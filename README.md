@@ -30,4 +30,8 @@ Figure 3.4: phase precession interleaved with phase procession (bimodal cell)
 ### Offline sequential activation resemble hippocampal replay dynamics
 Figure 4.1: demonstration of diffusion and super-diffusion in 2D space
 Figure 4.2: histogram plot of probability v.s. step sizes for diffusion and super-diffusion
+figure 4.3: Phase diagram
+Figure 4.4: Levy exponent v.s. adaptation strength; Levy exponent v.s. noise strength
 
+### Anti-correlation between neural activity and movement trajectory
+Figure 5: already done
