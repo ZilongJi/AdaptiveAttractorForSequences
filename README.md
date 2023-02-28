@@ -28,5 +28,6 @@ Figure 3.3: bi-directional theta sweeps
 Figure 3.4: phase precession interleaved with phase procession (bimodal cell)
 
 ### Offline sequential activation resemble hippocampal replay dynamics
-Figure 4.1: 
+Figure 4.1: demonstration of diffusion and super-diffusion in 2D space
+Figure 4.2: histogram plot of probability v.s. step sizes for diffusion and super-diffusion
 
