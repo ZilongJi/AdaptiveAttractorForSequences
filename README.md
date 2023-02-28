@@ -7,7 +7,7 @@
 > add the packages needed to reproduce the results here...
 
 ### An adaptive attractor network for the place cell population
-- [x] Figure 1.1: model schematic
+- [ ] Figure 1.1: model schematic
 
 - [ ] Figure 1.2: place field
 
