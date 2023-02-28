@@ -3,7 +3,8 @@
 
 ### Required python packages top reproduce figures below:
 > python 3.8 and later versions\
-> brainpy
+> brainpy\
+> add the packages needed to reproduce the results here...
 
 ### An adaptive attractor network for the place cell population
 Figure 1.1: model schematic
