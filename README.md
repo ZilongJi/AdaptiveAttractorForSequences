@@ -9,7 +9,7 @@
 ### An adaptive attractor network for the place cell population
 - [ ] Figure 1.1: model schematic
 
-- [ ] Figure 1.2: place field
+- [x] Figure 1.2: place field
 
 ### Delayed spatial encoding and delay compensation by adaptation
 - [ ] Figure 2.1: localized bump-like network activity (1-dimensional demonstration)
