@@ -1,19 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 28 15:18:47 2023
-
-This code describes the continuous attractor class,
-including 1-dimensional CANN and 2-dimensional CANN
-
-@author: Zilong
-"""
 import brainpy as bp
 import brainpy.math as bm
+import jax
 
 bm.set_platform('cpu')
 class CANN1D(bp.NeuGroup):
-  def __init__(self, num, tau=1., tau_v=50., k=1., a=0.3, A=0.2, J0=1.,
-               z_min=-bm.pi, z_max=bm.pi, m=0.3):
+  def __init__(self, num, tau=1., tau_v=50., k=5., a=0.3, A=0.12, J0=1.,
+               z_min=-bm.pi, z_max=bm.pi, mbar=150):
     super(CANN1D, self).__init__(size=num)
 
     # parameters
@@ -23,7 +15,7 @@ class CANN1D(bp.NeuGroup):
     self.a = a  # Half-width of the range of excitatory connections
     self.A = A  # Magnitude of the external input
     self.J0 = J0  # maximum connection value
-    self.m = m
+    self.m = mbar*tau/tau_v
 
     # feature space
     self.z_min = z_min
@@ -34,7 +26,9 @@ class CANN1D(bp.NeuGroup):
     self.dx = self.z_range / num  # The stimulus density
 
     # The connection matrix
-    self.conn_mat = self.make_conn()
+    # self.conn_mat = self.make_conn()
+    conn_mat = self.make_conn()
+    self.conn_fft = bm.fft.fft(conn_mat)
 
     # variables
     self.r = bm.Variable(bm.zeros(num))
@@ -48,11 +42,9 @@ class CANN1D(bp.NeuGroup):
     return d
 
   def make_conn(self):
-    x_left = bm.reshape(self.x, (-1, 1))
-    x_right = bm.repeat(self.x.reshape((1, -1)), len(self.x), axis=0)
-    d = self.dist(x_left - x_right)
-    conn = self.J0 * bm.exp(-0.5 * bm.square(d / self.a)) / (bm.sqrt(2 * bm.pi) * self.a)
-    return conn
+    d = self.dist(bm.abs(self.x[0] - self.x))
+    Jxx = self.J0 * bm.exp(-0.5 * bm.square(d / self.a)) / (bm.sqrt(2 * bm.pi) * self.a)
+    return Jxx
 
   def get_stimulus_by_pos(self, pos):
     return self.A * bm.exp(-0.25 * bm.square(self.dist(self.x - pos) / self.a))
@@ -61,10 +53,14 @@ class CANN1D(bp.NeuGroup):
     r1 = bm.square(self.u)
     r2 = 1.0 + self.k * bm.sum(r1)
     self.r.value = r1 / r2
-    Irec = bm.dot(self.conn_mat, self.r)
+    # r = jax.vmap(bm.fft.fft)(self.r)
+    r = bm.fft.fft(self.r)
+    Irec = bm.real(bm.fft.ifft(r * self.conn_fft))
+    # Irec = bm.dot(self.conn_mat, self.r)
     self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau * tdi.dt
     self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * tdi.dt
     self.input[:] = 0.
+
 cann = CANN1D(num=512)
 dur1, dur2, dur3 = 100., 2000., 500.
 num1 = int(dur1 / bm.get_dt())
