@@ -16,11 +16,11 @@
 
 - [ ] Figure 2.2：smooth tracking of the external location input $I_{ext}$
 
-- [ ] Figure 2.3: delay distance v.s. moving speed
+- [x] Figure 2.3: delay distance v.s. moving speed
 
-- [ ] Figure 2.4: delay distance v.s. adatation strength, we should observe that delay distance decrease as the adaptation strength increases
+- [x] Figure 2.4: delay distance v.s. adatation strength, we should observe that delay distance decrease as the adaptation strength increases
 
-- [ ] Figure 2.5: fixing $m=\tau/tau_v$, plot delay distance as a function of moving speed
+- [x] Figure 2.5: fixing $m=\tau/tau_v$, plot delay distance as a function of moving speed
 
 ### Online sequential activation resembles theta sweeps
 - [ ] Figure 3.1: forward theta sweeps
