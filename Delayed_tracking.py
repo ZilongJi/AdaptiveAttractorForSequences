@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from cann_fft import CANN1D
 bm.set_platform('cpu')
 
-cann = CANN1D(num=512,mbar = 1)
+cann = CANN1D(num=512,mbar = 0)
 v_ext = cann.a / cann.tau_v * 0.5
 dur = 2*bm.pi/v_ext
 dt = bm.get_dt()
