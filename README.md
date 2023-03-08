@@ -23,11 +23,11 @@
 - [x] Figure 2.5: fixing $m=\tau/tau_v$, plot delay distance as a function of moving speed
 
 ### Online sequential activation resembles theta sweeps
-- [ ] Figure 3.1: forward theta sweeps
+- [x] Figure 3.1: forward theta sweeps
 
 - [ ] Figure 3.2: phase precession (unimodal cell)
 
-- [ ] Figure 3.3: bi-directional theta sweeps
+- [x] Figure 3.3: bi-directional theta sweeps
 
 - [ ] Figure 3.4: phase precession interleaved with phase procession (bimodal cell)
 
