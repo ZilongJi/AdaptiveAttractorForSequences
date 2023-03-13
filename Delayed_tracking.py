@@ -5,7 +5,9 @@ import jax
 import seaborn as sns
 import matplotlib.pyplot as plt
 from cann import CANN1D
-
+plt.rcParams ['pdf.fonttype'] = 42
+plt.rcParams ['font.sans-serif'] = ['Arial']
+plt.rcParams['mathtext.fontset'] = 'cm'
 def delayed_track_m(mbar=0):
     import brainpy as bp
     from cann_fft import CANN1D
@@ -59,12 +61,20 @@ plt.scatter(mbar/5, -mean_dis)
 plt.plot(mbar/5, -mean_dis)
 label_size = 18
 tick_size = 15
-plt.xlabel('Adaptation strength', fontsize=label_size)
-plt.ylabel('Delayed distance (1e-3)', fontsize=label_size)
-plt.tight_layout()
+plt.xlabel(r'Adaptation strength $m$', fontsize=label_size)
+plt.ylabel('Lag distance (rads)', fontsize=label_size)
+
+# 设置xtick和ytick的取值
+xticks = np.linspace(0,np.max(mbar/5),4)
+yticks = np.linspace(0,np.max(-mean_dis),4)
+ax.set_xticks(xticks)
+ax.set_yticks(yticks)
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
+
+
+plt.tight_layout()
 fig.savefig('Figures/lag_distance_adaptation.png', dpi=300)
 # plt.show()
 
@@ -120,14 +130,18 @@ ax.errorbar(vext, -mean_dis, yerr=std_dis, fmt='o', color='blue', ecolor='black'
 ax.fill_between(vext, -mean_dis-std_dis, -mean_dis+std_dis, alpha=0.2, color='blue')
 plt.scatter(vext, -mean_dis)
 plt.plot(vext, -mean_dis)
-plt.xlabel('Moving speed (rads/s)', fontsize=label_size)
-plt.ylabel('Delayed distance (rads*1e-3)', fontsize=label_size)
-plt.tight_layout()
+plt.xlabel(r'Moving speed $v_{ext}$ (rads/s)', fontsize=label_size)
+plt.ylabel('Lag distance (rads)', fontsize=label_size)
+
+# 设置xtick和ytick的取值
+xticks = np.linspace(0,np.max(vext),4)
+yticks = np.linspace(0,np.max(-mean_dis),4)
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
 fig.savefig('Figures/lag_distance_adaptation.png', dpi=300)
 fig.savefig('Figures/lag_distance_vext.png', dpi=300)
+plt.tight_layout()
 plt.show()
 
 
