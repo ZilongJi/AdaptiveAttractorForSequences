@@ -98,7 +98,14 @@ class CANN2D(bp.dyn.NeuGroup):
     self.input[:] = 0.
 # m = 1.13 boundary
 
-def get_trace(sigma_m, m_0):
+def get_trace(mu, gamma):
+  def get_sigma_m(mu, gamma):
+    m_0 = 1 - mu
+    sigma_m = 2 * np.sqrt(np.pi) * m_0 * tau / tau_v * a * gamma
+    return sigma_m, m_0
+
+  sigma_m, m_0 = get_sigma_m(mu, gamma)
+
   cann = CANN2D(length=100, k=0.1, sigma_u = 0.5, sigma_m = float(sigma_m), m_0 = float(m_0))
   Iext, length = bp.inputs.section_input(
       values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
@@ -127,10 +134,10 @@ def get_trace(sigma_m, m_0):
   '''
 
   center_trace = bm.as_numpy(center_trace)
-  np.save('./data/center_trace'+str(sigma_m)+str(m_0)+'.npy', center_trace)
+  np.save('./data/center_trace'+str(mu)+'_'+str(gamma)+'.npy', center_trace)
   return center_trace
 
-def get_alpha(trace,sigma_m,m_0):
+def get_alpha(trace,mu,gamma):
   #trace = np.load('./data/center_trace.npy')
   data = np.sum(np.square(trace[:-1, :] - trace[1:, :]), axis=1)
   data = data[199:]
@@ -152,28 +159,24 @@ def get_alpha(trace,sigma_m,m_0):
                   np.max(data), 100)
   plt.plot(x, dist.pdf(x, para[0], para[1], para[2], para[3]),
            'r-', lw=5, alpha=0.6, label='levy_stable pdf')
-  plt.savefig('./figure/'+str(sigma_m)+'_'+str(m_0)+'.jpg')
+  plt.savefig('./figure/'+str(mu)+'_'+str(gamma)+'.jpg')
   plt.close()
   #plt.show()
   return para[0]
 
-def get_sigma_m(mu,gamma):
-  m_0  = 1 - mu
-  sigma_m = 2*np.sqrt(np.pi)*m_0*tau/tau_v*a*gamma
-  return sigma_m,m_0
+def get_Alpha():
+  mu_list = np.linspace(0,1,11)
+  gamma_list = np.linspace(0,1,11)
+  Alpha = np.zeros((11,11))
+  for mu,i in zip(mu_list,range(11)):
+    for gamma,j in zip(gamma_list,range(11)):
+      print('mu = ', mu, '_gamma=', gamma)
+      trace = get_trace(mu, gamma)
+      alpha = get_alpha(trace,mu,gamma)
+
+      Alpha[i,j] = alpha
+  np.save('./data/Alpha.npy',Alpha)
 
 
-mu_list = np.linspace(0,1,11)
-gamma_list = np.linspace(0,1,11)
-Alpha = np.zeros((11,11))
-for mu,i in zip(mu_list,range(11)):
-  for gamma,j in zip(gamma_list,range(11)):
-    sigma_m, m_0 = get_sigma_m(mu,gamma)
-    trace = get_trace(sigma_m, m_0)
-    alpha = get_alpha(trace,sigma_m,m_0)
-    Alpha[i,j] = alpha
-
-np.save('./data/Alpha.npy',Alpha)
-
-# trace = get_trace(0.1,0.95)
-# get_alpha(trace)
+#get_Alpha()
+get_trace(0.1,0.2)

@@ -4,11 +4,23 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 def plot_4_1():
-    sigma_m = np.linspace(0,1,11)[3]
-    m_0 = np.linspace(0,1,11)[4]
-    center_trace = np.load('./data/center_trace'+str(sigma_m)+str(m_0)+'.npy')
+    mu = 0.1
+    gamma = 0.2
+    center_trace = np.load('./data/center_trace'+str(mu)+str(gamma)+'.npy')
     plt.scatter(center_trace[:, 0], center_trace[:, 1], c=np.linspace(1, 0, center_trace.shape[0]), s=1)
     plt.show()
+
+def plot4_2():
+    mu = 0.1
+    gamma = 0.2
+    center_trace_1 = np.load('./data/center_trace' + str(mu) + str(gamma) + '.npy')
+    data1 = np.sum(np.square(center_trace_1[:-1, :] - center_trace_1[1:, :]), axis=1)
+    data1 = data1[199:]
+    mu = 0.1
+    gamma = 0.2
+    center_trace_2 = np.load('./data/center_trace' + str(mu) + str(gamma) + '.npy')
+    data2 = np.sum(np.square(center_trace_2[:-1, :] - center_trace_2[1:, :]), axis=1)
+    data2 = data2[199:]
 
 def plot_4_3():
     Alpha = np.load('./data/Alpha.npy')
@@ -32,4 +44,7 @@ def plot_4_3():
     # plt.plot(gamma,Alpha[0,:])
     # plt.show()
 
-plot_phase()
+
+plot_4_1()
+
+#plot_4_3()
