@@ -4,7 +4,7 @@ import numpy as np
 import jax
 import seaborn as sns
 import matplotlib.pyplot as plt
-from cann_fft import CANN1D
+from cann import CANN1D
 import scipy
 bm.set_platform('cpu')
 
