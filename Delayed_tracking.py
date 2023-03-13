@@ -47,21 +47,24 @@ std_dis = np.std(dis*1e3,axis=1)
 # aspect_ratio = 4/3
 ylen = 6
 fig, ax = plt.subplots(figsize=(ylen, ylen))
-ax.errorbar(mbar/5, -mean_dis, yerr = std_dis, fmt='o', color='blue', ecolor='black', capsize=5, capthick=2)
-ax.fill_between(mbar/5, -mean_dis-std_dis, -mean_dis+std_dis, alpha=0.2, color='blue')
-plt.scatter(mbar/5, -mean_dis)
-plt.plot(mbar/5, -mean_dis)
-plt.xlabel('Adaptation strength', fontsize=15)
-plt.ylabel('Delayed distance (1e-3)', fontsize=15)
-plt.tight_layout()
-# 设置坐标轴的线条粗细
+# 设置所有线条粗细
 ax.spines['top'].set_linewidth(1)
 ax.spines['right'].set_linewidth(1)
 ax.spines['bottom'].set_linewidth(1)
 ax.spines['left'].set_linewidth(1)
+# errorbar
+ax.errorbar(mbar/5, -mean_dis, yerr = std_dis, fmt='o', color='blue', ecolor='black', capsize=5, capthick=2)
+ax.fill_between(mbar/5, -mean_dis-std_dis, -mean_dis+std_dis, alpha=0.2, color='blue')
+plt.scatter(mbar/5, -mean_dis)
+plt.plot(mbar/5, -mean_dis)
+label_size = 18
+tick_size = 15
+plt.xlabel('Adaptation strength', fontsize=label_size)
+plt.ylabel('Delayed distance (1e-3)', fontsize=label_size)
+plt.tight_layout()
 # 设置xtick和ytick的字体大小
-ax.tick_params(axis='x', labelsize=15)
-ax.tick_params(axis='y', labelsize=15)
+ax.tick_params(axis='x', labelsize=tick_size)
+ax.tick_params(axis='y', labelsize=tick_size)
 fig.savefig('Figures/lag_distance_adaptation.png', dpi=300)
 # plt.show()
 
@@ -107,13 +110,23 @@ mean_dis = np.mean(dis*1e3, axis=1)
 
 vext = vbar*0.4/5*1e3
 fig, ax = plt.subplots(figsize=(ylen, ylen))
+# 设置坐标轴的线条粗细
+ax.spines['top'].set_linewidth(1)
+ax.spines['right'].set_linewidth(1)
+ax.spines['bottom'].set_linewidth(1)
+ax.spines['left'].set_linewidth(1)
+
 ax.errorbar(vext, -mean_dis, yerr=std_dis, fmt='o', color='blue', ecolor='black', capsize=5, capthick=2)
 ax.fill_between(vext, -mean_dis-std_dis, -mean_dis+std_dis, alpha=0.2, color='blue')
 plt.scatter(vext, -mean_dis)
 plt.plot(vext, -mean_dis)
-plt.xlabel('Moving speed (rads/s)', fontsize=15)
-plt.ylabel('Delayed distance (rads*1e-3)', fontsize=15)
+plt.xlabel('Moving speed (rads/s)', fontsize=label_size)
+plt.ylabel('Delayed distance (rads*1e-3)', fontsize=label_size)
 plt.tight_layout()
+# 设置xtick和ytick的字体大小
+ax.tick_params(axis='x', labelsize=tick_size)
+ax.tick_params(axis='y', labelsize=tick_size)
+fig.savefig('Figures/lag_distance_adaptation.png', dpi=300)
 fig.savefig('Figures/lag_distance_vext.png', dpi=300)
 plt.show()
 
