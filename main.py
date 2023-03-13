@@ -1,13 +1,19 @@
 import brainpy as bp
 import brainpy.math as bm
 import matplotlib.pyplot as plt
-import jax
 import numpy as np
+#from package import levy
+from scipy import stats
+import levy
 
 bm.set_platform('cpu')
 
+a = 0.2
+tau = 1.
+tau_v = 1.
+
 class CANN2D(bp.dyn.NeuGroup):
-  def __init__(self, length, tau=1., tau_v=1., m_0=1., k=8.1, a=0.2, A=10., J0=4., sigma_u=0., sigma_m=0.,
+  def __init__(self, length, tau=tau, tau_v=tau_v, m_0=1., k=8.1, a=a, A=10., J0=4., sigma_u=0., sigma_m=0.,
                z_min=-bm.pi, z_max=bm.pi, name=None):
     super(CANN2D, self).__init__(size=(length, length), name=name)
 
@@ -78,7 +84,6 @@ class CANN2D(bp.dyn.NeuGroup):
     self.center[0] = bm.angle(bm.sum(exppos*xcenter))
     self.center[1] = bm.angle(bm.sum(exppos*ycenter))
 
-
   def update(self, tdi):
     r1 = bm.square(self.u)
     r2 = 1.0 + self.k * bm.sum(r1)
@@ -91,38 +96,84 @@ class CANN2D(bp.dyn.NeuGroup):
                    + self.sigma_m * self.u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau_v)
     self.get_center()
     self.input[:] = 0.
-
 # m = 1.13 boundary
 
-cann = CANN2D(length=100, k=0.1, sigma_u = 0.5, sigma_m = 0.1, m_0 = 0.95)
+def get_trace(sigma_m, m_0):
+  cann = CANN2D(length=100, k=0.1, sigma_u = 0.5, sigma_m = float(sigma_m), m_0 = float(m_0))
+  Iext, length = bp.inputs.section_input(
+      values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
+      durations=[2., 10.],
+      return_length=True
+  )
+  runner = bp.DSRunner(cann,
+                       inputs = ['input', Iext, 'iter'],
+                       monitors = ['r', 'center'],
+                       dyn_vars = bm.random.DEFAULT,
+                       dt = 0.01,
+                       jit = True)
+  runner.run(length)
+  center_trace = runner.mon.center
 
-#cann.show_conn()
+  '''
+  bp.visualize.animate_2D(values=runner.mon.r.reshape((-1, cann.num)),
+                         net_size=(cann.length, cann.length))
+  '''
 
-# cann = CANN2D_FFT(length=100, k=0.1)
+  '''
+  plt.scatter(center_trace[:,0], center_trace[:,1], c = np.linspace(1,0,center_trace.shape[0]), s = 1)
+  #plt.xlim([-np.pi,np.pi])
+  #plt.ylim([-np.pi,np.pi])
+  plt.show()
+  '''
 
-Iext, length = bp.inputs.section_input(
-    values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
-    durations=[2., 10.],
-    return_length=True
-)
+  center_trace = bm.as_numpy(center_trace)
+  np.save('./data/center_trace'+str(sigma_m)+str(m_0)+'.npy', center_trace)
+  return center_trace
 
-runner = bp.DSRunner(cann,
-                     inputs = ['input', Iext, 'iter'],
-                     monitors = ['r', 'center'],
-                     dyn_vars = bm.random.DEFAULT,
-                     dt = 0.01,
-                     jit = True)
-runner.run(length)
+def get_alpha(trace,sigma_m,m_0):
+  #trace = np.load('./data/center_trace.npy')
+  data = np.sum(np.square(trace[:-1, :] - trace[1:, :]), axis=1)
+  data = data[199:]
+  # data = np.random.choice(data,200)
+  data = np.concatenate((data,data*-1),axis = 0)
+  data = data * 10e6
+  #ans = levy.fit_levy(data,beta = 0, location = 0, scale = 2.5)# alpha beta mu sigma
+  ans = levy.fit_levy(data, beta=0, mu=0, sigma=2.5)  # alpha beta mu sigma
+  # print(ans)
+  para = ans[0].get()
+  likelihood = ans[1]
 
-'''
-bp.visualize.animate_2D(values=runner.mon.r.reshape((-1, cann.num)),
-                       net_size=(cann.length, cann.length))
-'''
+  print(para)
+  print(likelihood)
+  plt.figure()
+  plt.hist(data, density=True, bins='auto')
+  dist = stats.levy_stable
+  x = np.linspace(np.min(data),
+                  np.max(data), 100)
+  plt.plot(x, dist.pdf(x, para[0], para[1], para[2], para[3]),
+           'r-', lw=5, alpha=0.6, label='levy_stable pdf')
+  plt.savefig('./figure/'+str(sigma_m)+'_'+str(m_0)+'.jpg')
+  plt.close()
+  #plt.show()
+  return para[0]
 
-center_trace = runner.mon.center
-#plt.scatter(center_trace[:,0],center_trace[:,1], c = np.linspace(1,0,center_trace.shape[0]),s = 1)
-plt.scatter(center_trace[:,0], center_trace[:,1], c = np.linspace(1,0,center_trace.shape[0]), s = 1)
-#plt.xlim([-np.pi,np.pi])
-#plt.ylim([-np.pi,np.pi])
+def get_sigma_m(mu,gamma):
+  m_0  = 1 - mu
+  sigma_m = 2*np.sqrt(np.pi)*m_0*tau/tau_v*a*gamma
+  return sigma_m,m_0
 
-plt.show()
+
+mu_list = np.linspace(0,1,11)
+gamma_list = np.linspace(0,1,11)
+Alpha = np.zeros((11,11))
+for mu,i in zip(mu_list,range(11)):
+  for gamma,j in zip(gamma_list,range(11)):
+    sigma_m, m_0 = get_sigma_m(mu,gamma)
+    trace = get_trace(sigma_m, m_0)
+    alpha = get_alpha(trace,sigma_m,m_0)
+    Alpha[i,j] = alpha
+
+np.save('./data/Alpha.npy',Alpha)
+
+# trace = get_trace(0.1,0.95)
+# get_alpha(trace)
