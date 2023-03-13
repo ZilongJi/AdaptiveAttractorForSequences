@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from cann_fft import CANN1D
 bm.set_platform('cpu')
 
-cann = CANN1D(num=512, mbar=1)
+cann = CANN1D(num=64, mbar=1)
 v_ext = cann.a / cann.tau_v * 0.5
 dur = 2 * bm.pi / v_ext
 dt = bm.get_dt()
@@ -22,17 +22,30 @@ for i in range(num)[1:]:
         position[i] -= 2 * np.pi
 
 position = position.reshape((-1, 1))
-Iext = cann.get_stimulus_by_pos(position)
+noise = 0.01*np.random.randn(num,cann.num)
+Iext = cann.get_stimulus_by_pos(position+0.5*np.random.randn(num,1)) + noise
 
 runner = bp.DSRunner(cann,
                      inputs=('input', Iext, 'iter'),
                      monitors=['u', 'v', 'r'])
 
 runner.run(dur)
-plt.figure()
+aspect_ratio = 4/3
+ylen = 5
+fig = plt.figure(figsize=(ylen, ylen*aspect_ratio))
 index = np.linspace(1, cann.num, cann.num)
-plt.pcolormesh(index, position, runner.mon.u)
-plt.xlabel('Neuron index', fontsize=15)
-plt.ylabel('Position', fontsize=15)
-plt.colorbar
+# index = np.linspace(0, 300, 300)
+fr = runner.mon.r.T
+pos = position.squeeze()
+# plt.pcolormesh(index,position, fr[100:400,:])
+plt.pcolormesh(pos[2000:12000]-pos[2000], index[10:50]-index[10], 1e3*fr[10:50,2000:12000], cmap='jet')
+
+# plt.pcolormesh(position, index,  runner.mon.u)
+plt.xlabel('Position', fontsize=15)
+plt.ylabel('Cell indices', fontsize=15)
+clb = plt.colorbar()
+clb.set_label('Firing rate(spikes/s)', fontsize=15)
+# clb.ax.set_title('Firing rate(spikes/s)')
+plt.tight_layout()
+fig.savefig('Figures/place_field.png', dpi=300)
 plt.show()
