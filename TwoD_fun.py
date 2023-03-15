@@ -94,7 +94,7 @@ class CANN2D(bp.dyn.NeuGroup):
     self.input[:] = 0.
 # m = 1.13 boundary
 
-def get_trace(duration, mu, gamma, a, tau, tau_v):
+def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1):
   def get_sigma_m(mu, gamma):
     m_0 = 1 - mu
     sigma_m = 2 * np.sqrt(np.pi) * m_0 * tau / tau_v * a * gamma
@@ -103,7 +103,7 @@ def get_trace(duration, mu, gamma, a, tau, tau_v):
 
   sigma_m, m_0 = get_sigma_m(mu, gamma)
 
-  cann = CANN2D(length=100, a=a, tau=tau, tau_v=tau_v, k=0.1, sigma_u=0.5, sigma_m=float(sigma_m), m_0=float(m_0))
+  cann = CANN2D(length=100, a=a, tau=tau, tau_v=tau_v, k=0.1, sigma_u=0.5, sigma_m=sigma_m.astype(float), m_0=m_0.astype(float))
   Iext, length = bp.inputs.section_input(
       values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
       durations=[2., duration],
@@ -114,7 +114,8 @@ def get_trace(duration, mu, gamma, a, tau, tau_v):
                        monitors = ['r', 'center'],
                        dyn_vars = bm.random.DEFAULT,
                        dt = 0.01,
-                       jit = True)
+                       jit = True,
+                       numpy_mon_after_run=False)
   runner.run(length)
   center_trace = runner.mon.center
 
@@ -129,24 +130,25 @@ def get_trace(duration, mu, gamma, a, tau, tau_v):
   plt.show()
   '''
 
-  center_trace = bm.as_numpy(center_trace)
+  # center_trace = bm.as_numpy(center_trace)
   #np.save('./data/center_trace'+str(mu)+'_'+str(gamma)+'.npy', center_trace)
   return center_trace
 
-def get_alpha(trace,mu,gamma):
-  #trace = np.load('./data/center_trace.npy')
+
+def get_alpha(trace,mu = 0,gamma = 0):
+  # trace = np.load('./data/center_trace.npy')
   data = np.sum(np.square(trace[:-1, :] - trace[1:, :]), axis=1)
   data = data[199:]
   # data = np.random.choice(data,200)
-  data = np.concatenate((data,data*-1),axis = 0)
+  data = np.concatenate((data, data * -1), axis=0)
   data = data * 10e6
-  #ans = levy.fit_levy(data,beta = 0, location = 0, scale = 2.5)# alpha beta mu sigma
-  ans = levy.fit_levy(data, beta=0, mu=0, sigma=2.5)  # alpha beta mu sigma
+  # ans = levy.fit_levy(data,beta = 0, location = 0, scale = 2.5)# alpha beta mu sigma
+  ans = levy.fit_levy(data, beta=0, mu=0, sigma=2.3)  # alpha beta mu sigma
   # print(ans)
-  para = ans[0].get()
+  para = (2- ans[0].get()) / 1.5 + 1
+  print(para[0])
+  '''
   likelihood = ans[1]
-
-  print(para)
   print(likelihood)
   plt.figure()
   plt.hist(data, density=True, bins='auto')
@@ -158,20 +160,26 @@ def get_alpha(trace,mu,gamma):
   plt.savefig('./Figures/'+str(round(mu,2))+'_'+str(round(gamma,2))+'.jpg')
   plt.close()
   #plt.show()
+  '''
   return para[0]
 
-def get_Alpha(N):
-  mu_list = np.linspace(0,1,N)
-  gamma_list = np.linspace(0,1,N)
-  Alpha = np.zeros((N,N))
-  for mu,i in zip(mu_list,range(N)):
-    for gamma,j in zip(gamma_list,range(N)):
-      print('mu = ', mu, '_gamma=', gamma)
-      trace = get_trace(10, mu, gamma, 0.2, 1, 1)
-      alpha = get_alpha(trace,mu,gamma)
-      Alpha[i,j] = alpha
-  Alpha = Alpha.T
-  np.save('./data/Alpha.npy',Alpha)
+
+def get_Alpha(N,M,simulation = True):
+  if simulation == True:
+    mu_list = np.linspace(0, 1, N)
+    gamma_list = np.linspace(0, 1.5, M)
+    mu_list, gamma_list = np.meshgrid(mu_list, gamma_list)
+    Trace = bp.running.jax_vectorize_map(get_trace, [mu_list.flatten(), gamma_list.flatten()], clear_buffer = True, num_parallel=N*M)
+    Trace = bm.as_numpy(Trace)
+    np.save('./data/Trace.npy',Trace)
+  Trace = np.load('./data/Trace.npy')
+
+  Alpha = np.zeros((M, N))
+  for i in range(M):
+    for j in range(N):
+      Alpha[i,j] = get_alpha(Trace[N*M-1-i*N-j,:,:])
+
+  return Alpha
 
 
 if __name__ == '__main__':

@@ -6,6 +6,8 @@ from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
 import TwoD_fun
 import levy
+import brainpy as bp
+import brainpy.math as bm
 
 plt.rcParams ['pdf.fonttype'] = 42
 plt.rcParams['font.sans-serif'] = ['Arial']
@@ -19,7 +21,7 @@ def plot4_2(simulation=[0, 0]):
     fit_guess = np.array([[2,0,0],[1,1,3]])
     def plot_hist(label, simulation, mu, gamma):
         if simulation == 1:
-            center_trace = TwoD_fun.get_trace(100, mu, gamma, 0.2, 1, 100)
+            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma , 100, 0.2, 1, 100))
             stepsize = np.sum(np.square(center_trace[:-1, :] - center_trace[1:, :]), axis=1)
             stepsize = stepsize[199:]
             np.save('./data/stepsize' + str(mu) + '_' + str(gamma) + '.npy', stepsize)
