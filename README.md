@@ -36,7 +36,7 @@
 
 - [x] Figure 4.2: histogram plot of probability v.s. step sizes for diffusion and super-diffusion
 
-- [ ] Figure 4.3: Phase diagram
+- [x] Figure 4.3: Phase diagram
 
 - [ ] Figure 4.4: Levy exponent v.s. adaptation strength; Levy exponent v.s. noise strength
 

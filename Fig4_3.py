@@ -32,7 +32,7 @@ def plot_4_3(simulation = 0):
     plt.ylim([-0.5,16.5])
     #plt.grid(None)
     #plt.rcParams["axes.grid"] = False
-    axcb = plt.colorbar(shrink = 0.6)
+    axcb = plt.colorbar()
     axcb.set_label(r'Levy exponent $\alpha$', fontsize=10)
     axcb.set_ticks([1, 1.5, 2])
     plt.plot()
