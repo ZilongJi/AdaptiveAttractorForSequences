@@ -8,12 +8,8 @@ import levy
 
 bm.set_platform('cpu')
 
-a = 0.2
-tau = 1.
-tau_v = 1.
-
 class CANN2D(bp.dyn.NeuGroup):
-  def __init__(self, length, tau=tau, tau_v=tau_v, m_0=1., k=8.1, a=a, A=10., J0=4., sigma_u=0., sigma_m=0.,
+  def __init__(self, length, tau=1, tau_v=144, m_0=1., k=8.1, a=0.2, A=10., J0=4., sigma_u=0., sigma_m=0.,
                z_min=-bm.pi, z_max=bm.pi, name=None):
     super(CANN2D, self).__init__(size=(length, length), name=name)
 
@@ -98,18 +94,19 @@ class CANN2D(bp.dyn.NeuGroup):
     self.input[:] = 0.
 # m = 1.13 boundary
 
-def get_trace(mu, gamma):
+def get_trace(duration, mu, gamma, a, tau, tau_v):
   def get_sigma_m(mu, gamma):
     m_0 = 1 - mu
     sigma_m = 2 * np.sqrt(np.pi) * m_0 * tau / tau_v * a * gamma
+    print('sigma_m =', sigma_m, ', m_0 = ', m_0)
     return sigma_m, m_0
 
   sigma_m, m_0 = get_sigma_m(mu, gamma)
 
-  cann = CANN2D(length=100, k=0.1, sigma_u = 0.5, sigma_m = float(sigma_m), m_0 = float(m_0))
+  cann = CANN2D(length=100, a=a, tau=tau, tau_v=tau_v, k=0.1, sigma_u=0.5, sigma_m=float(sigma_m), m_0=float(m_0))
   Iext, length = bp.inputs.section_input(
       values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
-      durations=[2., 10.],
+      durations=[2., duration],
       return_length=True
   )
   runner = bp.DSRunner(cann,
@@ -125,7 +122,6 @@ def get_trace(mu, gamma):
   bp.visualize.animate_2D(values=runner.mon.r.reshape((-1, cann.num)),
                          net_size=(cann.length, cann.length))
   '''
-
   '''
   plt.scatter(center_trace[:,0], center_trace[:,1], c = np.linspace(1,0,center_trace.shape[0]), s = 1)
   #plt.xlim([-np.pi,np.pi])
@@ -134,7 +130,7 @@ def get_trace(mu, gamma):
   '''
 
   center_trace = bm.as_numpy(center_trace)
-  np.save('./data/center_trace'+str(mu)+'_'+str(gamma)+'.npy', center_trace)
+  #np.save('./data/center_trace'+str(mu)+'_'+str(gamma)+'.npy', center_trace)
   return center_trace
 
 def get_alpha(trace,mu,gamma):
@@ -159,24 +155,24 @@ def get_alpha(trace,mu,gamma):
                   np.max(data), 100)
   plt.plot(x, dist.pdf(x, para[0], para[1], para[2], para[3]),
            'r-', lw=5, alpha=0.6, label='levy_stable pdf')
-  plt.savefig('./figure/'+str(mu)+'_'+str(gamma)+'.jpg')
+  plt.savefig('./Figures/'+str(round(mu,2))+'_'+str(round(gamma,2))+'.jpg')
   plt.close()
   #plt.show()
   return para[0]
 
-def get_Alpha():
-  mu_list = np.linspace(0,1,11)
-  gamma_list = np.linspace(0,1,11)
-  Alpha = np.zeros((11,11))
-  for mu,i in zip(mu_list,range(11)):
-    for gamma,j in zip(gamma_list,range(11)):
+def get_Alpha(N):
+  mu_list = np.linspace(0,1,N)
+  gamma_list = np.linspace(0,1,N)
+  Alpha = np.zeros((N,N))
+  for mu,i in zip(mu_list,range(N)):
+    for gamma,j in zip(gamma_list,range(N)):
       print('mu = ', mu, '_gamma=', gamma)
-      trace = get_trace(mu, gamma)
+      trace = get_trace(10, mu, gamma, 0.2, 1, 1)
       alpha = get_alpha(trace,mu,gamma)
-
       Alpha[i,j] = alpha
+  Alpha = Alpha.T
   np.save('./data/Alpha.npy',Alpha)
 
 
-#get_Alpha()
-get_trace(0.1,0.2)
+if __name__ == '__main__':
+  print('###')
