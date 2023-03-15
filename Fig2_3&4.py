@@ -136,6 +136,8 @@ plt.ylabel('Lag distance (rads)', fontsize=label_size)
 # 设置xtick和ytick的取值
 xticks = np.linspace(0,np.max(vext),4)
 yticks = np.linspace(0,np.max(-mean_dis),4)
+ax.set_xticks(xticks)
+ax.set_yticks(yticks)
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
