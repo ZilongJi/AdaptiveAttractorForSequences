@@ -75,7 +75,7 @@ ax.tick_params(axis='y', labelsize=tick_size)
 
 
 plt.tight_layout()
-fig.savefig('Figures/lag_distance_adaptation.png', dpi=300)
+fig.savefig('Figures/Fig2_4.png', dpi=300)
 # plt.show()
 
 
@@ -139,8 +139,7 @@ yticks = np.linspace(0,np.max(-mean_dis),4)
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
-fig.savefig('Figures/lag_distance_adaptation.png', dpi=300)
-fig.savefig('Figures/lag_distance_vext.png', dpi=300)
+fig.savefig('Figures/Fig2_3.png', dpi=300)
 plt.tight_layout()
 plt.show()
 
