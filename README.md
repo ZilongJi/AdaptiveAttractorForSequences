@@ -32,9 +32,9 @@
 - [ ] Figure 3.4: phase precession interleaved with phase procession (bimodal cell)
 
 ### Fig4: Offline sequential activation resemble hippocampal replay dynamics
-- [ ] Figure 4.1: demonstration of diffusion and super-diffusion in 2D space
+- [x] Figure 4.1: demonstration of diffusion and super-diffusion in 2D space
 
-- [ ] Figure 4.2: histogram plot of probability v.s. step sizes for diffusion and super-diffusion
+- [x] Figure 4.2: histogram plot of probability v.s. step sizes for diffusion and super-diffusion
 
 - [ ] Figure 4.3: Phase diagram
 
@@ -81,3 +81,16 @@
 <img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig3_3.png" width=40% height=40%>
 </p>
 <em>Hint: refer to Fig3.1.</em>
+
+
+#### Figure4.1: 
+<p float="center">
+<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig4_1.png" width=40% height=40%>
+</p>
+<em>Hint: refer to Fig4.1.</em>
+
+#### Figure4.2: 
+<p float="center">
+<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig4_2.png" width=40% height=40%>
+</p>
+<em>Hint: refer to Fig4.2.</em>
