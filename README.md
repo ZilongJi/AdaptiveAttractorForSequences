@@ -94,3 +94,10 @@
 <img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig4_2.png" width=40% height=40%>
 </p>
 <em>Hint: refer to Fig4.2.</em>
+
+#### Figure4.3: 
+<p float="center">
+<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig4_3.png" width=40% height=40%>
+</p>
+<em>Hint: refer to Fig4.3.</em>
+
