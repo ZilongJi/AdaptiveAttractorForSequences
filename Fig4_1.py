@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
 import TwoD_fun
+import brainpy as bp
+import brainpy.math as bm
 
 plt.rcParams ['pdf.fonttype'] = 42
 plt.rcParams ['font.sans-serif'] = ['Arial']
@@ -16,7 +18,7 @@ def plot_4_1(simulation = [0 ,0]):
     fig, axs = plt.subplots(1, 2, figsize=(5, 2), dpi=300, sharex = True, sharey = True)
     def linetrace(mu, gamma, simulation, ax, label):
         if simulation == 1:
-            center_trace = TwoD_fun.get_trace(1000, mu, gamma, 0.2, 1, 100)
+            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 1000, 0.2, 1, 100))
             np.save('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy', center_trace)
 
         center_trace = np.load('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy')
