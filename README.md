@@ -87,17 +87,17 @@
 <p float="center">
 <img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig4_1.png" width=40% height=40%>
 </p>
-<em>Hint: refer to Fig4.1.</em>
+<em>Hint: @Xing si: to show the difference of Levy flight and diffusion, you have to put the scale on x and y axis. Colorbar font size is larger than font size under x axis. Make them to be consistent. </em>
 
 #### Figure4.2: 
 <p float="center">
 <img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig4_2.png" width=40% height=40%>
 </p>
-<em>Hint: refer to Fig4.2.</em>
+<em>Hint: Make sure the color map used here is consistent with other plots. Chage the font size of x and y labels.</em>
 
 #### Figure4.3: 
 <p float="center">
 <img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig4_3.png" width=40% height=40%>
 </p>
-<em>Hint: refer to Fig4.3.</em>
+<em>Hint: Remove the image smoothness.</em>
 
