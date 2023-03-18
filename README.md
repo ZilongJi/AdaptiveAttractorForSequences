@@ -12,7 +12,7 @@
 - [x] Figure 1.2: place field
 
 ### Fig2: Delayed spatial encoding and delay compensation by adaptation
-- [ ] Figure 2.1: localized bump-like network activity (1-dimensional demonstration)
+- [x] Figure 2.1: localized bump-like network activity (1-dimensional demonstration)
 
 - [ ] Figure 2.2：smooth tracking of the external location input $I_{ext}$
 
@@ -51,6 +51,11 @@
 <img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig1_2_placefield.png" width=40% height=40%>
 </p>
 <em>Hint: Xaxis: switch to location. Yaxis: switch to cell index. Add noise, no smooth, no periodic boundary (cut off the two sides). Add colorbar. See Fig1c in [https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-23765-x/MediaObjects/41467_2021_23765_MOESM1_ESM.pdf] for an example.</em>
+#### Figure2.1: 
+<p float="center">
+<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/fig2_1.png" width=40% height=40%>
+</p>
+
 
 #### Figure2.3: 
 <p float="center">
