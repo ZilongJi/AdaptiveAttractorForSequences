@@ -53,7 +53,7 @@
 <em>Hint: Xaxis: switch to location. Yaxis: switch to cell index. Add noise, no smooth, no periodic boundary (cut off the two sides). Add colorbar. See Fig1c in [https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-021-23765-x/MediaObjects/41467_2021_23765_MOESM1_ESM.pdf] for an example.</em>
 #### Figure2.1: 
 <p float="center">
-<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/fig2_1.png" width=40% height=40%>
+<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig2_1.png" width=40% height=40%>
 </p>
 
 
