@@ -14,7 +14,7 @@
 ### Fig2: Delayed spatial encoding and delay compensation by adaptation
 - [x] Figure 2.1: localized bump-like network activity (1-dimensional demonstration)
 
-- [ ] Figure 2.2：smooth tracking of the external location input $I_{ext}$
+- [x] Figure 2.2：smooth tracking of the external location input $I_{ext}$
 
 - [x] Figure 2.3: delay distance v.s. moving speed
 
@@ -54,6 +54,10 @@
 #### Figure2.1: 
 <p float="center">
 <img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig2_1.png" width=40% height=40%>
+</p>
+#### Figure2.2: 
+<p float="center">
+<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig2_2.png" width=40% height=40%>
 </p>
 
 
