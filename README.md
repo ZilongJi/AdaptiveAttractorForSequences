@@ -110,3 +110,10 @@
 </p>
 <em>Hint: Remove the image smoothness.</em>
 
+#### Figure4.4: 
+<p float="center">
+<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/Fig4_4.png" width=40% height=40%>
+</p>
+<em>Hint: Remove the image smoothness.</em>
+
+
