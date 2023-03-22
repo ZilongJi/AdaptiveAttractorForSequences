@@ -129,7 +129,6 @@ def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1):
   #plt.ylim([-np.pi,np.pi])
   plt.show()
   '''
-
   # center_trace = bm.as_numpy(center_trace)
   #np.save('./data/center_trace'+str(mu)+'_'+str(gamma)+'.npy', center_trace)
   return center_trace
@@ -163,21 +162,23 @@ def get_alpha(trace,mu = 0,gamma = 0):
   '''
   return para[0]
 
+def get_Alpha(N, M, simulation = True, epoch=10):
+  Alpha = np.zeros((M, N, epoch))
 
-def get_Alpha(N,M,simulation = True):
-  if simulation == True:
-    mu_list = np.linspace(0, 1, N)
-    gamma_list = np.linspace(0, 1.5, M)
-    mu_list, gamma_list = np.meshgrid(mu_list, gamma_list)
-    Trace = bp.running.jax_vectorize_map(get_trace, [mu_list.flatten(), gamma_list.flatten()], clear_buffer = True, num_parallel=N*M)
-    Trace = bm.as_numpy(Trace)
-    np.save('./data/Trace.npy',Trace)
-  Trace = np.load('./data/Trace.npy')
+  for e in range(epoch):
+    bm.random.seed()
+    if simulation == True:
+      mu_list = np.linspace(0, 1, N)
+      gamma_list = np.linspace(0, 1.5, M)
+      mu_list, gamma_list = np.meshgrid(mu_list, gamma_list)
+      Trace = bp.running.jax_vectorize_map(get_trace, [mu_list.flatten(), gamma_list.flatten()], clear_buffer = True, num_parallel=N*M)
+      Trace = bm.as_numpy(Trace)
+      np.save('./data/Trace_'+str(e)+'.npy',Trace)
+    Trace = np.load('./data/Trace_'+str(e)+'.npy')
 
-  Alpha = np.zeros((M, N))
-  for i in range(M):
-    for j in range(N):
-      Alpha[i,j] = get_alpha(Trace[N*M-1-i*N-j,:,:])
+    for i in range(M):
+      for j in range(N):
+        Alpha[i,j,e] = get_alpha(Trace[N*M-1-i*N-j,:,:])
 
   return Alpha
 

@@ -14,8 +14,12 @@ plt.rcParams['mathtext.fontset'] = 'cm'
 def plot_4_3(simulation = 0):
     fig = plt.figure(figsize = (8,3),dpi = 300)
 
-    Alpha = np.load('./data/Alpha.npy')[:,1:]
+    Alpha = np.load('./data/Alpha.npy')[:,1:,:]
     print(Alpha.shape)
+    Alpha_mean = np.mean(Alpha,axis = 2)
+    Alpha_std = np.std(Alpha, axis = 2)
+    print(Alpha_std)
+
 
     mu = np.linspace(0, 1, Alpha.shape[1])
     mu_theory = np.linspace(0, 1, 1000)
@@ -26,14 +30,14 @@ def plot_4_3(simulation = 0):
     gamma_theory_ = np.minimum(2, 1 + 0.5 / np.square(gamma_theory)) # mu = 0.25
 
     ax = plt.subplot(1,2,1)
-    plt.plot(mu,Alpha[9,:], marker='o', markerfacecolor='white',linestyle = '-', color = 'k')
+    plt.errorbar(mu,Alpha_mean[9,:],Alpha_std[9,:], fmt='o',markersize=3, markerfacecolor='white',linestyle = '-', color = 'k')
     plt.plot(mu_theory, mu_theory_, linestyle='-', color = 'red')
     plt.ylabel(r'Lévy exponent $\alpha$', fontsize=10)
     plt.xlabel(r'Distance-to-boudary $\mu$', fontsize=10)
     plt.xticks(np.array([0, 0.5, 1]))
 
     plt.subplot(1, 2, 2,sharey = ax)
-    plt.plot(gamma, Alpha[:,3],marker='o', markerfacecolor='white',linestyle = '-',label = 'simulation')
+    plt.errorbar(gamma, Alpha_mean[:,3],Alpha_std[:,3],fmt='o', markersize=3, markerfacecolor='white',linestyle = '-',color = 'k', label = 'simulation')
     plt.plot(gamma_theory, gamma_theory_, linestyle='-', color='red',label = 'theory')
     plt.xlabel(r'Noise-to-strength $\gamma$', fontsize=10)
     plt.xticks(np.array([0, 0.5, 1, 1.5]))

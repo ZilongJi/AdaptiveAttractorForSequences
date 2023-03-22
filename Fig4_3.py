@@ -16,7 +16,8 @@ def plot_4_3(simulation = 0):
     if simulation == 1:
         Alpha = TwoD_fun.get_Alpha(11, 21, True)
         np.save('./data/Alpha.npy', Alpha)
-    Alpha = np.load('./data/Alpha.npy')[0:-3,:]
+    Alpha = np.load('./data/Alpha.npy')[0:-3,:,:]
+    Alpha = np.mean(Alpha, axis=2)
     Alpha = np.concatenate((np.ones((Alpha.shape[0],Alpha.shape[0]-Alpha.shape[1])),Alpha),axis = 1)
 
 
