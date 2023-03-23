@@ -38,7 +38,7 @@
 
 - [x] Figure 4.3: Phase diagram
 
-- [ ] Figure 4.4: Levy exponent v.s. adaptation strength; Levy exponent v.s. noise strength
+- [x] Figure 4.4: Levy exponent v.s. adaptation strength; Levy exponent v.s. noise strength
 
 ### Fig5: Anti-correlation between neural activity and movement trajectory
 - [x] Figure 5: already done
