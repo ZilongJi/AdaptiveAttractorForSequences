@@ -24,10 +24,10 @@
 - [ ] Figure 3.1: illustration of the interplay between intrinsic dynamics and external snesory-motion information
 - [x] Figure 3.2: forward theta sweeps
 - [x] Figure 3.3: bi-directional theta sweeps
-- [ ] Figure 3.4: quantitative measurement of forward sweeps and bidirection sweeps.
+- [x] Figure 3.4: quantitative measurement of forward sweeps and bidirection sweeps.
 
-- [ ] Figure SIxxx (move to SI): phase precession (unimodal cell)
-- [ ] Figure SIxxx (move to SI): phase precession interleaved with phase procession (bimodal cell)
+- [x] Figure SIxxx (move to SI): phase precession (unimodal cell)
+- [x] Figure SIxxx (move to SI): phase precession interleaved with phase procession (bimodal cell)
 
 ### Fig4: Offline sequential activation resemble hippocampal replay dynamics
 - [x] Figure 4.1: demonstration of diffusion and super-diffusion in 2D space
