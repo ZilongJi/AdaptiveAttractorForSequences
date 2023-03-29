@@ -17,7 +17,16 @@ ticksize = 15
 charsize = 18
 linewidth = 1.5
 
+
+def downsample(center,num = 10):
+    ans = np.zeros(np.floor(center.shape[0]/num).astype(int)-1)
+    for i in range(ans.shape[0]):
+        ans[i] = center[num*i]
+    return ans
+
 def plot_4_1(simulation = [0 ,0]):
+
+
     fig, axs = plt.subplots(1, 2, figsize=(10, 4), sharex = True, sharey = True)
     def linetrace(mu, gamma, simulation, ax, label):
         if simulation == 1:
@@ -25,8 +34,8 @@ def plot_4_1(simulation = [0 ,0]):
             np.save('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy', center_trace)
 
         center_trace = np.load('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy')
-        x = center_trace[200:-1,0]*-1
-        y = center_trace[200:-1,1]*-1 + 0.05
+        x = downsample(center_trace[200:-1,0]*-1)
+        y = downsample(center_trace[200:-1,1]*-1 + 0.05)
         dydx = np.array((range(x.shape[0]))) / x.shape[0] # first derivative
 
         points = np.array([x, y]).T.reshape(-1, 1, 2)
@@ -44,8 +53,8 @@ def plot_4_1(simulation = [0 ,0]):
             ax.set_xlim(x.min()-0.2, x.max()+0.2)
             ax.set_ylim(y.min()-0.2, y.max()+0.2)
         if label == 0:
-            x2 = center_trace[200:-1, 0] * -10
-            y2 = center_trace[200:-1, 1] * -10
+            x2 = downsample(center_trace[200:-1, 0] * -10)
+            y2 = downsample(center_trace[200:-1, 1] * -10)
 
             ax2 = fig.add_axes([0.65, 0.3, 0.2, 0.4])
             dydx = np.array((range(x2.shape[0]))) / x2.shape[0]  # first derivative
