@@ -48,7 +48,7 @@ mean_dis = np.mean(dis*1e3,axis=1)
 std_dis = np.std(dis*1e3,axis=1)
 # aspect_ratio = 4/3
 ylen = 6
-fig, ax = plt.subplots(figsize=(ylen, ylen))
+fig, ax = plt.subplots(figsize=(6, 4))
 # 设置所有线条粗细
 ax.spines['top'].set_linewidth(1)
 ax.spines['right'].set_linewidth(1)
@@ -76,6 +76,7 @@ ax.tick_params(axis='y', labelsize=tick_size)
 
 plt.tight_layout()
 fig.savefig('Figures/Fig2_4.png', dpi=300)
+fig.savefig('Figures/Fig2_4.pdf', dpi=300)
 # plt.show()
 
 
@@ -119,7 +120,7 @@ mean_dis = np.mean(dis*1e3, axis=1)
 
 
 vext = vbar*0.4/5*1e3
-fig, ax = plt.subplots(figsize=(ylen, ylen))
+fig, ax = plt.subplots(figsize=(6, 4))
 # 设置坐标轴的线条粗细
 ax.spines['top'].set_linewidth(1)
 ax.spines['right'].set_linewidth(1)
@@ -141,9 +142,11 @@ ax.set_yticks(yticks)
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
-fig.savefig('Figures/Fig2_3.png', dpi=300)
 plt.tight_layout()
 plt.show()
+fig.savefig('Figures/Fig2_3.png', dpi=300)
+fig.savefig('Figures/Fig2_3.pdf', dpi=300)
+
 
 
 

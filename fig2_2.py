@@ -45,7 +45,7 @@ fr = runner.mon.r.T
 cU = runner.mon.center
 pos = np.linspace(-np.pi,np.pi,cann.num)
 # plt.pcolormesh(index,position, fr[100:400,:])
-im = plt.pcolormesh(time[100:-100]-time[100], pos[50:200] - pos[50], 1e3*fr[50:200,100:-100], cmap='jet')
+im = plt.pcolormesh(time[100:-100:25]-time[100], pos[50:200] - pos[50], 1e3*fr[50:200,100:-100:25], cmap='viridis')
 time_slice = 450
 plt.scatter(time[time_slice:-time_slice-50:100]-time[100], position[time_slice:-time_slice-50:100]-position[time_slice]+0.1, marker='v',color = 'k')
 plt.scatter(time[time_slice:-time_slice-50:100]-time[100], cU[time_slice:-time_slice-50:100]-position[time_slice], marker='^', color='white', edgecolor='none')
@@ -65,5 +65,6 @@ clb = plt.colorbar(im)
 clb.set_label('Firing rate(spikes/s)', fontsize=label_size)
 # clb.ax.set_title('Firing rate(spikes/s)')
 plt.tight_layout()
-fig.savefig('Figures/Fig2_2.png', dpi=300)
 plt.show()
+fig.savefig('Figures/Fig2_2.png', dpi=300)
+fig.savefig('Figures/Fig2_2.pdf', dpi=300)

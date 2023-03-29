@@ -29,8 +29,8 @@ index = np.linspace(1, cann.num, cann.num)
 fr = runner.mon.r
 pos = position.squeeze()
 
-fig, axes = plt.subplots(nrows=2,figsize=(6,2)) # 创建两个子图
-axes[0].plot(index, 1e3*fr[2000,:], linewidth=1) # 在第一个子图上画线
+fig, axes = plt.subplots(nrows=2,figsize=(6,4)) # 创建两个子图
+axes[0].plot(index, 1e3*fr[2000,:], linewidth=2) # 在第一个子图上画线
 for spine in axes[0].spines.values():
     spine.set_visible(False)
 axes[0].get_xaxis().set_visible(False) # 隐藏第一个子图的x轴
@@ -40,21 +40,19 @@ axes[1].spines['top'].set_linewidth(1)
 axes[1].spines['right'].set_linewidth(1)
 axes[1].spines['bottom'].set_linewidth(1)
 axes[1].spines['left'].set_linewidth(1)
-
+label_size = 18
+tick_size = 15
 # plt.pcolormesh(index,position, fr[100:400,:])
-im = axes[1].pcolormesh(index, time[2000:12000]-time[2000], 1e3*fr[2000:12000,:], cmap='jet')
-plt.xlabel('Cell indices', fontsize=15)
-# 添加颜色条
-# divider = make_axes_locatable(axes[1])
-# cax = divider.append_axes('bottom', size='5%', pad=0.5)
-# clb = fig.colorbar(im, cax=cax, orientation='horizontal')
+im = axes[1].pcolormesh(index, time[2000:12000:50]-time[2000], 1e3*fr[2000:12000:50,:], cmap='viridis')
+plt.xlabel('Cell indices', fontsize=label_size)
 
-# clb = fig.colorbar(im, ax=axes[1])
-# clb.set_label('Firing rate(spikes/s)', fontsize=15)
-# 设置xtick和ytick的取值
 xticks = np.array([1,32,64,96,128])
 axes[1].set_xticks(xticks)
+axes[1].tick_params(axis='x', labelsize=tick_size)
 axes[1].set_yticks([])
-fig.savefig('Figures/Fig2_1.png', dpi=300)
 plt.tight_layout()
 plt.show()
+fig.savefig('Figures/Fig2_1.png', dpi=300)
+fig.savefig('Figures/Fig2_1.pdf', dpi=300)
+
+# plt.show()
