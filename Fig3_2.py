@@ -59,7 +59,7 @@ ax.spines['top'].set_linewidth(1)
 ax.spines['right'].set_linewidth(1)
 ax.spines['bottom'].set_linewidth(1)
 ax.spines['left'].set_linewidth(1)
-im = plt.pcolormesh(time-time[0], pos, fr*1e3, cmap='jet')
+im = plt.pcolormesh(time[0:-1:50]-time[0], pos, fr[:,0:-1:50]*1e3, cmap='viridis')
 clb = plt.colorbar(im)
 clb.set_label('Firing rate(spikes/s)', fontsize=label_size)
 plt.plot(time-time[0], cI, color='k', linewidth=2)
@@ -67,7 +67,7 @@ plt.plot(time-time[0], cI, color='k', linewidth=2)
 for peaks in Peaks:
     plt.plot([time[peaks]-time[0], time[peaks]-time[0]],[-np.pi,np.pi],'w--', linewidth=1)
 plt.xlim(0,1e3)
-plt.xlabel('time(ms)', fontsize=label_size)
+# plt.xlabel('time(ms)', fontsize=label_size)
 plt.ylabel('Decoded Position', fontsize=label_size)
 # 设置xtick和ytick的取值
 xticks = np.linspace(0,1e3,3)
@@ -81,18 +81,8 @@ plt.ylim([-2.5, 2.5])
 plt.tight_layout()
 plt.show()
 fig.savefig('Figures/Fig3_2.png', dpi=300)
+fig.savefig('Figures/Fig3_2.pdf', dpi=300)
 
-##Calculate theta phase
-
-Period = np.mean(np.diff(time[Peaks]))
-phase = np.zeros(len(time))
-for ti in range(len(time)):
-    time_residual = time[ti]-time[Peaks]
-    if np.max(time_residual)>0:
-        time_residual[time_residual < 0] = 2*Period
-        phase[ti] = np.min(time_residual)/Period*2*np.pi
-    else:
-        phase[ti] = (Period+np.max(time_residual)) / Period * 2 * np.pi
 
 
 

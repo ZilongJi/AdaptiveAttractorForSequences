@@ -8,7 +8,7 @@ from cann import CANN1D
 import scipy
 bm.set_platform('cpu')
 
-cann = CANN1D(tau=3, tau_v=144., num=128, mbar=150.3)
+cann = CANN1D(tau=3, tau_v=144., num=128, mbar=153)
 v_ext = cann.a / cann.tau_v * 0.55
 dur =  2.5*np.pi / v_ext
 dt = bm.get_dt()
@@ -32,7 +32,8 @@ runner = bp.DSRunner(cann,
                      monitors=['u', 'v', 'r','center','centerI'])
 
 runner.run(dur)
-probe_num = int( 1.6*bm.pi / v_ext/dt)
+probe_num = int( 1.9*bm.pi / v_ext/dt)#if mbar=153
+# probe_num = int( 1.6*bm.pi / v_ext/dt)#if mbar=150.3
 time=time[probe_num:-1]
 index = np.linspace(1, cann.num, cann.num)
 pos = np.linspace(-np.pi,np.pi,cann.num+1)
@@ -86,5 +87,6 @@ ax.tick_params(axis='y', labelsize=tick_size)
 # plt.ylim([-2.5, 2.5])
 plt.tight_layout()
 plt.show()
-fig.savefig('Figures/Fig3_3_2.png', dpi=300)
+fig.savefig('Figures/Fig3_3_1.png', dpi=300)
+fig.savefig('Figures/Fig3_3_1.pdf', dpi=300)
 
