@@ -20,8 +20,6 @@
 
 - [x] Figure 2.4: delay distance v.s. adatation strength, we should observe that delay distance decrease as the adaptation strength increases
 
-- [x] Figure 2.5: fixing $m=\tau/tau_v$, plot delay distance as a function of moving speed
-
 ### Fig3: Online sequential activation resembles theta sweeps
 - [ ] Figure 3.1: illustration of the interplay between intrinsic dynamics and external snesory-motion information
 - [x] Figure 3.2: forward theta sweeps
@@ -73,11 +71,6 @@
 </p>
 <em>Hint: Xaxis: Adaptation strength (m). Yaxis: Lag distance（rads）. Change to scatter plot with linked lines between scatters. Add noise during simulation and do shadow plot.</em>
 
-#### Figure2.5: 
-<p float="center">
-<img src="https://github.com/ZilongJi/AdaptiveAttractorForSequences/blob/main/Figures/fig2_5.png" width=40% height=40%>
-</p>
-<em>Hint: Xaxis: Moving speed (rads/s), values are too small, need to match the real moving speed if it is on the linear track. Yaxis: Lag distance（rads）. Change to scatter plot. Add noise during simulation and do shadow plot.</em>
 
 #### Figure3.1: 
 <p float="center">
