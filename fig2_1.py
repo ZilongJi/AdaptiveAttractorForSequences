@@ -44,7 +44,7 @@ label_size = 18
 tick_size = 15
 # plt.pcolormesh(index,position, fr[100:400,:])
 im = axes[1].pcolormesh(index, time[2000:12000:50]-time[2000], 1e3*fr[2000:12000:50,:], cmap='viridis')
-plt.xlabel('Cell indices', fontsize=label_size)
+plt.xlabel('Cell index', fontsize=label_size)
 
 xticks = np.array([1,32,64,96,128])
 axes[1].set_xticks(xticks)
