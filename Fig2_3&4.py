@@ -5,12 +5,11 @@ import jax
 import seaborn as sns
 import matplotlib.pyplot as plt
 from cann import CANN1D
+# from cann_fft import CANN1D
 plt.rcParams ['pdf.fonttype'] = 42
 plt.rcParams ['font.sans-serif'] = ['Arial']
 plt.rcParams['mathtext.fontset'] = 'cm'
 def delayed_track_m(mbar=0):
-    import brainpy as bp
-    from cann_fft import CANN1D
     cann = CANN1D(num=128, mbar=mbar, tau=3, tau_v=144)
     vbar = 1
     v_ext = cann.a / cann.tau_v * vbar
@@ -48,25 +47,27 @@ mean_dis = np.mean(dis*1e3,axis=1)
 std_dis = np.std(dis*1e3,axis=1)
 # aspect_ratio = 4/3
 ylen = 6
-fig, ax = plt.subplots(figsize=(6, 4))
+fig, ax = plt.subplots(figsize=(5, 4))
 # 设置所有线条粗细
 ax.spines['top'].set_linewidth(1)
 ax.spines['right'].set_linewidth(1)
 ax.spines['bottom'].set_linewidth(1)
 ax.spines['left'].set_linewidth(1)
 # errorbar
-ax.errorbar(mbar/5, -mean_dis, yerr = std_dis, fmt='o', color='blue', ecolor='black', capsize=5, capthick=2)
-ax.fill_between(mbar/5, -mean_dis-std_dis, -mean_dis+std_dis, alpha=0.2, color='blue')
-plt.scatter(mbar/5, -mean_dis)
-plt.plot(mbar/5, -mean_dis)
+ax.errorbar(mbar*3/144, -mean_dis, yerr = std_dis, fmt='o', color='blue', ecolor='black', capsize=5, capthick=2)
+ax.fill_between(mbar*3/144, -mean_dis-std_dis, -mean_dis+std_dis, alpha=0.2, color='blue')
+plt.scatter(mbar*3/144, -mean_dis)
+plt.plot(mbar*3/144, -mean_dis)
 label_size = 18
 tick_size = 15
 plt.xlabel(r'Adaptation strength $m$', fontsize=label_size)
 plt.ylabel('Lag distance (rads)', fontsize=label_size)
 
 # 设置xtick和ytick的取值
-xticks = np.linspace(0,np.max(mbar/5),4)
-yticks = np.linspace(0,np.max(-mean_dis),4)
+xticks = np.array([0,0.1,0.2])
+# xticks = np.linspace(0,np.max(mbar/144*3),4)
+yticks = np.array([0,5,10,15])
+
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
 # 设置xtick和ytick的字体大小
@@ -75,6 +76,7 @@ ax.tick_params(axis='y', labelsize=tick_size)
 
 
 plt.tight_layout()
+plt.show()
 fig.savefig('Figures/Fig2_4.png', dpi=300)
 fig.savefig('Figures/Fig2_4.pdf', dpi=300)
 # plt.show()
@@ -120,7 +122,7 @@ mean_dis = np.mean(dis*1e3, axis=1)
 
 
 vext = vbar*0.4/5*1e3
-fig, ax = plt.subplots(figsize=(6, 4))
+fig, ax = plt.subplots(figsize=(5, 4))
 # 设置坐标轴的线条粗细
 ax.spines['top'].set_linewidth(1)
 ax.spines['right'].set_linewidth(1)
@@ -135,8 +137,7 @@ plt.xlabel(r'Moving speed $v_{ext}$ (rads/s)', fontsize=label_size)
 plt.ylabel('Lag distance (rads)', fontsize=label_size)
 
 # 设置xtick和ytick的取值
-xticks = np.linspace(0,np.max(vext),4)
-yticks = np.linspace(0,np.max(-mean_dis),4)
+xticks = np.linspace(0,np.max(vext),5)
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
 # 设置xtick和ytick的字体大小
