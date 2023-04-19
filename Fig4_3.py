@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
+import matplotlib
 from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
 import TwoD_fun
@@ -22,18 +23,28 @@ def plot_4_3(simulation = 0):
         np.save('./data/Alpha.npy', Alpha)
     Alpha = np.load('./data/Alpha.npy')[0:-3,:,:]
     Alpha = np.mean(Alpha, axis=2)
-    Alpha = np.concatenate((np.ones((Alpha.shape[0],Alpha.shape[0]-Alpha.shape[1])),Alpha),axis = 1)
+    Alpha = np.concatenate((np.ones((Alpha.shape[0],Alpha.shape[0]-Alpha.shape[1]))*np.nan,Alpha),axis = 1)
+    Alpha[:,7] *= np.nan
+
+    cmap = matplotlib.cm.viridis
+    current_cmap = matplotlib.cm.get_cmap()
+    current_cmap.set_bad(color='white')
+
+    plt.imshow(Alpha, origin='lower',cmap = cmap)
+    print(Alpha.shape)
+    plt.plot(np.linspace(7.5,15.5,100),17/2/np.sqrt(2)*np.sqrt(np.linspace(0,9,100))-0.5, linewidth = 2 ,color = 'black',alpha = 0.5)
+    plt.plot(np.linspace(7.5,7.5,10),np.linspace(-0.5,16.5,10), linewidth = 2 , color = 'black',alpha = 0.5)
+
+    plt.plot(np.linspace(10, 10, 10), np.linspace(-0.5, 16.5, 10), linewidth=1.5,linestyle='--',color = 'black',alpha = 0.8)
+    plt.plot(np.linspace(7.5, 17.5, 10), np.linspace(13.5, 13.5, 10), linewidth=1.5, linestyle='--', color='black',
+             alpha=0.5)
 
 
-    plt.imshow(Alpha, origin='lower',cmap = 'viridis')
-
-    plt.plot(np.linspace(7.5,15.5,100),17/2/np.sqrt(2)*np.sqrt(np.linspace(0,9,100))-0.5, linewidth = 1.5)
-    plt.plot(np.linspace(7.5,7.5,10),np.linspace(-0.5,16.5,10), linewidth = 1.5)
 
     plt.xticks(np.array([3,8,13,18])-0.5,[-0.5,0,0.5,1],fontsize = ticksize)
     plt.yticks(np.array([0, 7, 14]) - 0.5, [0, 0.5, 1],fontsize = ticksize)
-    plt.xlabel('Distance-to-boudary $\mu$', fontsize = charsize)
-    plt.ylabel('Noise-to-strength $\gamma$', fontsize=charsize)
+    plt.xlabel('normalized dist-to-boundary $\mu$', fontsize = charsize)
+    plt.ylabel('normalized noise amp $\gamma$', fontsize=charsize)
     plt.ylim([-0.5,16.5])
     #plt.grid(None)
     #plt.rcParams["axes.grid"] = False
@@ -41,6 +52,8 @@ def plot_4_3(simulation = 0):
     axcb.set_label(r'Lévy exponent $\alpha$', fontsize=charsize)
     axcb.set_ticks([1, 1.5, 2])
     axcb.set_ticklabels([1, 1.5, 2], fontsize=ticksize)
+
+    plt.scatter([15,9,2],[2,13,2],marker = 'o', c = 'r',edgecolors= 'grey',s=20,alpha = 0.5)
     '''
     mu = np.linspace(-0.8, 1, Alpha.shape[1])
     gamma = np.linspace(0, 1.5, Alpha.shape[0])

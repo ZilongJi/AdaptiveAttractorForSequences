@@ -14,10 +14,11 @@ plt.rcParams['font.sans-serif'] = ['Arial']
 plt.rcParams['mathtext.fontset'] = 'cm'
 
 #fit_color = ['#7F5994','#E8EB5E']
-fit_color = ['#440453','#FDE73A']
+#fit_color = ['#440453','#FDE73A']
+fit_color = ['#D95319','#4DBEEE']
 #colors = ['#7F5994', '#7D70A6', '#7685AE', '#6F97B0', '#65A8B0', '#61B9AB', '#6ECAA3', '#8FD892', '#B8E475', '#E8EB5E']
 
-legend = ['Brownian motion', 'Lévy flights']
+legend = ['Brownian motion', 'Super-diffusion']
 
 ticksize = 15
 charsize = 18
@@ -25,7 +26,7 @@ linewidth = 1.5
 
 
 def plot4_2(simulation=[0, 0]):
-    plt.figure(figsize=(4, 4))
+    plt.figure(figsize=(4, 3.5))
     fit_guess = np.array([[2,0,0],[1,1,3]])
     def plot_hist(label, simulation, mu, gamma):
         if simulation == 1:

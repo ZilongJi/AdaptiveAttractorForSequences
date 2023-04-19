@@ -89,10 +89,10 @@ class CANN2D(bp.dyn.NeuGroup):
     interaction = bm.real(bm.fft.ifft2(r * self.conn_fft))
     self.u.value = self.u + (-self.u + self.input + interaction - self.v) / self.tau * bm.get_dt() \
                    + self.sigma_u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau)
-    #self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt() \
-                   #+ self.sigma_m * self.u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau_v)
-    self.v.value = self.v + (-self.v + self.m * self.r) / self.tau_v * bm.get_dt() \
+    self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt() \
                    + self.sigma_m * self.u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau_v)
+    #self.v.value = self.v + (-self.v + self.m * self.r) / self.tau_v * bm.get_dt() \
+                   #+ self.sigma_m * self.u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau_v)
     self.get_center()
     self.input[:] = 0.
 # m = 1.13 boundary
