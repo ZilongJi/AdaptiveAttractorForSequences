@@ -45,24 +45,29 @@ fr = runner.mon.r.T
 cU = runner.mon.center
 pos = np.linspace(-np.pi,np.pi,cann.num)
 # plt.pcolormesh(index,position, fr[100:400,:])
-im = plt.pcolormesh(time[100:-100:25]-time[100], pos[50:200] - pos[50], 1e3*fr[50:200,100:-100:25], cmap='viridis')
-time_slice = 450
-plt.scatter(time[time_slice:-time_slice-50:100]-time[100], position[time_slice:-time_slice-50:100]-position[time_slice]+0.1, marker='v',color = 'k')
-plt.scatter(time[time_slice:-time_slice-50:100]-time[100], cU[time_slice:-time_slice-50:100]-position[time_slice], marker='^', color='white', edgecolor='none')
-plt.plot(time[time_slice:-time_slice-50]-time[100], position[time_slice:-time_slice-50]-position[time_slice], 'b', linewidth=2)
+tstart = 300
+tend = -300
+im = plt.pcolormesh(time[tstart:tend:25]-time[tstart], pos[50:180] - pos[50], 1e3*fr[50:180,tstart:tend:25], cmap='viridis')
+time_slice = 500
+plt.scatter(time[time_slice:-time_slice-50:100]-time[tstart], position[time_slice:-time_slice-50:100]-position[time_slice]+0.1, marker='v',color = 'k')
+plt.scatter(time[time_slice:-time_slice-50:100]-time[tstart], cU[time_slice:-time_slice-50:100]-position[time_slice], marker='^', color='white', edgecolor='none')
+plt.plot(time[time_slice:-time_slice-50]-time[tstart], position[time_slice:-time_slice-50]-position[time_slice], 'b', linewidth=2)
 # 设置xtick和ytick的取值
-xticks = np.linspace(0,200,4)
-yticks = np.linspace(0,3.6,4)
+xticks = np.linspace(0,150,4)
+yticks = np.linspace(0,3,4)
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
-plt.ylim([0,3.8])
+plt.ylim([0,3.14])
+plt.xlim([0,150])
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
-plt.xlabel('time(ms)', fontsize=label_size)
-plt.ylabel('Decoded position', fontsize=label_size)
+plt.xlabel('time (ms)', fontsize=label_size)
+plt.ylabel('Decoded position (rads)', fontsize=label_size)
 clb = plt.colorbar(im)
-clb.set_label('Firing rate(spikes/s)', fontsize=label_size)
+clb.set_label('Firing rate (spikes/s)', fontsize=label_size)
+cticks = np.linspace(0,2,5)
+clb.set_ticks(cticks)
 # clb.ax.set_title('Firing rate(spikes/s)')
 plt.tight_layout()
 plt.show()
