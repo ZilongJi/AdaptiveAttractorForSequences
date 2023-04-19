@@ -63,7 +63,7 @@ ax.spines['left'].set_linewidth(1)
 im = plt.pcolormesh(time[0:-1:50]-time[0], pos, fr[:,0:-1:50]*1e3, cmap='viridis')
 clb = plt.colorbar(im)
 clb.set_label('Firing rate(spikes/s)', fontsize=label_size)
-plt.plot(time-time[0], cI, color='k', linewidth=2)
+plt.plot(time-time[0], cI, color='r', linewidth=2)
 # plt.plot(time-time[0], cU, color='w', linewidth=2)
 for peaks in Peaks:
     plt.plot([time[peaks]-time[0], time[peaks]-time[0]],[-np.pi,np.pi],'w--', linewidth=1)
@@ -81,8 +81,8 @@ ax.tick_params(axis='y', labelsize=tick_size)
 plt.ylim([-2.5, 2.5])
 plt.tight_layout()
 plt.show()
-fig.savefig('Figures/Fig3_1.png', dpi=300)
-fig.savefig('Figures/Fig3_1.pdf', dpi=300)
+fig.savefig('Figures/Fig3_1a.png', dpi=300)
+fig.savefig('Figures/Fig3_1a.pdf', dpi=300)
 
 
 

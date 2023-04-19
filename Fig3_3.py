@@ -6,9 +6,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from cann import CANN1D
 import scipy
+from scipy.stats import ttest_ind
 bm.set_platform('cpu')
 
-cann = CANN1D(tau=3, tau_v=144., num=128, mbar=153)
+cann = CANN1D(tau=3, tau_v=144., num=128, mbar=150.3)
 v_ext = cann.a / cann.tau_v * 0.55
 dur =  2.5*np.pi / v_ext
 dt = bm.get_dt()
@@ -32,8 +33,8 @@ runner = bp.DSRunner(cann,
                      monitors=['u', 'v', 'r','center','centerI'])
 
 runner.run(dur)
-probe_num = int( 1.9*bm.pi / v_ext/dt)#if mbar=153
-# probe_num = int( 1.6*bm.pi / v_ext/dt)#if mbar=150.3
+# probe_num = int( 1.9*bm.pi / v_ext/dt)#if mbar=153
+probe_num = int( 1.6*bm.pi / v_ext/dt)#if mbar=150.3
 time=time[probe_num:-1]
 index = np.linspace(1, cann.num, cann.num)
 pos = np.linspace(-np.pi,np.pi,cann.num+1)
@@ -62,6 +63,13 @@ fr_neg = np.zeros(len(Peaks)-1)
 for i in range(len(Peaks)-1):
     fr_neg[i] = np.mean(fr[:,Peaks[i]:Peaks_neg[i+1]])
     fr_pos[i] = np.mean(fr[:,Peaks_neg[i]:Peaks[i]])
+# 对两组数据进行双样本 t-检验
+t_statistic, p_value = ttest_ind(fr_pos, fr_neg)
+
+# 输出结果
+print(f"t-statistic: {t_statistic}")
+print(f"p-value: {p_value}")
+
 std_pos = np.std(fr_pos)
 std_neg = np.std(fr_neg)
 label_size = 18
@@ -79,7 +87,7 @@ y = np.array([np.mean(fr_pos)*1e3, np.mean(fr_neg)*1e3])
 std_fr = np.array([std_pos*1e3, std_neg*1e3])
 ax.errorbar(x, y, yerr = std_fr, fmt='o', color='blue', ecolor='black', capsize=5, capthick=2)
 # 画直方图
-plt.bar(x, y)
+plt.bar(x, y, width=0.5)
 plt.ylabel('Mean firing rates (spikes/s)', fontsize=label_size)
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
