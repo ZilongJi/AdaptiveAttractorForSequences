@@ -5,6 +5,7 @@ import numpy as np
 #from package import levy
 from scipy import stats
 import levy
+import math
 
 bm.set_platform('cpu')
 
@@ -88,22 +89,24 @@ class CANN2D(bp.dyn.NeuGroup):
     interaction = bm.real(bm.fft.ifft2(r * self.conn_fft))
     self.u.value = self.u + (-self.u + self.input + interaction - self.v) / self.tau * bm.get_dt() \
                    + self.sigma_u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau)
-    self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt() \
+    #self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt() \
+                   #+ self.sigma_m * self.u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau_v)
+    self.v.value = self.v + (-self.v + self.m * self.r) / self.tau_v * bm.get_dt() \
                    + self.sigma_m * self.u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau_v)
     self.get_center()
     self.input[:] = 0.
 # m = 1.13 boundary
 
-def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1):
+def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1, visulaize = False):
   def get_sigma_m(mu, gamma):
     m_0 = 1 - mu
-    sigma_m = 2 * np.sqrt(np.pi) * m_0 * tau / tau_v * a * gamma
+    sigma_m = 2 * math.sqrt(np.pi) * m_0 * tau / tau_v * a * gamma
     print('sigma_m =', sigma_m, ', m_0 = ', m_0)
     return sigma_m, m_0
 
   sigma_m, m_0 = get_sigma_m(mu, gamma)
 
-  cann = CANN2D(length=100, a=a, tau=tau, tau_v=tau_v, k=0.1, sigma_u=0.5, sigma_m=sigma_m.astype(float), m_0=m_0.astype(float))
+  cann = CANN2D(length=100, a=a, tau=tau, tau_v=tau_v, k=0.1, sigma_u=0.5, sigma_m=sigma_m, m_0=m_0)
   Iext, length = bp.inputs.section_input(
       values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
       durations=[2., duration],
@@ -119,16 +122,17 @@ def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1):
   runner.run(length)
   center_trace = runner.mon.center
 
-  '''
-  bp.visualize.animate_2D(values=runner.mon.r.reshape((-1, cann.num)),
-                         net_size=(cann.length, cann.length))
-  '''
-  '''
-  plt.scatter(center_trace[:,0], center_trace[:,1], c = np.linspace(1,0,center_trace.shape[0]), s = 1)
-  #plt.xlim([-np.pi,np.pi])
-  #plt.ylim([-np.pi,np.pi])
-  plt.show()
-  '''
+  if visulaize == True:
+    '''
+    bp.visualize.animate_2D(values=runner.mon.r.reshape((-1, cann.num)),
+                           net_size=(cann.length, cann.length))
+
+    '''
+    plt.scatter(center_trace[:,0], center_trace[:,1], c = np.linspace(1,0,center_trace.shape[0]), s = 1)
+    #plt.xlim([-np.pi,np.pi])
+    #plt.ylim([-np.pi,np.pi])
+    plt.show()
+
   # center_trace = bm.as_numpy(center_trace)
   #np.save('./data/center_trace'+str(mu)+'_'+str(gamma)+'.npy', center_trace)
   return center_trace
@@ -168,8 +172,8 @@ def get_Alpha(N, M, simulation = True, epoch=10):
   for e in range(epoch):
     bm.random.seed()
     if simulation == True:
-      mu_list = np.linspace(0, 1, N)
-      gamma_list = np.linspace(0, 1.5, M)
+      mu_list = np.linspace(0, 1, N).astype(float)
+      gamma_list = np.linspace(0, 1.5, M).astype(float)
       mu_list, gamma_list = np.meshgrid(mu_list, gamma_list)
       Trace = bp.running.jax_vectorize_map(get_trace, [mu_list.flatten(), gamma_list.flatten()], clear_buffer = True, num_parallel=N*M)
       Trace = bm.as_numpy(Trace)
