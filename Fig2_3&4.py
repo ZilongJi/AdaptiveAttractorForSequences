@@ -43,8 +43,8 @@ for monte in range(monte_num):
     dis[:,monte] = bp.running.jax_vectorize_map(delayed_track_m, [mbar], num_parallel=num_p)
     print(monte/monte_num)
 
-mean_dis = np.mean(dis*1e3,axis=1)
-std_dis = np.std(dis*1e3,axis=1)
+mean_dis = np.mean(dis*1e2,axis=1)
+std_dis = np.std(dis*1e2,axis=1)
 # aspect_ratio = 4/3
 ylen = 6
 fig, ax = plt.subplots(figsize=(5, 4))
@@ -61,12 +61,12 @@ plt.plot(mbar*3/144, -mean_dis)
 label_size = 18
 tick_size = 15
 plt.xlabel(r'Adaptation strength $m$', fontsize=label_size)
-plt.ylabel('Lag distance (rads)', fontsize=label_size)
+plt.ylabel('Lag distance (cm)', fontsize=label_size)
 
 # 设置xtick和ytick的取值
 xticks = np.array([0,0.1,0.2])
 # xticks = np.linspace(0,np.max(mbar/144*3),4)
-yticks = np.array([0,5,10,15])
+yticks = np.array([0,0.5,1,1.5])
 
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
@@ -117,11 +117,11 @@ for ni in range(num_p):
         progress = ni*monte_num+monte
         print(progress/(num_p*monte_num))
 
-std_dis = np.std(dis*1e3, axis=1)
-mean_dis = np.mean(dis*1e3, axis=1)
+std_dis = np.std(dis*1e2, axis=1)
+mean_dis = np.mean(dis*1e2, axis=1)
 
 
-vext = vbar*0.4/5*1e3
+vext = vbar*0.4/144*1e3
 fig, ax = plt.subplots(figsize=(5, 4))
 # 设置坐标轴的线条粗细
 ax.spines['top'].set_linewidth(1)
@@ -133,8 +133,8 @@ ax.errorbar(vext, -mean_dis, yerr=std_dis, fmt='o', color='blue', ecolor='black'
 ax.fill_between(vext, -mean_dis-std_dis, -mean_dis+std_dis, alpha=0.2, color='blue')
 plt.scatter(vext, -mean_dis)
 plt.plot(vext, -mean_dis)
-plt.xlabel(r'Moving speed $v_{ext}$ (rads/s)', fontsize=label_size)
-plt.ylabel('Lag distance (rads)', fontsize=label_size)
+plt.xlabel(r'Moving speed $v_{ext}$ (m/s)', fontsize=label_size)
+plt.ylabel('Lag distance (cm)', fontsize=label_size)
 
 # 设置xtick和ytick的取值
 xticks = np.linspace(0,np.max(vext),5)
