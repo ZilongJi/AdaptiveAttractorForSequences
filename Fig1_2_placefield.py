@@ -1,8 +1,11 @@
+'''
+Plot the place field of cells in the CANN model.
+Created on 2021-04-20 by Tianhao Chu,
+MOdified by Zilong Ji
+'''
 import brainpy as bp
 import brainpy.math as bm
 import numpy as np
-import jax
-import seaborn as sns
 import matplotlib.pyplot as plt
 from cann_fft import CANN1D
 bm.set_platform('cpu')
@@ -30,35 +33,25 @@ runner = bp.DSRunner(cann,
                      monitors=['u', 'v', 'r'])
 
 runner.run(dur)
-aspect_ratio = 4/3
-ylen = 5
-fig, ax = plt.subplots(figsize=(4, 6))
-# 设置坐标轴的线条粗细
-ax.spines['top'].set_linewidth(1)
-ax.spines['right'].set_linewidth(1)
-ax.spines['bottom'].set_linewidth(1)
-ax.spines['left'].set_linewidth(1)
+
+fig, ax = plt.subplots(figsize=(4, 6), dpi=300)
+
 index = np.linspace(1, cann.num, cann.num)
-# index = np.linspace(0, 300, 300)
+
 fr = runner.mon.r.T
 pos = position.squeeze()
-# plt.pcolormesh(index,position, fr[100:400,:])
-plt.pcolormesh(pos[2000:12000:20]-pos[2000], index[10:50]-index[10], 1e3*fr[10:50,2000:12000:20], cmap='viridis')
 
-# plt.pcolormesh(position, index,  runner.mon.u)
-plt.xlabel('Position', fontsize=18)
-plt.ylabel('Cell indices', fontsize=18)
+plt.pcolormesh(pos[2000:12000:20]-pos[2000], index[10:50]-index[10], 1e3*fr[10:50,2000:12000:20], cmap='viridis')
+plt.xlabel('Position (m)', fontsize=12)
+plt.ylabel('Cell index', fontsize=12)
 clb = plt.colorbar()
-clb.set_label('Firing rate(spikes/s)', fontsize=18)
-tick_size = 15
+clb.set_label('Firing rate (Hz)', fontsize=12)
 # xticks = np.linspace(0,np.max(vext),4)
-yticks = [0,15,30]
+yticks = [0,20,40]
 # ax.set_xticks(xticks)
 ax.set_yticks(yticks)
-ax.tick_params(axis='x', labelsize=tick_size)
-ax.tick_params(axis='y', labelsize=tick_size)
-# clb.ax.set_title('Firing rate(spikes/s)')
+ax.tick_params(axis='x', labelsize=10)
+ax.tick_params(axis='y', labelsize=10)
 plt.tight_layout()
-plt.show()
-fig.savefig('Figures/place_field.png', dpi=300)
-fig.savefig('Figures/place_field.pdf', dpi=300)
+#plt.show()
+fig.savefig('Figures/place_field.pdf')
