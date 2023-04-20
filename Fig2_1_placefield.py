@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from cann_fft import CANN1D
 bm.set_platform('cpu')
 
+#create and run the network
 cann = CANN1D(num=64, mbar=1)
 v_ext = cann.a / cann.tau_v * 0.5
 dur = 2 * bm.pi / v_ext
@@ -34,24 +35,35 @@ runner = bp.DSRunner(cann,
 
 runner.run(dur)
 
-fig, ax = plt.subplots(figsize=(4, 6), dpi=300)
-
-index = np.linspace(1, cann.num, cann.num)
-
 fr = runner.mon.r.T
 pos = position.squeeze()
 
-plt.pcolormesh(pos[2000:12000:20]-pos[2000], index[10:50]-index[10], 1e3*fr[10:50,2000:12000:20], cmap='viridis')
-plt.xlabel('Position (m)', fontsize=12)
-plt.ylabel('Cell index', fontsize=12)
-clb = plt.colorbar()
-clb.set_label('Firing rate (Hz)', fontsize=12)
-# xticks = np.linspace(0,np.max(vext),4)
-yticks = [0,20,40]
-# ax.set_xticks(xticks)
+# Plot the place field
+# set some parameters
+labelsize = 18
+ticksize = 14
+fig, ax = plt.subplots(figsize=(6, 8), dpi=300)
+
+index = np.linspace(1, cann.num, cann.num)
+plt.pcolormesh(100*(pos[2000:12000:20]-pos[2000]), index[10:50]-index[10], 1e3*fr[10:50,2000:12000:20], cmap='inferno')
+#viridis, inferno, plasma, magma, cividis
+
+#add labels
+plt.xlabel('Position (cm)', fontsize=labelsize)
+plt.ylabel('Cell index', fontsize=labelsize)
+
+#set colorbar, add ticks 
+clb = plt.colorbar(ticklocation='right', ticks=[0,1,2])
+clb.set_label('Firing rate (Hz)', fontsize=labelsize)
+#change the font size
+clb.ax.tick_params(labelsize=ticksize)
+
+yticks = [0,10,20,30,39]
 ax.set_yticks(yticks)
-ax.tick_params(axis='x', labelsize=10)
-ax.tick_params(axis='y', labelsize=10)
+ax.set_yticklabels([0,10,20,30,40])
+
+ax.tick_params(axis='x', labelsize=ticksize)
+ax.tick_params(axis='y', labelsize=ticksize)
 plt.tight_layout()
-#plt.show()
+
 fig.savefig('Figures/place_field.pdf')

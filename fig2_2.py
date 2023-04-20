@@ -1,8 +1,6 @@
 import brainpy as bp
 import brainpy.math as bm
 import numpy as np
-import jax
-import seaborn as sns
 import matplotlib.pyplot as plt
 from cann import CANN1D
 bm.set_platform('cpu')
@@ -30,46 +28,43 @@ runner = bp.DSRunner(cann,
                      monitors=['u', 'v', 'r','center'])
 
 runner.run(dur)
-fig = plt.figure(figsize=(6, 4))
+
+
+# Plot the figure
+fig = plt.figure(figsize=(6, 3), dpi=300)
 ax = fig.add_subplot(1, 1, 1)
-label_size = 18
-tick_size = 15
-# 设置所有线条粗细
-ax.spines['top'].set_linewidth(1)
-ax.spines['right'].set_linewidth(1)
-ax.spines['bottom'].set_linewidth(1)
-ax.spines['left'].set_linewidth(1)
+labelsize = 18
+ticksize = 14
+
 index = np.linspace(1, cann.num, cann.num)
-# index = np.linspace(0, 300, 300)
+
 fr = runner.mon.r.T
 cU = runner.mon.center
 pos = np.linspace(-np.pi,np.pi,cann.num)
-# plt.pcolormesh(index,position, fr[100:400,:])
+
 tstart = 300
 tend = -300
-im = plt.pcolormesh(time[tstart:tend:25]-time[tstart], (pos[50:180] - pos[50])*1e2, 1e3*fr[50:180,tstart:tend:25], cmap='viridis')
+im = plt.pcolormesh(time[tstart:tend:25]-time[tstart], (pos[50:180] - pos[50])*1e2, 1e3*fr[50:180,tstart:tend:25], cmap='inferno')
 time_slice = 500
 plt.scatter(time[time_slice:-time_slice-50:100]-time[tstart], (position[time_slice:-time_slice-50:100]-position[time_slice]+0.1)*1e2, marker='v',color = 'k')
 plt.scatter(time[time_slice:-time_slice-50:100]-time[tstart], (cU[time_slice:-time_slice-50:100]-position[time_slice])*1e2, marker='^', color='white', edgecolor='none')
 plt.plot(time[time_slice:-time_slice-50]-time[tstart], (position[time_slice:-time_slice-50]-position[time_slice])*1e2, 'b', linewidth=2)
-# 设置xtick和ytick的取值
+
+#set x and y ticks
 xticks = np.linspace(0,1500,4)
 yticks = np.linspace(0,300,4)
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
 plt.ylim([0,314])
 plt.xlim([0,1500])
-# 设置xtick和ytick的字体大小
-ax.tick_params(axis='x', labelsize=tick_size)
-ax.tick_params(axis='y', labelsize=tick_size)
-plt.xlabel('time (ms)', fontsize=label_size)
-plt.ylabel('Decoded position (cm)', fontsize=label_size)
-clb = plt.colorbar(im)
-clb.set_label('Firing rate (hz)', fontsize=label_size)
-cticks = np.linspace(0,2,5)
-clb.set_ticks(cticks)
-# clb.ax.set_title('Firing rate(spikes/s)')
+# set font size on x and y ticks
+ax.tick_params(axis='x', labelsize=ticksize)
+ax.tick_params(axis='y', labelsize=ticksize)
+plt.xlabel('time (ms)', fontsize=labelsize)
+plt.ylabel('Decoded position (cm)', fontsize=labelsize)
+clb = plt.colorbar(im, ticks=[0,1,2])
+clb.set_label('Firing rate (Hz)', fontsize=labelsize)
+clb.ax.tick_params(labelsize=ticksize)
 plt.tight_layout()
-plt.show()
-fig.savefig('Figures/Fig2_2.png', dpi=300)
+
 fig.savefig('Figures/Fig2_2.pdf', dpi=300)

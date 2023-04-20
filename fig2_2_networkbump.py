@@ -1,13 +1,11 @@
 import brainpy as bp
 import brainpy.math as bm
 import numpy as np
-import jax
-import seaborn as sns
 import matplotlib.pyplot as plt
 from cann_fft import CANN1D
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 bm.set_platform('cpu')
 
+#create and run the network
 cann = CANN1D(num=128, mbar=1)
 v_ext = cann.a / cann.tau_v * 0.5
 dur = 2 * bm.pi / v_ext
@@ -29,30 +27,30 @@ index = np.linspace(1, cann.num, cann.num)
 fr = runner.mon.r
 pos = position.squeeze()
 
-fig, axes = plt.subplots(nrows=2,figsize=(6,4)) # 创建两个子图
-axes[0].plot(index, 1e3*fr[2000,:], linewidth=2) # 在第一个子图上画线
+#plot the figrue
+# set some parameters
+labelsize = 18
+ticksize = 14
+custom_color = '#009FB9'
+
+#create twwo subplots with the first one is bigger than the second one
+fig, axes = plt.subplots(nrows=2,figsize=(6,3), height_ratios=[2, 1], dpi=300)
+#plot the line and set the line color to customized color
+axes[0].plot(index, 1e3*fr[2000,:], linewidth=2, color=custom_color) 
+#set axis off and box off in this subplot
+axes[0].set_xticks([])
+axes[0].set_yticks([])
 for spine in axes[0].spines.values():
     spine.set_visible(False)
-axes[0].get_xaxis().set_visible(False) # 隐藏第一个子图的x轴
-axes[0].get_yaxis().set_visible(False) # 隐藏第一个子图的y轴
-# 设置坐标轴的线条粗细
-axes[1].spines['top'].set_linewidth(1)
-axes[1].spines['right'].set_linewidth(1)
-axes[1].spines['bottom'].set_linewidth(1)
-axes[1].spines['left'].set_linewidth(1)
-label_size = 18
-tick_size = 15
+    
 # plt.pcolormesh(index,position, fr[100:400,:])
-im = axes[1].pcolormesh(index, time[2000:12000:50]-time[2000], 1e3*fr[2000:12000:50,:], cmap='viridis')
-plt.xlabel('Cell index', fontsize=label_size)
+im = axes[1].pcolormesh(index, time[2000:12000:50]-time[2000], 1e3*fr[2000:12000:50,:], cmap='inferno')
+plt.xlabel('Cell index', fontsize=labelsize)
 
 xticks = np.array([1,32,64,96,128])
 axes[1].set_xticks(xticks)
-axes[1].tick_params(axis='x', labelsize=tick_size)
+axes[1].tick_params(axis='x', labelsize=ticksize)
 axes[1].set_yticks([])
 plt.tight_layout()
-plt.show()
-fig.savefig('Figures/Fig2_1.png', dpi=300)
-fig.savefig('Figures/Fig2_1.pdf', dpi=300)
 
-# plt.show()
+fig.savefig('Figures/Fig2_1.pdf', bbox_inches='tight')
