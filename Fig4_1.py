@@ -28,7 +28,7 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
     fig, axs = plt.subplots(2, 2, figsize=(6, 6), sharex = True, sharey = True)
     def linetrace(mu, gamma,  simulation, ax, label, sigma_u=0.5):
         if simulation == 1:
-            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 200, 0.2, 1, 1,sigma_u = sigma_u))
+            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 200, 0.2, 1, 100, sigma_u = sigma_u))
             np.save('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy', center_trace)
 
         center_trace = np.load('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy')
