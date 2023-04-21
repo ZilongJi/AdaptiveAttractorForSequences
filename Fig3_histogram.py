@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 from cann import CANN1D
 import scipy
 from scipy.stats import ttest_ind
+#set default ramndom seed for reproducibility
+np.random.seed(0)
+#set backend to cpu
 bm.set_platform('cpu')
 
 cann = CANN1D(tau=3, tau_v=144., num=128, mbar=150.3)
@@ -50,13 +53,15 @@ relative_pos = np.squeeze(relative_pos)
 Peaks,_ = scipy.signal.find_peaks(relative_pos, width=300)
 Peaks_neg,_ = scipy.signal.find_peaks(-relative_pos, width=300)
 speed = np.diff(relative_pos)
+
+'''
 fig0, ax0 = plt.subplots(figsize=(6,6))
 plt.plot(time-time[0], relative_pos)
 plt.scatter(time[Peaks]-time[0], relative_pos[Peaks], color='blue')
 plt.scatter(time[Peaks_neg]-time[0], relative_pos[Peaks_neg], color='red')
 print(len(Peaks))
 print(len(Peaks_neg))
-
+'''
 
 fr_pos = np.zeros(len(Peaks)-1)
 fr_neg = np.zeros(len(Peaks)-1)
@@ -73,13 +78,10 @@ print(f"p-value: {p_value}")
 std_pos = np.std(fr_pos)
 std_neg = np.std(fr_neg)
 label_size = 18
-tick_size = 15
+tick_size = 16
+
 fig, ax = plt.subplots(figsize=(6,4))
-# 设置所有线条粗细
-ax.spines['top'].set_linewidth(1)
-ax.spines['right'].set_linewidth(1)
-ax.spines['bottom'].set_linewidth(1)
-ax.spines['left'].set_linewidth(1)
+
 # x变量
 x = ['forward window', 'Reverse window']
 # y变量
@@ -88,13 +90,12 @@ std_fr = np.array([std_pos*1e3, std_neg*1e3])
 ax.errorbar(x, y, yerr = std_fr, fmt='o', color='blue', ecolor='black', capsize=5, capthick=2)
 # 画直方图
 plt.bar(x, y, width=0.5)
-plt.ylabel('Mean firing rates (spikes/s)', fontsize=label_size)
+plt.ylabel('Mean firing rates (Hz)', fontsize=label_size)
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
 # plt.ylim([-2.5, 2.5])
 plt.tight_layout()
-plt.show()
-fig.savefig('Figures/Fig3_3_1.png', dpi=300)
-fig.savefig('Figures/Fig3_3_1.pdf', dpi=300)
+
+fig.savefig('Figures/Fig3_e_inset.pdf', dpi=300)
 

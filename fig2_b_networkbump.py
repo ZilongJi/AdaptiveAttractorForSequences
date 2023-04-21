@@ -3,6 +3,9 @@ import brainpy.math as bm
 import numpy as np
 import matplotlib.pyplot as plt
 from cann_fft import CANN1D
+#set default ramndom seed for reproducibility
+np.random.seed(0)
+#set backend to cpu
 bm.set_platform('cpu')
 
 #create and run the network
@@ -53,4 +56,4 @@ axes[1].tick_params(axis='x', labelsize=ticksize)
 axes[1].set_yticks([])
 plt.tight_layout()
 
-fig.savefig('Figures/Fig2_1.pdf', bbox_inches='tight')
+fig.savefig('Figures/Fig2b.pdf', bbox_inches='tight')

@@ -6,8 +6,12 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from cann import CANN1D
 import scipy
+#set default ramndom seed for reproducibility
+np.random.seed(0)
+#set backend to cpu
 bm.set_platform('cpu')
 
+#build and run the network
 cann = CANN1D(tau=3, tau_v=144., num=128, mbar=153)
 v_ext = cann.a / cann.tau_v * 0.55
 dur = 2.5*np.pi / v_ext
@@ -47,84 +51,82 @@ relative_pos = bm.where(relative_pos < -np.pi, relative_pos + 2*np.pi,  relative
 relative_pos = np.squeeze(relative_pos)
 Peaks,_ = scipy.signal.find_peaks(relative_pos, width=300)
 Trough,_ = scipy.signal.find_peaks(-relative_pos, width=300)
+
+'''
 fig0, ax0 = plt.subplots(figsize=(6,6))
 plt.plot(time-time[0], relative_pos)
 plt.scatter(time[Peaks]-time[0], relative_pos[Peaks])
+'''
 
-##Visualize theta sweeps
-ylen = 6
-label_size = 18
-tick_size = 15
-fig, ax = plt.subplots(figsize=(8,4))
-# 设置所有线条粗细
-ax.spines['top'].set_linewidth(1)
-ax.spines['right'].set_linewidth(1)
-ax.spines['bottom'].set_linewidth(1)
-ax.spines['left'].set_linewidth(1)
-im = plt.pcolormesh(time[0:-1:50]-time[0], pos, fr[:,0:-1:50]*1e3, cmap='viridis')
-clb = plt.colorbar(im)
-clb.set_label('Firing rate(spikes/s)', fontsize=label_size)
-plt.plot(time-time[0], cI, color='r', linewidth=2)
-# plt.plot(time-time[0], cU, color='w', linewidth=2)
+#visualize bump sweeps
+#set parameters for plotting
+labelsize = 18
+ticksize = 14
+position_color = '#F18D00'
+
+fig, ax = plt.subplots(figsize=(6,3),dpi=300)
+
+im = plt.pcolormesh(time[0:-1:50]-time[0], pos, fr[:,0:-1:50]*1e3, cmap='inferno')
+clb = plt.colorbar(ticklocation='right', ticks=[0,1,2])
+clb.set_label('Firing rate (Hz)', fontsize=labelsize)
+clb.ax.tick_params(labelsize=ticksize)
+#add animal position to the plot 
+plt.plot(time-time[0], cI, color=position_color, linewidth=2)  
+
+#add separate lines to theta sweeps
 for peaks in Peaks:
     plt.plot([time[peaks]-time[0], time[peaks]-time[0]],[-np.pi,np.pi],'w--', linewidth=1)
+
 plt.xlim(0, 1e3)
-# plt.xlabel('time(ms)', fontsize=label_size)
-plt.ylabel('Decoded Position', fontsize=label_size)
-# 设置xtick和ytick的取值
+plt.ylim([-2.5, 2.5])
+plt.xlabel('Time (ms)', fontsize=labelsize)
+plt.ylabel('Position (cm)', fontsize=labelsize)
+
+# set x and y ticks
 xticks = np.linspace(0, 1e3, 3)
 yticks = np.linspace(-2.5,2.5,3)
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
-# 设置xtick和ytick的字体大小
-ax.tick_params(axis='x', labelsize=tick_size)
-ax.tick_params(axis='y', labelsize=tick_size)
+#set y ticks labels
+yticklabels = [0, int(2.5*100), int(5*100)]
+ax.set_yticklabels(yticklabels)
+ax.tick_params(axis='x', labelsize=ticksize)
+ax.tick_params(axis='y', labelsize=ticksize)
 plt.ylim([-2.5, 2.5])
-plt.tight_layout()
-plt.show()
-fig.savefig('Figures/Fig3_1.png', dpi=300)
-fig.savefig('Figures/Fig3_1.pdf', dpi=300)
+
+fig.savefig('Figures/Fig3b.pdf')
 
 
-fig, ax = plt.subplots(figsize=(8,4))
-# 设置所有线条粗细
-ax.spines['top'].set_linewidth(1)
-ax.spines['right'].set_linewidth(1)
-ax.spines['bottom'].set_linewidth(1)
-ax.spines['left'].set_linewidth(1)
+fig, ax = plt.subplots(figsize=(6,3),dpi=300)
 t_start = Trough[1]
 t_end = Trough[2]
 
-im = plt.pcolormesh(time[t_start:(t_end)]-time[t_start], pos-cI[t_start], fr[:,t_start:(t_end)]*1e3, cmap='viridis')
-clb = plt.colorbar(im)
-clb.set_label('Firing rate(spikes/s)', fontsize=label_size)
-# plt.plot(time-time[0], cI, color='r', linewidth=2)
-plt.plot([time[Peaks[1]]-time[t_start], time[Peaks[1]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
-plt.plot([time[Peaks[2]]-time[t_start], time[Peaks[2]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
-plt.plot([time[Peaks[3]]-time[t_start], time[Peaks[3]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
+im = plt.pcolormesh(time[t_start:(t_end)]-time[t_start], pos-cI[t_start], fr[:,t_start:(t_end)]*1e3, cmap='inferno')
+clb = plt.colorbar(ticklocation='right', ticks=[0,1,2])
+clb.set_label('Firing rate (Hz)', fontsize=labelsize)
+clb.ax.tick_params(labelsize=ticksize)
 
-# plt.xlabel('time(ms)', fontsize=label_size)
-plt.ylabel('Decoded Position', fontsize=label_size)
-# 设置xtick和ytick的取值
-xticks = np.linspace(0, 88, 3)
+# plt.plot(time-time[0], cI, color='r', linewidth=2)
+#plt.plot([time[Peaks[1]]-time[t_start], time[Peaks[1]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
+plt.plot([time[Peaks[2]]-time[t_start], time[Peaks[2]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
+#plt.plot([time[Peaks[3]]-time[t_start], time[Peaks[3]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
+
+#add reference line of y=0
+plt.plot([0, time[t_end]-time[t_start]], [0,0], color=position_color, linewidth=2, linestyle='--')
+
+plt.xlabel('Time (ms)', fontsize=labelsize)
+plt.ylabel('Relative position (cm)', fontsize=labelsize)
+# set x,y ticks
+xticks = np.linspace(0, 80, 3)
 yticks = np.array([-1.2,0,1.5])
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
-# 设置xtick和ytick的字体大小
-ax.tick_params(axis='x', labelsize=tick_size)
-ax.tick_params(axis='y', labelsize=tick_size)
-plt.xlim(0, 88)
+# set yticklabels
+yticklabels = [-int(1.2*100), 0, int(1.5*100)]
+ax.set_yticklabels(yticklabels)
+ax.tick_params(axis='x', labelsize=ticksize)
+ax.tick_params(axis='y', labelsize=ticksize)
+plt.xlim(0, 82)
 plt.ylim([-1.2,1.5])
-plt.tight_layout()
-plt.show()
-fig.savefig('Figures/Fig3_1a.png', dpi=300)
-fig.savefig('Figures/Fig3_1a.pdf', dpi=300)
 
-
-
-
-# encoder = bp.encoding.PoissonEncoder()
-# spike = encoder(fr.T*1e2)
-# plt.figure()
-# bp.visualize.raster_plot(time[probe_num:-1],spike)
-# plt.show()
+fig.savefig('Figures/Fig3d.pdf')

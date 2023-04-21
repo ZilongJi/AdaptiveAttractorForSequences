@@ -3,6 +3,9 @@ import brainpy.math as bm
 import numpy as np
 import matplotlib.pyplot as plt
 from cann import CANN1D
+#set default ramndom seed for reproducibility
+np.random.seed(0)
+#set backend to cpu
 bm.set_platform('cpu')
 
 #create and run the network
@@ -72,4 +75,4 @@ clb.set_label('Firing rate (Hz)', fontsize=labelsize)
 clb.ax.tick_params(labelsize=ticksize)
 plt.tight_layout()
 
-fig.savefig('Figures/Fig2_2.pdf', dpi=300)
+fig.savefig('Figures/Fig2c.pdf', dpi=300)

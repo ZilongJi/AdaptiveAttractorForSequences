@@ -8,6 +8,9 @@ import brainpy.math as bm
 import numpy as np
 import matplotlib.pyplot as plt
 from cann_fft import CANN1D
+#set default ramndom seed for reproducibility
+np.random.seed(0)
+#set backend to cpu
 bm.set_platform('cpu')
 
 #create and run the network
@@ -66,4 +69,4 @@ ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
 plt.tight_layout()
 
-fig.savefig('Figures/place_field.pdf')
+fig.savefig('Figures/Fig2a.pdf')
