@@ -18,7 +18,7 @@ charsize = 18
 linewidth = 1.5
 
 
-def downsample(center,num = 10):
+def downsample(center,num = 30):
     ans = np.zeros(np.floor(center.shape[0]/num).astype(int)-1)
     for i in range(ans.shape[0]):
         ans[i] = center[num*i]
@@ -28,7 +28,7 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
     fig, axs = plt.subplots(2, 2, figsize=(6, 6), sharex = True, sharey = True)
     def linetrace(mu, gamma,  simulation, ax, label, sigma_u=0.5):
         if simulation == 1:
-            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 200, 0.2, 1, 100, sigma_u = sigma_u))
+            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 100, 0.2, 1, 1, sigma_u = sigma_u))
             np.save('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy', center_trace)
 
         center_trace = np.load('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy')
@@ -100,7 +100,7 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
             plt.ylim([-0.25, 0.35])
 
 
-    line = linetrace(-0.2, 0, simulation[0], axs[0,0], 0, sigma_u = 0)
+    line = linetrace(-0.5, 0, simulation[0], axs[0,0], 0, sigma_u = 0.05)
     line = linetrace(0.1, 15, simulation[1], axs[0,1], 1)
     line = linetrace(0.8, 0.1, simulation[2], axs[1,0], 2)
     line = linetrace(0.9, 0.01, simulation[3], axs[1, 1], 3)
@@ -117,4 +117,4 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
     plt.show()
 
 
-plot_4_1(simulation = [0, 0, 0, 0])
+plot_4_1(simulation = [1, 0, 0, 0])
