@@ -88,7 +88,7 @@ yticklabels = [0, int(2.5*100), int(5*100)]
 ax.set_yticklabels(yticklabels)
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
-
+plt.tight_layout()
 fig.savefig('Figures/Fig3c.pdf', dpi=300)
 
 #plot the average bump sweeps
@@ -127,5 +127,5 @@ ax.tick_params(axis='y', labelsize=ticksize)
 
 plt.xlim(0, 82)
 plt.ylim([-1.2,1.5])
-
+plt.tight_layout()
 fig.savefig('Figures/Fig3c_1.pdf')

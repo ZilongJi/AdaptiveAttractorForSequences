@@ -93,7 +93,7 @@ ax.set_yticklabels(yticklabels)
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
 plt.ylim([-2.5, 2.5])
-
+plt.tight_layout()
 fig.savefig('Figures/Fig3b.pdf')
 
 
@@ -129,5 +129,5 @@ ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
 plt.xlim(0, 82)
 plt.ylim([-1.2,1.5])
-
+plt.tight_layout()
 fig.savefig('Figures/Fig3b_1.pdf')
