@@ -4,7 +4,7 @@ import numpy as np
 import jax
 import seaborn as sns
 import matplotlib.pyplot as plt
-from cann import CANN1D
+from cann_fft import CANN1D
 # from cann_fft import CANN1D
 plt.rcParams ['pdf.fonttype'] = 42
 plt.rcParams ['font.sans-serif'] = ['Arial']
