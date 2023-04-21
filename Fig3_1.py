@@ -8,9 +8,9 @@ from cann import CANN1D
 import scipy
 bm.set_platform('cpu')
 
-cann = CANN1D(tau=3, tau_v=144., num=128, mbar=153)
+cann = CANN1D(tau=3, tau_v=144., num=128, mbar=150)
 v_ext = cann.a / cann.tau_v * 0.55
-dur =  2.5*np.pi / v_ext
+dur = 2.5*np.pi / v_ext
 dt = bm.get_dt()
 num = int(dur / dt)
 time = np.linspace(0, dur, num)
@@ -46,6 +46,7 @@ relative_pos = bm.where(relative_pos > np.pi, relative_pos - 2*np.pi,  relative_
 relative_pos = bm.where(relative_pos < -np.pi, relative_pos + 2*np.pi,  relative_pos)
 relative_pos = np.squeeze(relative_pos)
 Peaks,_ = scipy.signal.find_peaks(relative_pos, width=300)
+Trough,_ = scipy.signal.find_peaks(-relative_pos, width=300)
 fig0, ax0 = plt.subplots(figsize=(6,6))
 plt.plot(time-time[0], relative_pos)
 plt.scatter(time[Peaks]-time[0], relative_pos[Peaks])
@@ -67,11 +68,11 @@ plt.plot(time-time[0], cI, color='r', linewidth=2)
 # plt.plot(time-time[0], cU, color='w', linewidth=2)
 for peaks in Peaks:
     plt.plot([time[peaks]-time[0], time[peaks]-time[0]],[-np.pi,np.pi],'w--', linewidth=1)
-plt.xlim(0,1e3)
+plt.xlim(0, 1e3)
 # plt.xlabel('time(ms)', fontsize=label_size)
 plt.ylabel('Decoded Position', fontsize=label_size)
 # 设置xtick和ytick的取值
-xticks = np.linspace(0,1e3,3)
+xticks = np.linspace(0, 1e3, 3)
 yticks = np.linspace(-2.5,2.5,3)
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
@@ -81,9 +82,43 @@ ax.tick_params(axis='y', labelsize=tick_size)
 plt.ylim([-2.5, 2.5])
 plt.tight_layout()
 plt.show()
+fig.savefig('Figures/Fig3_1.png', dpi=300)
+fig.savefig('Figures/Fig3_1.pdf', dpi=300)
+
+
+fig, ax = plt.subplots(figsize=(8,4))
+# 设置所有线条粗细
+ax.spines['top'].set_linewidth(1)
+ax.spines['right'].set_linewidth(1)
+ax.spines['bottom'].set_linewidth(1)
+ax.spines['left'].set_linewidth(1)
+t_start = Trough[1]
+t_end = Trough[2]
+
+im = plt.pcolormesh(time[t_start:(t_end)]-time[t_start], pos-cI[t_start], fr[:,t_start:(t_end)]*1e3, cmap='viridis')
+clb = plt.colorbar(im)
+clb.set_label('Firing rate(spikes/s)', fontsize=label_size)
+# plt.plot(time-time[0], cI, color='r', linewidth=2)
+plt.plot([time[Peaks[1]]-time[t_start], time[Peaks[1]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
+plt.plot([time[Peaks[2]]-time[t_start], time[Peaks[2]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
+plt.plot([time[Peaks[3]]-time[t_start], time[Peaks[3]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
+
+# plt.xlabel('time(ms)', fontsize=label_size)
+plt.ylabel('Decoded Position', fontsize=label_size)
+# 设置xtick和ytick的取值
+xticks = np.linspace(0, 88, 3)
+yticks = np.array([-1.2,0,1.5])
+ax.set_xticks(xticks)
+ax.set_yticks(yticks)
+# 设置xtick和ytick的字体大小
+ax.tick_params(axis='x', labelsize=tick_size)
+ax.tick_params(axis='y', labelsize=tick_size)
+plt.xlim(0, 88)
+plt.ylim([-1.2,1.5])
+plt.tight_layout()
+plt.show()
 fig.savefig('Figures/Fig3_1a.png', dpi=300)
 fig.savefig('Figures/Fig3_1a.pdf', dpi=300)
-
 
 
 
