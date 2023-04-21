@@ -99,6 +99,13 @@ plt.ylabel('Bump height', fontsize=labelsize)
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
 # plt.ylim([-2.5, 2.5])
+#set right and up axis off
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+#set left and bottom axis to 1 pt
+ax.spines['left'].set_linewidth(1)
+ax.spines['bottom'].set_linewidth(1)
+
 plt.tight_layout()
 
 fig.savefig('Figures/Fig3b_2.pdf')
