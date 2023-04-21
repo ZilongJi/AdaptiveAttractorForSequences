@@ -97,15 +97,16 @@ plt.ylim([-2.5, 2.5])
 fig.savefig('Figures/Fig3b.pdf')
 
 
-fig, ax = plt.subplots(figsize=(6,3),dpi=300)
+fig, ax = plt.subplots(figsize=(3,3),dpi=300)
 t_start = Trough[1]
 t_end = Trough[2]
 
 im = plt.pcolormesh(time[t_start:(t_end)]-time[t_start], pos-cI[t_start], fr[:,t_start:(t_end)]*1e3, cmap='inferno')
+'''
 clb = plt.colorbar(ticklocation='right', ticks=[0,1,2])
 clb.set_label('Firing rate (Hz)', fontsize=labelsize)
 clb.ax.tick_params(labelsize=ticksize)
-
+'''
 # plt.plot(time-time[0], cI, color='r', linewidth=2)
 #plt.plot([time[Peaks[1]]-time[t_start], time[Peaks[1]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
 plt.plot([time[Peaks[2]]-time[t_start], time[Peaks[2]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
@@ -115,7 +116,7 @@ plt.plot([time[Peaks[2]]-time[t_start], time[Peaks[2]]-time[t_start]],[-np.pi,np
 plt.plot([0, time[t_end]-time[t_start]], [0,0], color=position_color, linewidth=2, linestyle='--')
 
 plt.xlabel('Time (ms)', fontsize=labelsize)
-plt.ylabel('Relative position (cm)', fontsize=labelsize)
+plt.ylabel('Relative pos. (cm)', fontsize=labelsize)
 # set x,y ticks
 xticks = np.linspace(0, 80, 3)
 yticks = np.array([-1.2,0,1.5])
@@ -129,4 +130,4 @@ ax.tick_params(axis='y', labelsize=ticksize)
 plt.xlim(0, 82)
 plt.ylim([-1.2,1.5])
 
-fig.savefig('Figures/Fig3d.pdf')
+fig.savefig('Figures/Fig3b_1.pdf')
