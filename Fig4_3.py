@@ -53,7 +53,7 @@ def plot_4_3(simulation = 0):
     axcb.set_ticks([1, 1.5, 2])
     axcb.set_ticklabels([1, 1.5, 2], fontsize=ticksize)
 
-    plt.scatter([15,9,2],[2,13,2],marker = 'o', c = 'r',edgecolors= 'grey',s=20,alpha = 0.5)
+    plt.scatter([16,14,9,2],[0,10,13,0],marker = 'o', c = 'r',edgecolors= 'grey',s=20,alpha = 0.5)
     '''
     mu = np.linspace(-0.8, 1, Alpha.shape[1])
     gamma = np.linspace(0, 1.5, Alpha.shape[0])

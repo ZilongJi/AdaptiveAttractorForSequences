@@ -11,7 +11,7 @@ plt.rcParams ['pdf.fonttype'] = 42
 plt.rcParams ['font.sans-serif'] = ['Arial']
 plt.rcParams['mathtext.fontset'] = 'cm'
 
-xlabel = ['Traveling wave', 'Super-diffusion','Brownian motion']
+xlabel = ['Traveling wave', 'Super-diffusion','Brownian motion','Stationary']
 
 ticksize = 15
 charsize = 18
@@ -24,17 +24,17 @@ def downsample(center,num = 10):
         ans[i] = center[num*i]
     return ans
 
-def plot_4_1(simulation = [0, 0 ,0]):
-    fig, axs = plt.subplots(1, 3, figsize=(10, 3), sharex = True, sharey = True)
-    def linetrace(mu, gamma, simulation, ax, label):
+def plot_4_1(simulation = [0, 0 ,0, 0]):
+    fig, axs = plt.subplots(2, 2, figsize=(6, 6), sharex = True, sharey = True)
+    def linetrace(mu, gamma,  simulation, ax, label, sigma_u=0.5):
         if simulation == 1:
-            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 100, 0.2, 1, 1))
+            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 200, 0.2, 1, 1,sigma_u = sigma_u))
             np.save('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy', center_trace)
 
         center_trace = np.load('./data/center_trace' + str(mu) + '_' + str(gamma) + '.npy')
         if label == 2:
-            x = downsample(center_trace[200:-1,0]*-2.5)
-            y = downsample(center_trace[200:-1,1]*-2.5+ 0.05)
+            x = downsample(center_trace[200:-1,0]*-3 + 0.15)
+            y = downsample(center_trace[200:-1,1]*-3 + 0.05)
         else:
             x = downsample(center_trace[200:-1,0]*-1)
             y = downsample(center_trace[200:-1,1]*-1 + 0.05)
@@ -61,7 +61,7 @@ def plot_4_1(simulation = [0, 0 ,0]):
             x2 = downsample(center_trace[200:-1, 0] * -10)
             y2 = downsample(center_trace[200:-1, 1] * -10)
 
-            ax2 = fig.add_axes([0.72, 0.3, 0.15, 0.45])
+            ax2 = fig.add_axes([0.24, 0.23, 0.2, 0.2])
             dydx = np.array((range(x2.shape[0]))) / x2.shape[0]  # first derivative
 
             points = np.array([x2, y2]).T.reshape(-1, 1, 2)
@@ -72,29 +72,38 @@ def plot_4_1(simulation = [0, 0 ,0]):
             ax2.add_collection(lc)
             #plt.plot(np.ones(2),np.ones(2), linewidth=0)
 
-            plt.xticks([-1,0],[-0.2,0],fontsize = ticksize)
-            plt.yticks([-0.5, 0.5], [0, 0.2],fontsize = ticksize)
+            plt.xticks([-1,-0.4],[-0.2,0],fontsize = ticksize)
+            plt.yticks([], [], fontsize=ticksize)
+            #plt.yticks([0.7, 1.2], [0.3, 0.4],fontsize = ticksize)
 
-            plt.xlim([-1.2, 0.5])
-            plt.ylim([-0.6,0.8])
+            plt.xlim([-1.1, -0.3])
+            plt.ylim([0.6, 1.4])
+        if label == 3:
+            x2 = downsample(center_trace[200:-1, 0] * -10)
+            y2 = downsample(center_trace[200:-1, 1] * -10)
 
-            '''
-            plt.plot(np.linspace(np.min(x), np.min(x2) - 0.05, 100), np.linspace(np.max(y) + 0.05, np.max(y2), 100),
-                     '--', color='black', linewidth=1)
-            plt.plot(np.linspace(np.max(x) + 0.05, np.max(x2), 100), np.linspace(np.min(y), np.min(y2) - 0.05, 100),
-                     '--', color='black', linewidth=1)
+            ax2 = fig.add_axes([0.65, 0.23, 0.2, 0.2])
+            dydx = np.array((range(x2.shape[0]))) / x2.shape[0]  # first derivative
 
-            '''
-            #ax.axes()
-            #plt.axes([0.6,0.3, 0.2,0.4])
+            points = np.array([x2, y2]).T.reshape(-1, 1, 2)
+            segments = np.concatenate([points[:-1], points[1:]], axis=1)
+            norm = plt.Normalize(dydx.min(), dydx.max())
+            lc = LineCollection(segments, cmap='viridis', norm=norm, linewidth=linewidth, alpha=0.8)
+            lc.set_array(dydx)
+            ax2.add_collection(lc)
+            #plt.plot(np.ones(2),np.ones(2), linewidth=0)
 
-            #plt.plot(np.linspace(np.min(x2)-0.05, np.max(x2), 100), np.ones(100) * np.min(y2)-0.05 ,color = 'black',linewidth = 1)
-            #plt.plot(np.ones(100) * np.min(x2)-0.05, np.linspace(np.min(y2)-0.05, np.max(y2), 100), color='black', linewidth = 1)
+            plt.xticks([-0.2,0.2],[-0.01,0],fontsize = ticksize)
+            plt.yticks([0.7, 1.2], [0.3, 0.4],fontsize = ticksize)
+
+            plt.xlim([-0.3, 0.3])
+            plt.ylim([-0.25, 0.35])
 
 
-    line = linetrace(-0.2, 0, simulation[0], axs[0], 0)
-    line = linetrace(0.1, 15, simulation[1], axs[1], 1)
-    line = linetrace(0.8, 0.1, simulation[2], axs[2], 2)
+    line = linetrace(-0.2, 0, simulation[0], axs[0,0], 0, sigma_u = 0)
+    line = linetrace(0.1, 15, simulation[1], axs[0,1], 1)
+    line = linetrace(0.8, 0.1, simulation[2], axs[1,0], 2)
+    line = linetrace(0.9, 0.01, simulation[3], axs[1, 1], 3)
 
     fig.subplots_adjust(right=0.9)
     cbar_ax = fig.add_axes([0.92, 0.12, 0.015, 0.78])
@@ -108,4 +117,4 @@ def plot_4_1(simulation = [0, 0 ,0]):
     plt.show()
 
 
-plot_4_1(simulation = [0, 0, 0])
+plot_4_1(simulation = [0, 0, 0, 0])
