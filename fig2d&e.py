@@ -73,14 +73,12 @@ ax.set_yticks(yticks)
 # 设置xtick和ytick的字体大小
 ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
-
-
 plt.tight_layout()
-plt.show()
-fig.savefig('Figures/Fig2_4.png', dpi=300)
-fig.savefig('Figures/Fig2_4.pdf', dpi=300)
 # plt.show()
-
+fig.savefig('Figures/Fig2e.png', dpi=300)
+fig.savefig('Figures/Fig2e.pdf', dpi=300)
+# plt.show()
+bm.clear_buffer_memory()
 
 
 
@@ -93,19 +91,17 @@ dis = np.zeros((num_p, monte_num))
 
 for ni in range(num_p):
     v_ext = cann.a / cann.tau_v * vbar[ni]
-    dur = 0.1 * bm.pi / v_ext
+    dur = 0.1 * np.pi / v_ext
     dt = bm.get_dt()
     num = (dur / dt).astype(int)
-    position = np.zeros(num)
-    position[0] = -np.pi/2
-    for i in range(num)[1:]:
-        position[i] = position[i - 1] + v_ext * dt
-        if position[i] > np.pi:
-            position[i] -= 2 * np.pi
+    position = np.linspace(0,dur*v_ext,num)
     position = position.reshape((-1, 1))
     for monte in range(monte_num):
         noise = 0.02 * np.random.randn(num, cann.num)
         Iext = cann.get_stimulus_by_pos(position)+noise
+        cann.reset_state()
+        # looper = bp.LoopOverTime(cann)
+        # out = looper(Iext)
         runner = bp.DSRunner(cann,
                              inputs=('input', Iext, 'iter'),
                              monitors=['center', 'centerI'],
@@ -113,10 +109,12 @@ for ni in range(num_p):
                              progress_bar=False)
         runner.run(dur)
         distance = runner.mon.center - runner.mon.centerI
+        # distance = out.center - out.centerI
         dis[ni, monte] = np.mean(distance[500:-1])
         progress = ni*monte_num+monte
+        # cann.reset_state()
         print(progress/(num_p*monte_num))
-
+        # bm.clear_buffer_memory()
 std_dis = np.std(dis*1e2, axis=1)
 mean_dis = np.mean(dis*1e2, axis=1)
 
@@ -145,8 +143,8 @@ ax.tick_params(axis='x', labelsize=tick_size)
 ax.tick_params(axis='y', labelsize=tick_size)
 plt.tight_layout()
 plt.show()
-fig.savefig('Figures/Fig2_3.png', dpi=300)
-fig.savefig('Figures/Fig2_3.pdf', dpi=300)
+fig.savefig('Figures/Fig2d.png', dpi=300)
+fig.savefig('Figures/Fig2d.pdf', dpi=300)
 
 
 
