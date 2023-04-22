@@ -2,7 +2,6 @@ import brainpy as bp
 import brainpy.math as bm
 import matplotlib.pyplot as plt
 import numpy as np
-#from package import levy
 from scipy import stats
 import levy
 import math

@@ -1,22 +1,14 @@
 import numpy as np
-from scipy import stats
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
-from mpl_toolkits.mplot3d import Axes3D
 import TwoD_fun
-import brainpy as bp
 import brainpy.math as bm
 
-plt.rcParams ['pdf.fonttype'] = 42
-plt.rcParams ['font.sans-serif'] = ['Arial']
-plt.rcParams['mathtext.fontset'] = 'cm'
+xlabel = ['Traveling wave', 'Super-diffusion','Brownian-diffusion','Stationary']
 
-xlabel = ['Traveling wave', 'Super-diffusion','Brownian motion','Stationary']
-
-ticksize = 15
-charsize = 18
-linewidth = 1.5
-
+ticksize = 14
+labelsize = 18
+linewidth = 1
 
 def downsample(center,num = 30):
     ans = np.zeros(np.floor(center.shape[0]/num).astype(int)-1)
@@ -43,10 +35,10 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
         points = np.array([x, y]).T.reshape(-1, 1, 2)
         segments = np.concatenate([points[:-1], points[1:]], axis=1)
         norm = plt.Normalize(dydx.min(), dydx.max())
-        lc = LineCollection(segments, cmap='viridis', norm=norm, linewidth=linewidth, alpha=0.8)
+        lc = LineCollection(segments, cmap='inferno', norm=norm, linewidth=linewidth, alpha=0.8)
         lc.set_array(dydx)
         line = ax.add_collection(lc)
-        ax.set_title(xlabel[label],fontsize=charsize)
+        ax.set_title(xlabel[label],fontsize=labelsize)
         ax.set_xticks([0, 1])
         ax.set_yticks([0, 1])
         ax.set_xticklabels([0, 1],fontsize=ticksize)
@@ -67,7 +59,7 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
             points = np.array([x2, y2]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
             norm = plt.Normalize(dydx.min(), dydx.max())
-            lc = LineCollection(segments, cmap='viridis', norm=norm, linewidth=linewidth, alpha=0.8)
+            lc = LineCollection(segments, cmap='inferno', norm=norm, linewidth=linewidth, alpha=0.8)
             lc.set_array(dydx)
             ax2.add_collection(lc)
             #plt.plot(np.ones(2),np.ones(2), linewidth=0)
@@ -88,7 +80,7 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
             points = np.array([x2, y2]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
             norm = plt.Normalize(dydx.min(), dydx.max())
-            lc = LineCollection(segments, cmap='viridis', norm=norm, linewidth=linewidth, alpha=0.8)
+            lc = LineCollection(segments, cmap='inferno', norm=norm, linewidth=linewidth, alpha=0.8)
             lc.set_array(dydx)
             ax2.add_collection(lc)
             #plt.plot(np.ones(2),np.ones(2), linewidth=0)
@@ -107,14 +99,12 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
 
     fig.subplots_adjust(right=0.9)
     cbar_ax = fig.add_axes([0.92, 0.12, 0.015, 0.78])
-    axcb = fig.colorbar(line,  cax=cbar_ax, cmap='viridis')
-    axcb.set_label(r'Time $t(/\tau)$', fontsize=charsize)
+    axcb = fig.colorbar(line,  cax=cbar_ax, cmap='inferno')
+    axcb.set_label(r'Time $t(/\tau)$', fontsize=labelsize)
     axcb.set_ticks([0, 0.5, 1])
     axcb.set_ticklabels(['0', '50', '100'],fontsize = ticksize)
 
-    plt.savefig('./Figures/Fig4_1.png',bbox_inches = 'tight', dpi=300)
-    plt.savefig('./Figures/Fig4_1.pdf',bbox_inches = 'tight', dpi=300)
-    plt.show()
+    plt.savefig('./Figures/Fig4_1.pdf')
 
 
-plot_4_1(simulation = [1, 0, 0, 0])
+plot_4_1(simulation = [0, 0, 0, 0])

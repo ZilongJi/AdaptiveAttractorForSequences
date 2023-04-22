@@ -2,22 +2,20 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 import matplotlib
-from matplotlib.collections import LineCollection
-from mpl_toolkits.mplot3d import Axes3D
 import TwoD_fun
 
 plt.rcParams ['pdf.fonttype'] = 42
-plt.rcParams ['font.sans-serif'] = ['Arial']
+#plt.rcParams ['font.sans-serif'] = ['Arial']
 plt.rcParams['mathtext.fontset'] = 'cm'
 
 xlabel = ['Brownian motion', 'Lévy flights']
 
-ticksize = 15
-charsize = 18
+ticksize = 14
+labelsize = 18
 linewidth = 1.5
 
 def plot_4_3(simulation = 0):
-    fig = plt.figure(figsize = (6,4))
+    fig = plt.figure(figsize = (6,4), dpi=300)
     if simulation == 1:
         Alpha = TwoD_fun.get_Alpha(11, 21, True)
         np.save('./data/Alpha.npy', Alpha)
@@ -43,13 +41,13 @@ def plot_4_3(simulation = 0):
 
     plt.xticks(np.array([3,8,13,18])-0.5,[-0.5,0,0.5,1],fontsize = ticksize)
     plt.yticks(np.array([0, 7, 14]) - 0.5, [0, 0.5, 1],fontsize = ticksize)
-    plt.xlabel('normalized dist-to-boundary $\mu$', fontsize = charsize)
-    plt.ylabel('normalized noise amp $\gamma$', fontsize=charsize)
+    plt.xlabel('normalized dist-to-boundary $\mu$', fontsize = labelsize)
+    plt.ylabel('normalized noise amp $\gamma$', fontsize=labelsize)
     plt.ylim([-0.5,16.5])
     #plt.grid(None)
     #plt.rcParams["axes.grid"] = False
     axcb = plt.colorbar()
-    axcb.set_label(r'Lévy exponent $\alpha$', fontsize=charsize)
+    axcb.set_label(r'Lévy exponent $\alpha$', fontsize=labelsize)
     axcb.set_ticks([1, 1.5, 2])
     axcb.set_ticklabels([1, 1.5, 2], fontsize=ticksize)
 
