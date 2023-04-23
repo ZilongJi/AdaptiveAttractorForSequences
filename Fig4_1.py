@@ -43,9 +43,7 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
         ax.set_yticks([0, 1])
         ax.set_xticklabels([0, 1],fontsize=ticksize)
         ax.set_yticklabels([0, 1],fontsize=ticksize)
-        # if label == 0:
-        #     ax.set_xlim(-10, 10)
-        #     ax.set_ylim(-10, 10)
+
         if label == 1:
             ax.set_xlim(x.min()-0.2, x.max()+0.2)
             ax.set_ylim(y.min()-0.2, y.max()+0.2)
@@ -98,7 +96,7 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
     line = linetrace(0.9, 0.01, simulation[3], axs[1, 1], 3)
 
     fig.subplots_adjust(right=0.9)
-    cbar_ax = fig.add_axes([0.92, 0.12, 0.015, 0.78])
+    cbar_ax = fig.add_axes([0.92, 0.12, 0.015, 0.75])
     axcb = fig.colorbar(line,  cax=cbar_ax, cmap='inferno')
     axcb.set_label(r'Time $t(/\tau)$', fontsize=labelsize)
     axcb.set_ticks([0, 0.5, 1])
