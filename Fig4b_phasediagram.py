@@ -4,10 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib
 import TwoD_fun
 
-plt.rcParams ['pdf.fonttype'] = 42
-#plt.rcParams ['font.sans-serif'] = ['Arial']
-plt.rcParams['mathtext.fontset'] = 'cm'
-
 xlabel = ['Brownian motion', 'Lévy flights']
 
 ticksize = 14
@@ -49,8 +45,8 @@ def plot_4_3(simulation = 0):
     #decorate the plot
     plt.xticks(np.array([3,8,13,18])-0.5,[-0.5,0,0.5,1],fontsize = ticksize)
     plt.yticks(np.array([0, 7, 14]) - 0.5, [0, 0.5, 1],fontsize = ticksize)
-    plt.xlabel('Dist.-to-boundary $\mu$', fontsize = labelsize)
-    plt.ylabel('Noise amp. $\gamma$', fontsize=labelsize)
+    plt.xlabel(r'Dist.-to-boundary $\mu$', fontsize = labelsize)
+    plt.ylabel(r'Noise amp. $\gamma$', fontsize=labelsize)
     plt.ylim([-0.5,16.5])
 
     plt.tight_layout()
