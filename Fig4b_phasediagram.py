@@ -35,6 +35,7 @@ def plot_4_3(simulation = 0):
 
     #add colorbar
     axcb = plt.colorbar()
+    
     axcb.set_label(r'Lévy exponent $\alpha$', fontsize=labelsize)
     axcb.set_ticks([1, 1.5, 2])
     axcb.set_ticklabels([1, 1.5, 2], fontsize=ticksize)
