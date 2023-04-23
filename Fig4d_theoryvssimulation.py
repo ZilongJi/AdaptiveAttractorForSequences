@@ -30,7 +30,6 @@ def plot_4_3(simulation = 0):
 
     fig = plt.figure(figsize = (4,3), dpi=300)
     ax = fig.add_subplot(1, 1, 1)
-    #plt.errorbar(mu,Alpha_mean[9,:],Alpha_std[9,:], fmt='o',markersize=3, markerfacecolor='white',linestyle = '-', color = 'k')
     plt.plot(mu,Alpha_mean[9,:], marker = 'o', markersize=5, markerfacecolor='white',linestyle='--', color = color[0],linewidth = linewidth,label = 'simulated')
     plt.fill_between(mu, Alpha_mean[9,:] - Alpha_std[9,:], Alpha_mean[9,:] + Alpha_std[9,:],color= color[0], alpha=0.2)
 
@@ -44,7 +43,7 @@ def plot_4_3(simulation = 0):
     ax.spines['right'].set_visible(False)   
     ax.spines['top'].set_visible(False)
     plt.tight_layout()
-    plt.savefig('./Figures/Fig4_4_1.pdf')
+    plt.savefig('./Figures/Fig4d.pdf')
     
     #create a new figure
     fig = plt.figure(figsize = (4,3), dpi=300)
@@ -66,7 +65,7 @@ def plot_4_3(simulation = 0):
     ax.spines['top'].set_visible(False)   
     
     plt.tight_layout()
-    plt.savefig('./Figures/Fig4_4_2.pdf')
+    plt.savefig('./Figures/Fig4e.pdf')
 
 
 plot_4_3(simulation = 0)

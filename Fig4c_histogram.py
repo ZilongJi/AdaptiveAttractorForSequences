@@ -52,8 +52,8 @@ def plot4_2(simulation=[0, 0]):
     #put the legend on the right upper corner
     plt.legend(fontsize = ticksize,frameon=False, loc='upper right')
 
-    plt.savefig('./Figures/Fig4_2.pdf', bbox_inches='tight')
     plt.tight_layout()
-    plt.show()
+    plt.savefig('./Figures/Fig4c.pdf', bbox_inches='tight')
+    
 
 plot4_2([0,0])
