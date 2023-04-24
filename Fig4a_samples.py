@@ -17,7 +17,7 @@ def downsample(center,num = 30):
     return ans
 
 def plot_4_1(simulation = [0, 0 ,0, 0]):
-    fig, axs = plt.subplots(1, 4, figsize=(14, 3), sharex = True, sharey = True)
+    fig, axs = plt.subplots(1, 4, figsize=(14, 3), sharex = False, sharey = False)
     def linetrace(mu, gamma,  simulation, ax, label, sigma_u=0.5):
         if simulation == 1:
             center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 100, 0.2, 1, 1, sigma_u = sigma_u))
@@ -44,9 +44,13 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
         ax.set_xticklabels([0, 1],fontsize=ticksize)
         ax.set_yticklabels([0, 1],fontsize=ticksize)
 
+        ax.set_xlim(-0.2, 2)
+        ax.set_ylim(-0.2, 2)
+
         if label == 1:
-            ax.set_xlim(x.min()-0.2, x.max()+0.2)
-            ax.set_ylim(y.min()-0.2, y.max()+0.2)
+            #ax.set_xlim(x.min()-0.2, x.max()+0.2)
+            #ax.set_ylim(y.min()-0.2, y.max()+0.2)
+            pass
         if label == 2:
             x2 = downsample(center_trace[200:-1, 0] * -10)
             y2 = downsample(center_trace[200:-1, 1] * -10)
