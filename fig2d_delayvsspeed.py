@@ -6,6 +6,12 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from cann import CANN1D
 
+#set default ramndom seed for reproducibility
+np.random.seed(0)
+#set backend to cpu
+bm.set_platform('cpu')
+
+
 num_p = 10
 mbar = 0
 cann = CANN1D(num=128, mbar=mbar, tau=3, tau_v=144)
@@ -42,7 +48,7 @@ for ni in range(num_p):
 std_dis = np.std(dis*1e2, axis=1)
 mean_dis = np.mean(dis*1e2, axis=1)
 
-
+#%%
 vext = vbar*0.4/144*1e3
 fig, ax = plt.subplots(figsize=(5, 4))
 #set parameters
@@ -58,14 +64,18 @@ ax.fill_between(vext, -mean_dis-std_dis, -mean_dis+std_dis, alpha=0.2, color=cus
 plt.scatter(vext, -mean_dis, color=custom_color, s=50, edgecolors='k')
 plt.plot(vext, -mean_dis, color='k', linestyle=':', linewidth=2)
 
-plt.xlabel(r'Moving speed $v_{ext}$ (m/s)', fontsize=labelsize)
+plt.xlabel(r'Moving speed $v_{ext}$ (cm/s)', fontsize=labelsize)
 plt.ylabel('Lag distance (cm)', fontsize=labelsize)
 
 # set the xticks and yticks
 yticks = np.array([0,0.5,1,1.5])
-xticks = np.linspace(0,np.max(vext),5)
+#xticks = np.linspace(0,100*np.max(vext),5)
+xticks = np.array([0,0.5,1,1.5,2,2.5])
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
+#chnage xtick labels by times 100
+xticklabels = [str(int(xtick*100)) for xtick in xticks]
+ax.set_xticklabels(xticklabels, fontsize=ticksize)
 
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
@@ -82,3 +92,5 @@ fig.savefig('Figures/Fig2d.pdf', dpi=300)
 
 
 
+
+# %%
