@@ -45,7 +45,7 @@ pos = position.squeeze()
 # set some parameters
 labelsize = 18
 ticksize = 14
-fig, ax = plt.subplots(figsize=(4, 5), dpi=300)
+fig, ax = plt.subplots(figsize=(5, 6), dpi=300)
 
 index = np.linspace(1, cann.num, cann.num)
 plt.pcolormesh(100*(pos[2000:12000:20]-pos[2000]), index[10:50]-index[10], 1e3*fr[10:50,2000:12000:20], cmap='inferno')
