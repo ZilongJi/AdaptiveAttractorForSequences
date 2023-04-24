@@ -50,7 +50,7 @@ mean_dis = np.mean(dis*1e2, axis=1)
 
 #%%
 vext = vbar*0.4/144*1e3
-fig, ax = plt.subplots(figsize=(5, 4))
+fig, ax = plt.subplots(figsize=(4, 3), dpi=300)
 #set parameters
 labelsize = 18
 ticksize = 14
