@@ -111,6 +111,7 @@ def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1, sigma_u = 0.5, visu
       durations=[2., duration],
       return_length=True
   )
+
   runner = bp.DSRunner(cann,
                        inputs = ['input', Iext, 'iter'],
                        monitors = ['r', 'center'],

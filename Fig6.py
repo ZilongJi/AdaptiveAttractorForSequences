@@ -74,4 +74,5 @@ def plot_6(simulation=[0, 0, 0, 0]):
     plt.savefig('./Figures/Fig6.pdf')
 
 
-plot_6(simulation=[0, 0, 1, 0])
+if __name__ == '__main__':
+    plot_6(simulation=[0, 0, 0, 0])
