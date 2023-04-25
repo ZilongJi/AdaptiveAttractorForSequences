@@ -2,7 +2,6 @@ import brainpy as bp
 import brainpy.math as bm
 import matplotlib.pyplot as plt
 import numpy as np
-#from package import levy
 from scipy import stats
 import levy
 import math
@@ -97,7 +96,7 @@ class CANN2D(bp.dyn.NeuGroup):
     self.input[:] = 0.
 # m = 1.13 boundary
 
-def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1, visulaize = False):
+def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1, sigma_u = 0.5, visulaize = False):
   def get_sigma_m(mu, gamma):
     m_0 = 1 - mu
     sigma_m = 2 * math.sqrt(np.pi) * m_0 * tau / tau_v * a * gamma
@@ -106,12 +105,13 @@ def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1, visulaize = False):
 
   sigma_m, m_0 = get_sigma_m(mu, gamma)
 
-  cann = CANN2D(length=100, a=a, tau=tau, tau_v=tau_v, k=0.1, sigma_u=0.5, sigma_m=sigma_m, m_0=m_0)
+  cann = CANN2D(length=100, a=a, tau=tau, tau_v=tau_v, k=0.1, sigma_u=sigma_u, sigma_m=sigma_m, m_0=m_0)
   Iext, length = bp.inputs.section_input(
       values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
       durations=[2., duration],
       return_length=True
   )
+
   runner = bp.DSRunner(cann,
                        inputs = ['input', Iext, 'iter'],
                        monitors = ['r', 'center'],
@@ -183,7 +183,6 @@ def get_Alpha(N, M, simulation = True, epoch=10):
     for i in range(M):
       for j in range(N):
         Alpha[i,j,e] = get_alpha(Trace[N*M-1-i*N-j,:,:])
-
   return Alpha
 
 
