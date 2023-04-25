@@ -96,7 +96,7 @@ class CANN2D(bp.dyn.NeuGroup):
     self.input[:] = 0.
 # m = 1.13 boundary
 
-def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=1, sigma_u = 0.5, visulaize = False):
+def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=20, sigma_u = 0.5, visulaize = False):
   def get_sigma_m(mu, gamma):
     m_0 = 1 - mu
     sigma_m = 2 * math.sqrt(np.pi) * m_0 * tau / tau_v * a * gamma

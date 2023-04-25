@@ -14,7 +14,7 @@ bm.set_platform('cpu')
 
 num_p = 10
 mbar = 0
-cann = CANN1D(num=128, mbar=mbar, tau=3, tau_v=144)
+cann = CANN1D(num=64, mbar=mbar, tau=3, tau_v=144)
 vbar = bm.linspace(0.01,4,num_p)
 monte_num = 40
 dis = np.zeros((num_p, monte_num))
@@ -69,8 +69,8 @@ plt.ylabel('Lag distance (cm)', fontsize=labelsize)
 
 # set the xticks and yticks
 # yticks = np.array([0,0.5,1,1.5])
-#xticks = np.linspace(0,100*np.max(vext),5)
-# xticks = np.array([0,0.5,1,1.5,2,2.5])
+xticks = np.linspace(0,10,5)
+# xticks = np.array([0,0.5,1,1.5,2,])
 # ax.set_xticks(xticks)
 # ax.set_yticks(yticks)
 #chnage xtick labels by times 100
