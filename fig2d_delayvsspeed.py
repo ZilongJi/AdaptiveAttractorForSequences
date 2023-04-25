@@ -15,19 +15,19 @@ bm.set_platform('cpu')
 num_p = 10
 mbar = 0
 cann = CANN1D(num=128, mbar=mbar, tau=3, tau_v=144)
-vbar = bm.linspace(0.005,1,num_p)
+vbar = bm.linspace(0.01,4,num_p)
 monte_num = 40
 dis = np.zeros((num_p, monte_num))
 
 for ni in range(num_p):
     v_ext = cann.a / cann.tau_v * vbar[ni]
-    dur = 0.1 * np.pi / v_ext
+    dur = 0.2 * np.pi / v_ext
     dt = bm.get_dt()
     num = (dur / dt).astype(int)
     position = np.linspace(0,dur*v_ext,num)
     position = position.reshape((-1, 1))
     for monte in range(monte_num):
-        noise = 0.02 * np.random.randn(num, cann.num)
+        noise = 0.06 * np.random.randn(num, cann.num)
         Iext = cann.get_stimulus_by_pos(position)+noise
         cann.reset_state()
         # looper = bp.LoopOverTime(cann)
@@ -68,11 +68,11 @@ plt.xlabel(r'Moving speed $v_{ext}$ (cm/s)', fontsize=labelsize)
 plt.ylabel('Lag distance (cm)', fontsize=labelsize)
 
 # set the xticks and yticks
-yticks = np.array([0,0.5,1,1.5])
+# yticks = np.array([0,0.5,1,1.5])
 #xticks = np.linspace(0,100*np.max(vext),5)
-xticks = np.array([0,0.5,1,1.5,2,2.5])
-ax.set_xticks(xticks)
-ax.set_yticks(yticks)
+# xticks = np.array([0,0.5,1,1.5,2,2.5])
+# ax.set_xticks(xticks)
+# ax.set_yticks(yticks)
 #chnage xtick labels by times 100
 xticklabels = [str(int(xtick*100)) for xtick in xticks]
 ax.set_xticklabels(xticklabels, fontsize=ticksize)
@@ -85,7 +85,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 plt.tight_layout()
-
+plt.show()
 fig.savefig('Figures/Fig2d.pdf', dpi=300)
 
 

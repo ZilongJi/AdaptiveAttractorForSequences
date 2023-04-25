@@ -12,8 +12,8 @@ bm.set_platform('cpu')
 def delayed_track_m(mbar=0):
     cann = CANN1D(num=128, mbar=mbar, tau=3, tau_v=144)
     vbar = 1
-    v_ext = cann.a / cann.tau_v * vbar
-    dur = 0.1 * bm.pi / v_ext
+    v_ext = 4*cann.a / cann.tau_v * vbar
+    dur = 0.2 * bm.pi / v_ext
     dt = bm.get_dt()
     num = int((dur // dt))
     position = np.zeros(num)
@@ -69,10 +69,10 @@ plt.ylabel('Lag distance (cm)', fontsize=labelsize)
 
 # ste the xticks and yticks
 xticks = np.array([0,0.1,0.2])
-yticks = np.array([0,0.5,1,1.5])
+# yticks = np.array([0,0.5,1,1.5])
 
 ax.set_xticks(xticks)
-ax.set_yticks(yticks)
+# ax.set_yticks(yticks)
 
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
@@ -82,7 +82,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 plt.tight_layout()
-
+plt.show()
 fig.savefig('Figures/Fig2e.pdf')
 
 bm.clear_buffer_memory()
