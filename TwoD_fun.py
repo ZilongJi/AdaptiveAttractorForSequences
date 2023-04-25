@@ -182,7 +182,6 @@ def get_Alpha(N, M, simulation = True, epoch=10):
     for i in range(M):
       for j in range(N):
         Alpha[i,j,e] = get_alpha(Trace[N*M-1-i*N-j,:,:])
-
   return Alpha
 
 

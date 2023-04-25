@@ -112,6 +112,7 @@ def plot_4_1(simulation = [0, 0 ,0, 0]):
     axcb.set_ticks([0, 0.5, 1])
     axcb.set_ticklabels(['0', '50', '100'],fontsize = ticksize)
 
+    plt.show()
     plt.savefig('./Figures/Fig4a.pdf')
 
 
