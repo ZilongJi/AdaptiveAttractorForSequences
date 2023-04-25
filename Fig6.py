@@ -60,7 +60,7 @@ def plot_6(simulation=[0, 0, 0, 0]):
 
     line = linetrace(-0.3, 0, simulation[0], axs[0], 0, sigma_u=0.05)
     line = linetrace(0.1, 1, simulation[1], axs[1], 1)
-    line = linetrace(0.8, 0.1, simulation[2], axs[2], 2)
+    line = linetrace(0.5, 0.1, simulation[2], axs[2], 2)
     line = linetrace(0.9, 0.01, simulation[3], axs[3], 3)
 
     # fig.subplots_adjust(right=0.9)
@@ -70,8 +70,8 @@ def plot_6(simulation=[0, 0, 0, 0]):
     # axcb.set_ticks([0, 0.5, 1])
     # axcb.set_ticklabels(['0', '50', '100'], fontsize=ticksize)
 
-    plt.show()
+    #plt.show()
     plt.savefig('./Figures/Fig6.pdf')
 
 
-plot_6(simulation=[0, 0, 0, 0])
+plot_6(simulation=[0, 0, 1, 0])
