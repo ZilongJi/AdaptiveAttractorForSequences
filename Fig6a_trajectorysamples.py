@@ -19,7 +19,7 @@ def downsample(center, num=300):
 
 
 def plot_6a(simulation=[0, 0, 0]):
-    fig, axs = plt.subplots(1, 3, figsize=(10.5, 3), sharex=False, sharey=False)
+    fig, axs = plt.subplots(1, 3, figsize=(14, 3), sharex=False, sharey=False)
 
     def linetrace(mu, gamma, simulation, ax, label, sigma_u=0.5):
         if simulation == 1:
