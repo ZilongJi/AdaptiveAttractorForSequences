@@ -9,7 +9,6 @@ np.random.seed(0)
 #set backend to cpu
 bm.set_platform('cpu')
 
-
 num_p = 10
 mbar = 0
 cann = CANN1D(num=64, mbar=mbar, tau=3, tau_v=144)
@@ -67,7 +66,8 @@ plt.ylabel('Lag distance (cm)', fontsize=labelsize)
 
 # set the xticks and yticks
 # yticks = np.array([0,0.5,1,1.5])
-xticks = np.linspace(0,10,5)
+# xticks = np.linspace(0,10,5)
+xticks = np.asarray([0,2.5,5,7.5,10,12.5])
 # xticks = np.array([0,0.5,1,1.5,2,])
 # ax.set_xticks(xticks)
 # ax.set_yticks(yticks)
@@ -85,8 +85,6 @@ ax.spines['top'].set_visible(False)
 plt.tight_layout()
 plt.show()
 fig.savefig('Figures/Fig2d.pdf', dpi=300)
-
-
 
 
 
