@@ -10,7 +10,7 @@ import brainpy as bp
 import brainpy.math as bm
 
 
-fit_color = ['#F18D00','#009FB9']
+fit_color = ['#009FB9','#F18D00']
 legend = ['Brownian-diffusion', 'Super-diffusion']
 
 ticksize = 14

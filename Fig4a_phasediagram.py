@@ -51,7 +51,7 @@ def plot_4_3(simulation = 0):
     plt.ylim([-0.5,16.5])
 
     plt.tight_layout()
-    plt.savefig('./Figures/Fig4b.pdf')
+    plt.savefig('./Figures/Fig4a_2.pdf')
     
 
 plot_4_3(0)

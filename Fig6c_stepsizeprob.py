@@ -60,7 +60,7 @@ def plot6_c(simulation=[0, 0]):
     plt.plot([0.8, 20], [1, 1], '--', color='r', linewidth=1) 
 
     plt.tight_layout()
-    plt.savefig('./Figures/Fig6c.pdf', bbox_inches='tight')
+    plt.savefig('./Figures/Fig6c_inset.pdf', bbox_inches='tight')
     plt.show()
 
 
