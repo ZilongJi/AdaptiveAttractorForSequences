@@ -9,7 +9,7 @@ import levy
 import brainpy as bp
 import brainpy.math as bm
 
-fit_color = ['#F18D00', '#009FB9']
+fit_color = ['#009FB9', '#F18D00']
 legend = ['Brownian-diffusion', 'Super-diffusion']
 
 ticksize = 14
@@ -51,12 +51,14 @@ def plot6_c(simulation=[0, 0]):
     plt.ylabel('Probability', fontsize=labelsize)
     plt.xticks(fontsize=ticksize)
     plt.yticks(fontsize=ticksize)
+    #set y lim
+    plt.ylim([0.0001, 1])
     #plt.yticks([0, 0.1, 0.2, 0.3], fontsize=ticksize)
     # put the legend on the right upper corner
-    plt.legend(fontsize=ticksize, frameon=False)
+    plt.legend(fontsize=ticksize/1.5, frameon=False)
 
     plt.tight_layout()
-    plt.savefig('./Figures/Fig6c.pdf', bbox_inches='tight')
+    plt.savefig('./Figures/Fig6b.pdf', bbox_inches='tight')
     plt.show()
 
 
