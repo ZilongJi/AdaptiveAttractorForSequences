@@ -16,7 +16,7 @@ def f_1(x, A, B):
     return A*x + B
 
 
-def plot_6b(simulation=[0, 0, 0]):
+def plot_6d(simulation=[0, 0, 0]):
     def get_mean_var(x,y,interval):
         delta = np.sqrt((x[interval:]-x[:-interval])**2 + (y[interval:]-y[:-interval])**2)
         return [[np.mean(delta),np.std(delta)]]
@@ -47,8 +47,14 @@ def plot_6b(simulation=[0, 0, 0]):
     ax = plt.axes()
     ax.set_xscale("log")
     ax.set_yscale("log")
-    #extend the y axis longer
-    ax.set_ylim(0.01, 10)
+    ax.set_ylim(0.0001, 10)
+    #remove the top and right axis 
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    #replace the y ticks from meter to cm
+    ax.set_yticks([0.0001,0.001,0.01,0.1,1,10])
+    ax.set_yticklabels(['$10^{-2}$', '$10^{-1}$', '$10^0$', '$10^1$','$10^2$','$10^3$'])
+
 
     plot_mean_var(0.1, 2, simulation[0], 0, ax)
     plot_mean_var(0.5, 0.1, simulation[1], 1, ax)
@@ -56,10 +62,10 @@ def plot_6b(simulation=[0, 0, 0]):
 
     plt.legend(fontsize = ticksize/1.5, frameon=False, loc='upper left')
     plt.xlabel(r'Time-step interval $(\Delta t/\tau)$',fontsize = labelsize)
-    plt.ylabel('Mean displacement',fontsize = labelsize)
+    plt.ylabel('Mean distance (cm)',fontsize = labelsize)
 
-    plt.savefig('./Figures/Fig6b.pdf', bbox_inches='tight')
-    plt.show()
+    plt.tight_layout()
+    plt.savefig('./Figures/Fig6d.pdf', bbox_inches='tight')
 
 if __name__ == '__main__':
-    plot_6b(simulation=[0,0,0])
+    plot_6d(simulation=[0,0,0])

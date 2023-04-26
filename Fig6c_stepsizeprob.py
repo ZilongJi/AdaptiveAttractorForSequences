@@ -54,11 +54,13 @@ def plot6_c(simulation=[0, 0]):
     #set y lim
     plt.ylim([0.0001, 1])
     #plt.yticks([0, 0.1, 0.2, 0.3], fontsize=ticksize)
-    # put the legend on the right upper corner
+    # add legend
     plt.legend(fontsize=ticksize/1.5, frameon=False)
+    #add reference line of y=1 with red dash line
+    plt.plot([0.8, 20], [1, 1], '--', color='r', linewidth=1) 
 
     plt.tight_layout()
-    plt.savefig('./Figures/Fig6b.pdf', bbox_inches='tight')
+    plt.savefig('./Figures/Fig6c.pdf', bbox_inches='tight')
     plt.show()
 
 
