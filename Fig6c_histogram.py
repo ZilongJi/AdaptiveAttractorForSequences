@@ -18,7 +18,7 @@ labelsize = 18
 linewidth = 2
 
 
-def plot4_2(simulation=[0, 0]):
+def plot6c(simulation=[0, 0]):
     plt.figure(figsize=(4, 3), dpi=300)
     fit_guess = np.array([[2,0,0],[1,1,3]])
     def plot_hist(label, simulation, mu, gamma):
@@ -53,7 +53,7 @@ def plot4_2(simulation=[0, 0]):
     plt.legend(fontsize = ticksize,frameon=False, loc='upper right')
 
     plt.tight_layout()
-    plt.savefig('./Figures/Fig4c.pdf', bbox_inches='tight')
+    plt.savefig('./Figures/Fi6c.pdf', bbox_inches='tight')
     plt.show()
 
-plot4_2([0,0])
+plot6c([0,0])

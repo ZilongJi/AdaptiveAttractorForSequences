@@ -17,7 +17,7 @@ labelsize = 18
 linewidth = 2
 
 
-def plot6_c(simulation=[0, 0]):
+def plot6_c_inset(simulation=[0, 0]):
     plt.figure(figsize=(4, 3), dpi=300)
     fit_guess = np.array([[2, 0, 0], [1, 1, 3]])
 
@@ -64,4 +64,4 @@ def plot6_c(simulation=[0, 0]):
     plt.show()
 
 
-plot6_c([0, 0])
+plot6_c_inset([0, 0])
