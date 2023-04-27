@@ -12,6 +12,7 @@ cx = center_trace[:,0]
 cy = center_trace[:,1]
 hist, bin_edges = np.histogram(step, bins=40)
 bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
+print(len(step))
 brownian_step = bm.random.normal(np.mean(step), np.var(step), (len(step), 1))
 hist_brown, bin_edges_brown = np.histogram(brownian_step, bins=40)
 bin_centers_brown = 0.5 * (bin_edges_brown[:-1] + bin_edges_brown[1:])
@@ -22,6 +23,6 @@ plt.clf()
 plt.bar(bin_centers, hist, width=0.5*(bin_edges[1]-bin_edges[0]))
 plt.plot(bin_centers, hist, 'blue')
 
-plt.bar(bin_centers_brown, hist_brown, width=0.5*(bin_edges_brown[1]-bin_edges_brown[0]), color='brown')
+plt.bar(bin_centers_brown, hist_brown, width=0.5*(bin_edges_brown[1]-bin_edges_brown[0]), color='red')
 plt.plot(bin_centers_brown, hist_brown, 'red')
 plt.show()
