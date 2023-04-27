@@ -15,12 +15,11 @@ cy = center_trace[w_start:(w_start+w_size),1]
 st = step[w_start:(w_start+w_size)]
 mr = mean_fr[w_start:(w_start+w_size)]
 
-fig1, axs = plt.subplots(4, 1, figsize=(6, 4))
+fig1, axs = plt.subplots(3, 1, figsize=(6, 4))
 # 在第一个子图中绘制折线图
 axs[0].plot(cx)
 axs[1].plot(cy)
 axs[2].plot(st)
-axs[3].plot(mr)
 
 
 x = cx[0:-1:w_step]
@@ -36,4 +35,13 @@ for i in range(x.shape[0]):
     Z += np.exp((-(X-x[i])**2-(Y-y[i])**2)/(2*sigma**2))
 ax.plot(x, y, 'blue',linewidth=0.5)
 ax.contourf(X, Y, Z, alpha=1, levels=100,cmap='inferno')
+# plt.show()
+
+Z = np.zeros((size,size))
+for i in range(x.shape[0]):
+    if i/5 == np.floor(i/5):
+        Z = np.exp((-(X-x[i])**2-(Y-y[i])**2)/(2*sigma**2))
+        fig, ax = plt.subplots(figsize=(4, 3))
+        ax.contourf(X, Y, Z, alpha=1, levels=100,cmap='inferno')
+
 plt.show()
