@@ -16,7 +16,7 @@ def f_1(x, A, B):
     return A*x + B
 
 
-def plot_6d(simulation=[0, 0, 0]):
+def plot_5d(simulation=[0, 0, 0]):
     def get_mean_var(x,y,interval):
         delta = np.sqrt((x[interval:]-x[:-interval])**2 + (y[interval:]-y[:-interval])**2)
         return [[np.mean(delta),np.std(delta)]]
@@ -65,7 +65,7 @@ def plot_6d(simulation=[0, 0, 0]):
     plt.ylabel('Mean distance (cm)',fontsize = labelsize)
 
     plt.tight_layout()
-    plt.savefig('./Figures/Fig6d.pdf', bbox_inches='tight')
+    plt.savefig('./Figures/Fig5d.pdf', bbox_inches='tight')
 
 if __name__ == '__main__':
-    plot_6d(simulation=[0,0,0])
+    plot_5d(simulation=[0,0,0])

@@ -18,7 +18,7 @@ def downsample(center, num=300):
     return ans
 
 
-def plot_6a(simulation=[0, 0, 0]):
+def plot_5a(simulation=[0, 0, 0]):
     fig, axs = plt.subplots(1, 3, figsize=(14, 3), sharex=False, sharey=False)
 
     def linetrace(mu, gamma, simulation, ax, label, sigma_u=0.5):
@@ -78,8 +78,8 @@ def plot_6a(simulation=[0, 0, 0]):
     '''
 
     #plt.show()
-    plt.savefig('./Figures/Fig6a.pdf')
+    plt.savefig('./Figures/Fig5a.pdf')
 
 
 if __name__ == '__main__':
-    plot_6a(simulation=[0, 0, 0, 0])
+    plot_5a(simulation=[0, 0, 0, 0])

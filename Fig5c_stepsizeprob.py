@@ -17,7 +17,7 @@ labelsize = 18
 linewidth = 2
 
 
-def plot6_c_inset(simulation=[0, 0]):
+def plot5_c_inset(simulation=[0, 0]):
     plt.figure(figsize=(4, 3), dpi=300)
     fit_guess = np.array([[2, 0, 0], [1, 1, 3]])
 
@@ -60,8 +60,8 @@ def plot6_c_inset(simulation=[0, 0]):
     plt.plot([0.8, 20], [1, 1], '--', color='r', linewidth=1) 
 
     plt.tight_layout()
-    plt.savefig('./Figures/Fig6c_inset.pdf', bbox_inches='tight')
+    plt.savefig('./Figures/Fig5c_inset.pdf', bbox_inches='tight')
     plt.show()
 
 
-plot6_c_inset([0, 0])
+plot5_c_inset([0, 0])
