@@ -49,7 +49,7 @@ std_dis = np.std(dis*1e2,axis=1)
 ylen = 6
 
 #plot the figure
-fig, ax = plt.subplots(figsize=(4, 3),dpi=300)
+fig, ax = plt.subplots(figsize=(4.5, 3),dpi=300)
 #set parameters for the figure
 labelsize = 18
 ticksize = 14
