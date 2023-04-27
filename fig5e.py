@@ -16,18 +16,23 @@ cy = center_trace[w_start:(w_start + w_size), 1]
 st = step[w_start:(w_start + w_size)]
 mr = mean_fr[w_start:(w_start + w_size)]
 period = 20
-phase_step = np.zeros(1, period)
-phase_r = np.zeros(1, period)
-phase = np.linspace(-np.pi, np.pi, period)
-for i in range(np.floor(len(mean_fr) / period)):
+phase_step = np.zeros(period)
+phase_r = np.zeros(period)
+phase = np.linspace(-np.pi, np.pi, period+1)[:-1]
+for i in range(int(len(mean_fr) / period)):
     for j in range(period):
-        phase_step[j] = phase_step[j] + step[i * period + j + 5]
-        phase_r[j] = phase_r[j] + mean_fr[i * period + j + 5]
+        phase_step[j] = phase_step[j] + step[i * period + j]
+        phase_r[j] = phase_r[j] + mean_fr[i * period + j]
+phase_r = (phase_r-np.min(phase_r))/(np.max(phase_r)-np.min(phase_r))
+phase_step = (phase_step-np.min(phase_step))/(np.max(phase_step)-np.min(phase_step))
+# 首尾相连
+phase = np.append(phase, phase[0])
+phase_r = np.append(phase_r, phase_r[0])
+phase_step = np.append(phase_step, phase_step[0])
 
-fig1, axs = plt.subplots(2, 1, figsize=(4, 6), sharex=True)
-axs[0].plot(phase, phase_r)
-down_sample = 4
-axs[0].bar(phase[0:-1:down_sample], phase_r[0:-1:down_sample])
-axs[1].plot(phase[0:-1:down_sample], phase_step[0:-1:down_sample])
-axs[0].bar(phase[0:-1:down_sample], phase_step[0:-1:down_sample])
+fig = plt.figure(figsize=(6,6))
+ax = fig.add_subplot(111, projection='polar')
+ax.plot(phase, phase_r)
+ax.plot(phase, phase_step)
+
 plt.show()

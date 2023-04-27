@@ -18,7 +18,7 @@ mr = mean_fr[w_start:(w_start + w_size)]
 period = int(20)
 phase_step = np.zeros(period)
 phase_r = np.zeros(period)
-phase = np.linspace(-np.pi, np.pi, period)
+phase = np.linspace(-np.pi, np.pi, period+1)[:-1]
 for i in range(int(len(mean_fr) / period)):
     for j in range(period):
         phase_step[j] = phase_step[j] + step[i * period + j]
