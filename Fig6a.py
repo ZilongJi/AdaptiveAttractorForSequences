@@ -54,7 +54,7 @@ ax.set_ylabel('Y position (cm)', fontsize=labelsize)
 ax.tick_params(labelsize=ticksize)
 plt.tight_layout()
 #save figure
-plt.savefig('./Figures/Fig6a_1.png', bbox_inches='tight')
+plt.savefig('./Figures/Fig6a_1.pdf', bbox_inches='tight')
 
 #%plot each of the sub figures
 #create a folder to save figures
@@ -71,7 +71,7 @@ for i in range(x.shape[0]):
         #set axis off
         ax.axis('off')
         #save figure to the folder
-        plt.savefig('Figures/Fig6a/Fig6a_'+str(i)+'.png', bbox_inches='tight')
+        plt.savefig('Figures/Fig6a/Fig6a_'+str(i)+'.pdf', bbox_inches='tight')
 
 fig2, axs = plt.subplots(3, 1, figsize=(4, 3), dpi=300)
 #   
@@ -112,7 +112,7 @@ axs[2].tick_params(axis='both', which='major', labelsize=ticksize)
 fig2.align_ylabels(axs[:])  
 #plt.tight_layout()
 #save figure
-plt.savefig('./Figures/Fig6a_2.png', bbox_inches='tight')
+plt.savefig('./Figures/Fig6a_2.pdf', bbox_inches='tight')
 
 
 # %%
