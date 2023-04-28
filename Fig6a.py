@@ -29,7 +29,7 @@ linecolor = '#009FB9'
 #plot figure 1
 x = cx[0:-1:w_step]
 y = cy[0:-1:w_step]
-fig1, ax = plt.subplots(figsize=(4, 3), dpi=300)
+fig1, ax = plt.subplots(figsize=(3.5, 3), dpi=300)
 size = 128
 sigma = 20
 xx = np.linspace(np.min(x)-10,np.max(cx)+10,size)
@@ -73,7 +73,7 @@ for i in range(x.shape[0]):
         #save figure to the folder
         plt.savefig('Figures/Fig6a/Fig6a_'+str(i)+'.pdf', bbox_inches='tight')
 
-fig2, axs = plt.subplots(3, 1, figsize=(4, 3), dpi=300)
+fig2, axs = plt.subplots(3, 1, figsize=(3.5, 3), dpi=300)
 #   
 axs[0].plot(cx, color=linecolor)
 #make the x axis invisible
