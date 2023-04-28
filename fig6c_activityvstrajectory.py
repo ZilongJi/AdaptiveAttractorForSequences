@@ -76,4 +76,3 @@ plt.tight_layout()
 #save figure
 fig1.savefig('Figures/Fig6c.pdf', bbox_inches='tight')
 
-# %%
