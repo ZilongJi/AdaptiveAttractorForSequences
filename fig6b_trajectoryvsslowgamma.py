@@ -61,5 +61,10 @@ axs[1].set_yticks([])
 
 #align the ylabels
 fig1.align_ylabels(axs)
+
+plt.tight_layout()
+
 #save the figure
 fig1.savefig('./Figures/Fig6b.pdf', bbox_inches='tight')
+
+# %%
