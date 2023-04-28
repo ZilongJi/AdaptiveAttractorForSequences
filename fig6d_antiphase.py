@@ -40,8 +40,8 @@ phase_step = np.append(phase_step, phase_step[0])
 #%%
 fig = plt.figure(figsize=(3,3), dpi=300)
 ax = fig.add_subplot(111, projection='polar')
-ax.plot(phase, phase_r)
-ax.plot(phase, phase_step)
+ax.plot(phase, phase_r, color='#009FB9')
+ax.plot(phase, phase_step, color='#F18D00')
 
 #add grid
 ax.grid(True)
