@@ -30,9 +30,7 @@ def plot_5b(simulation=[0, 0, 0, 0, 0]):
         center_trace = np.load('./data/fig6b_brownian' + str(mu) + '_' + str(gamma) + '.npy')
         shuffled_1 = np.random.permutation(center_trace[:,0])
         shuffled_2 = np.random.permutation(center_trace[:,1])
-        center_shuffle = np.column_stack((shuffled_1, shuffled_1))
-
-        print(center_shuffle)
+        center_shuffle = np.column_stack((shuffled_1, shuffled_2))
         ans = []
         ans_shuffle = []
         interval_list = np.array(range(1, 100, 10))
@@ -66,13 +64,13 @@ def plot_5b(simulation=[0, 0, 0, 0, 0]):
     ax.set_yticks([0.0001, 0.001, 0.01, 0.1, 1, 10])
     ax.set_yticklabels(['$10^{-2}$', '$10^{-1}$', '$10^0$', '$10^1$', '$10^2$', '$10^3$'])
 
-    plot_mean_var(0.9, 0.1, simulation[0], 0, ax, 3)
-    plot_mean_var(0.9, 0.1, simulation[1], 2, ax, 2)
-    plot_mean_var(0.9, 0.1, simulation[2], 1, ax, 1)
-    plot_mean_var(0.9, 0.1, simulation[3], 2, ax, 0.5)
-    plot_mean_var(0.9, 0.1, simulation[4], 2, ax, 0.2)
+    plot_mean_var(0.9, 0.1, simulation[0], 0, ax, 1)
+    plot_mean_var(0.9, 0.1, simulation[1], 1, ax, 0.9)
+    plot_mean_var(0.9, 0.1, simulation[2], 2, ax, 0.7)
+    plot_mean_var(0.9, 0.1, simulation[3], 3, ax, 0.5)
+    plot_mean_var(0.9, 0.1, simulation[4], 4, ax, 0.2)
 
-    plt.legend(fontsize=ticksize / 1.5, frameon=False, loc='upper left')
+    # plt.legend(fontsize=ticksize / 1.5, frameon=False, loc='upper left')
     plt.xlabel(r'Time-step interval $(\Delta t/\tau)$', fontsize=labelsize)
     plt.ylabel('Mean distance (cm)', fontsize=labelsize)
 
