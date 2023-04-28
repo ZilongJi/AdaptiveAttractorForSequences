@@ -44,6 +44,11 @@ axs[0].spines['top'].set_visible(False)
 #add ylabel
 axs[0].set_ylabel('Mov. (cm)', fontsize=labelsize)
     
+#add y ticks
+axs[0].set_yticks([0, 10, 20])
+#add y tick labels
+axs[0].set_yticklabels([0, 10, 20], fontsize=ticksize)
+
 axs[1].plot(mr, linecolor)
 for peaks in Peaks:
     axs[1].plot([peaks, peaks],[0,np.max(mr)],'k--', linewidth=1)
@@ -54,10 +59,14 @@ axs[1].spines['top'].set_visible(False)
 
 #add xlabel and ylabel and chang label to two lines
 axs[1].set_xlabel('Time (ms)', fontsize=labelsize)
-axs[1].set_ylabel('Slow \n Gamma', fontsize=labelsize)
+axs[1].set_ylabel('Slow \n gamma', fontsize=labelsize)
 
 #set y ticks off for the second subplot
 axs[1].set_yticks([])
+#set x ticks
+axs[1].set_xticks([0, 50, 100, 150])
+#set x tick labels
+axs[1].set_xticklabels([0, 50, 100, 150], fontsize=ticksize)
 
 #align the ylabels
 fig1.align_ylabels(axs)
