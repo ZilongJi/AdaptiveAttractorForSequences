@@ -2,6 +2,7 @@ import brainpy as bp
 import brainpy.math as bm
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 import jax.numpy as jnp
 from jax import lax
 from scipy import stats
@@ -15,7 +16,7 @@ print(bp.__version__)
 
 
 class CANN2D(bp.DynamicalSystemNS):
-    def __init__(self, length=128, tau=10, tau_v=200, m_0=0.7, k=0.05, a=np.pi / 6, A=0.1, J0=1., sigma_u=0.,
+    def __init__(self, length=128, tau=10, tau_v=200, m_0=0.7, k=0.05, a=np.pi / 6, A=0.1, J0=1., sigma_u=0.5,
                  sigma_v=0.5, z_min=-bm.pi, z_max=bm.pi, name=None):
         super(CANN2D, self).__init__(name=name)
 
@@ -92,7 +93,9 @@ class CANN2D(bp.DynamicalSystemNS):
     def update(self, inp):
         rfft = bm.fft.fft2(self.r)
         interaction = bm.real(bm.fft.ifft2(rfft * self.conn_fft))
-        self.u.value = self.u + (-self.u + inp + interaction - self.v) / self.tau * bm.get_dt()
+        self.u.value = self.u + (-self.u + inp + interaction - self.v) / self.tau * bm.get_dt() \
+                       + self.sigma_u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(
+            bm.get_dt() / self.tau)
         self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt() \
                        + self.sigma_v * bm.random.normal(0, 1, (self.length, self.length)) * \
                        bm.sqrt(bm.get_dt() / self.tau_v)
@@ -104,8 +107,8 @@ class CANN2D(bp.DynamicalSystemNS):
         self.get_center()
 
 
-def get_trace(duration=30000, beta=0.5, sample_rate=20, T_start=2000, T_sample=1000, visual=False):
-    cann = CANN2D()
+def get_trace(duration=30000, beta=0.5, sample_rate=20, T_start=2000, T_sample=1000, visual=False, m_0 = 0.7):
+    cann = CANN2D(m_0 = 0.7)
     Iext, length = bp.inputs.section_input(
         values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
         durations=[500., duration],
@@ -122,15 +125,28 @@ def get_trace(duration=30000, beta=0.5, sample_rate=20, T_start=2000, T_sample=1
     wave = beta * np.sin(xx * 2 * np.pi / T_gamma)
     Iext = bm.as_numpy(Iext) + wave
 
+    def Gen_Poisson_spikes(rate, thres, dt):
+        rate = bm.where(rate < thres, 0, rate)
+        p = rate * dt
+        p_j = np.random.uniform(0, 1, size=rate.shape)
+        spike = bm.ones_like(rate)
+        spike = bm.where(p < p_j, 0, spike)
+        return spike
+
     def run_net(inp, ):  # 20 x size
         for i in range(sample_rate):
             cann.update(inp[i])
-        return cann.center, cann.rm
+        rate = cann.r
+        thres = 0.01
+        dt = 1
+        spike = Gen_Poisson_spikes(rate, thres, dt)
+        return cann.center, cann.rm, spike
 
     t0 = time.time()
-    center_trace, fr = bm.for_loop(run_net, Iext.reshape(-1, sample_rate, cann.length, cann.length))
+    center_trace, fr, spike = bm.for_loop(run_net, Iext.reshape(-1, sample_rate, cann.length, cann.length))
+    spike_num = np.mean(spike, axis=(1, 2)) * (128 ** 2)
     print(time.time() - t0)
-
+    print(spike_num.shape)
     center_trace = bm.as_numpy(center_trace)
     fr = bm.as_numpy(fr)
 
@@ -147,8 +163,8 @@ def get_trace(duration=30000, beta=0.5, sample_rate=20, T_start=2000, T_sample=1
     if visual == True:
         plt.hist(step, bins=60)
         plt.show()
-        plt.plot(mean_fr[T_start:T_sample+T_start])
+        plt.plot(mean_fr[T_start:T_sample + T_start])
         plt.show()
         plt.plot(center_trace[T_start:, 0], center_trace[T_start:, 1])
         plt.show()
-    return center_trace, step, mean_fr
+    return center_trace, step, mean_fr, spike_num
