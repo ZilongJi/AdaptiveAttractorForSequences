@@ -14,7 +14,7 @@ bm.set_platform('cpu')
 labelsize = 18
 ticksize = 14
 
-center_trace, step, mean_fr, spike_num = TwoD_gamma.get_trace(duration=3e4, beta=0.2, sample_rate=20, T_start=2000, T_sample=1000, visual=False, m_0 = 0.95)
+center_trace, step, mean_fr, spike_num = TwoD_gamma.get_trace(duration=3e4, beta=0.2, sample_rate=20, T_start=2000, T_sample=1000, visual=False, m_0 = 0.9)
 w_start = 95
 w_size = 160
 w_step = 3
@@ -53,15 +53,11 @@ indices = np.where(step < threshold)
 index = np.where(step >= threshold)
 spike_low = np.array(spike_num[indices])
 spike_high = np.array(spike_num[index])
-bins = np.linspace(0, 10, 11)
-print(np.min(spike_num))
+bins = np.linspace(0, 15, 11)
 hist_low, edges_l = np.histogram(spike_low, bins=bins)
 hist_high, edges_h = np.histogram(spike_high, bins=bins)
 bin_centers_l = 0.5 * (edges_l[:-1] + edges_l[1:])
 bin_centers_h = 0.5 * (edges_h[:-1] + edges_h[1:])
-
-print(bin_centers_l)
-print(bin_centers_h)
 hist_low = hist_low / np.sum(hist_low)
 hist_high = hist_high / np.sum(hist_high)
 fig2, axes = plt.subplots(figsize=(6, 4))
