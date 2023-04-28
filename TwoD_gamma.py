@@ -14,9 +14,6 @@ bm.set_platform('cpu')
 print(bp.__version__)
 
 
-# sys.exit()
-
-
 class CANN2D(bp.DynamicalSystemNS):
     def __init__(self, length=128, tau=10, tau_v=200, m_0=0.7, k=0.05, a=np.pi / 6, A=0.1, J0=1., sigma_u=0.,
                  sigma_v=0.5, z_min=-bm.pi, z_max=bm.pi, name=None):
