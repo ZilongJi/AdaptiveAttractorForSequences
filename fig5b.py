@@ -73,7 +73,7 @@ def plot_6d(simulation=[0, 0, 0, 0, 0]):
     plt.ylabel('Mean distance (cm)', fontsize=labelsize)
 
     plt.tight_layout()
-    plt.savefig('./Figures/Fig6d.pdf', bbox_inches='tight')
+    plt.savefig('./Figures/Fig5b.pdf', bbox_inches='tight')
     plt.show()
 
 
