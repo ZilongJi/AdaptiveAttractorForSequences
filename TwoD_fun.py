@@ -37,7 +37,7 @@ class CANN2D(bp.dyn.NeuGroup):
     self.conn_mat = self.make_conn()
     self.conn_fft = bm.fft.fft2(self.conn_mat)
     self.reset_state()
-    self.center = bm.zeros(2)
+    self.center = bm.Variable(bm.zeros(2))
 
   def reset_state(self, batch_size=None):
     # variables
@@ -115,9 +115,7 @@ def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=20, sigma_u = 0.5, vis
   runner = bp.DSRunner(cann,
                        inputs = ['input', Iext, 'iter'],
                        monitors = ['r', 'center'],
-                       dyn_vars = bm.random.DEFAULT,
                        dt = 0.01,
-                       jit = True,
                        numpy_mon_after_run=False)
   runner.run(length)
   center_trace = runner.mon.center

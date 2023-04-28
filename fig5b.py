@@ -17,7 +17,7 @@ def f_1(x, A, B):
     return A * x + B
 
 
-def plot_6d(simulation=[0, 0, 0, 0, 0]):
+def plot_5b(simulation=[0, 0, 0, 0, 0]):
     def get_mean_var(x, y, interval):
         delta = np.sqrt((x[interval:] - x[:-interval]) ** 2 + (y[interval:] - y[:-interval]) ** 2)
         return [[np.mean(delta), np.std(delta)]]
@@ -28,7 +28,11 @@ def plot_6d(simulation=[0, 0, 0, 0, 0]):
             np.save('./data/fig6b_brownian' + str(mu) + '_' + str(gamma) + '.npy', center_trace)
 
         center_trace = np.load('./data/fig6b_brownian' + str(mu) + '_' + str(gamma) + '.npy')
-        center_shuffle = random.shuffle
+        shuffled_1 = np.random.permutation(center_trace[:,0])
+        shuffled_2 = np.random.permutation(center_trace[:,1])
+        center_shuffle = np.column_stack((shuffled_1, shuffled_1))
+
+        print(center_shuffle)
         ans = []
         ans_shuffle = []
         interval_list = np.array(range(1, 100, 10))
@@ -47,7 +51,7 @@ def plot_6d(simulation=[0, 0, 0, 0, 0]):
                     capsize=2)
 
         ax.errorbar(interval_list, ans_shuffle[:, 0], ans_shuffle[:, 1], label=r'$~\alpha = $' + str(round(A1, 2)),
-                    color='blue',
+                    color='red',
                     capsize=2)
 
     plt.figure(figsize=(4, 3), dpi=300)
@@ -62,11 +66,11 @@ def plot_6d(simulation=[0, 0, 0, 0, 0]):
     ax.set_yticks([0.0001, 0.001, 0.01, 0.1, 1, 10])
     ax.set_yticklabels(['$10^{-2}$', '$10^{-1}$', '$10^0$', '$10^1$', '$10^2$', '$10^3$'])
 
-    plot_mean_var(0.9, 2, simulation[0], 0, ax)
-    plot_mean_var(0.9, 1.5, simulation[1], 2, ax)
-    plot_mean_var(0.9, 1, simulation[2], 1, ax)
-    plot_mean_var(0.9, 0.5, simulation[3], 2, ax)
-    plot_mean_var(0.9, 0.1, simulation[4], 2, ax)
+    plot_mean_var(0.9, 0.1, simulation[0], 0, ax, 3)
+    plot_mean_var(0.9, 0.1, simulation[1], 2, ax, 2)
+    plot_mean_var(0.9, 0.1, simulation[2], 1, ax, 1)
+    plot_mean_var(0.9, 0.1, simulation[3], 2, ax, 0.5)
+    plot_mean_var(0.9, 0.1, simulation[4], 2, ax, 0.2)
 
     plt.legend(fontsize=ticksize / 1.5, frameon=False, loc='upper left')
     plt.xlabel(r'Time-step interval $(\Delta t/\tau)$', fontsize=labelsize)
@@ -78,4 +82,4 @@ def plot_6d(simulation=[0, 0, 0, 0, 0]):
 
 
 if __name__ == '__main__':
-    plot_6d(simulation=[1, 1, 1, 1, 1])
+    plot_5b(simulation=[1, 1, 1, 1, 1])

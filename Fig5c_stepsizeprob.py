@@ -64,4 +64,4 @@ def plot5_c_inset(simulation=[0, 0]):
     plt.show()
 
 
-plot5_c_inset([0, 0])
+plot5_c_inset([1, 1])
