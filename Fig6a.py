@@ -110,7 +110,7 @@ axs[2].tick_params(axis='both', which='major', labelsize=ticksize)
 
 #align the y labels of three subplots   
 fig2.align_ylabels(axs[:])  
-#plt.tight_layout()
+plt.tight_layout()
 #save figure
 plt.savefig('./Figures/Fig6a_2.pdf', bbox_inches='tight')
 
