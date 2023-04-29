@@ -14,7 +14,7 @@ bm.set_platform('cpu')
 labelsize = 18
 ticksize = 14
 
-center_trace, step, mean_fr, spike_num = TwoD_gamma.get_trace(duration=3e4, beta=0.2, sample_rate=20, T_start=2000, T_sample=1000, visual=False, m_0 = 0.9)
+center_trace, step, mean_fr, spike_num = TwoD_gamma.get_trace(duration=3e4, beta=0.2, sample_rate=20, T_start=2000, T_sample=1000, visual=False, m_0 = 0.7)
 w_start = 95
 w_size = 160
 w_step = 3
@@ -48,12 +48,12 @@ ax.set_rlabel_position(60)
 #save figure
 fig.savefig('./Figures/Fig6d.pdf', bbox_inches='tight')
 
-threshold = 0.05
+threshold = 0.04
 indices = np.where(step < threshold)
 index = np.where(step >= threshold)
 spike_low = np.array(spike_num[indices])
 spike_high = np.array(spike_num[index])
-bins = np.linspace(0, 15, 11)
+bins = np.linspace(0, 12, 11)
 hist_low, edges_l = np.histogram(spike_low, bins=bins)
 hist_high, edges_h = np.histogram(spike_high, bins=bins)
 bin_centers_l = 0.5 * (edges_l[:-1] + edges_l[1:])
