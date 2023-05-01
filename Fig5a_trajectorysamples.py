@@ -4,6 +4,11 @@ from matplotlib.collections import LineCollection
 import TwoD_fun
 import brainpy.math as bm
 
+#set default ramndom seed for reproducibility
+bm.random.seed(1)
+#set backend to cpu
+bm.set_platform('cpu')
+
 #xlabel = ['Super-diffusion', 'Brownian-diffusion', 'Stationary', 'Traveling wave']
 xlabel = ['Super-diffusion', 'Brownian-diffusion', 'Stationary']
 
@@ -66,18 +71,7 @@ def plot_5a(simulation=[0, 0, 0]):
     line = linetrace(0.1, 1, simulation[0], axs[0], 0)
     line = linetrace(0.5, 0.1, simulation[1], axs[1], 1)
     line = linetrace(0.9, 0.01, simulation[2], axs[2], 2)
-    #line = linetrace(-0.3, 0, simulation[3], axs[3], 3, sigma_u=0.05)
 
-    '''
-    fig.subplots_adjust(right=0.9)
-    cbar_ax = fig.add_axes([0.92, 0.12, 0.015, 0.75])
-    axcb = fig.colorbar(line, cax=cbar_ax, cmap='inferno')
-    axcb.set_label(r'Time $t(/\tau)$', fontsize=labelsize)
-    axcb.set_ticks([0, 0.5, 1])
-    axcb.set_ticklabels(['0', '50', '100'], fontsize=ticksize)
-    '''
-
-    #plt.show()
     plt.savefig('./Figures/Fig5a.pdf')
 
 

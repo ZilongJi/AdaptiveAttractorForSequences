@@ -61,7 +61,6 @@ def plot5_c_inset(simulation=[0, 0]):
 
     plt.tight_layout()
     plt.savefig('./Figures/Fig5c_inset.pdf', bbox_inches='tight')
-    plt.show()
 
 
-plot5_c_inset([1, 1])
+plot5_c_inset([0, 0])

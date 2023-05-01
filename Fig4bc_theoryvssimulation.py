@@ -1,5 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import brainpy.math as bm
+#set default ramndom seed for reproducibility
+bm.random.seed(1)
+#set backend to cpu
+bm.set_platform('cpu')
 
 # Levy exponent v.s. adaptation strength; Levy exponent v.s. noise strength
 

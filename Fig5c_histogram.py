@@ -2,13 +2,14 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 from scipy.stats import levy_stable
-from matplotlib.collections import LineCollection
-from mpl_toolkits.mplot3d import Axes3D
 import TwoD_fun
 import levy
-import brainpy as bp
 import brainpy.math as bm
 
+#set default ramndom seed for reproducibility
+bm.random.seed(1)
+#set backend to cpu
+bm.set_platform('cpu')
 
 fit_color = ['#009FB9','#F18D00']
 legend = ['Brownian-diffusion', 'Super-diffusion']

@@ -12,9 +12,13 @@ labelsize = 18
 position_color = '#F18D00'
 bump_color = '#009FB9'
 
+#set default ramndom seed for reproducibility
+bm.random.seed(1)
+#set backend to cpu
+bm.set_platform('cpu')
+
 def f_1(x, A, B):
     return A*x + B
-
 
 def plot_5d(simulation=[0, 0, 0]):
     def get_mean_var(x,y,interval):

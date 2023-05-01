@@ -4,6 +4,11 @@ from matplotlib.collections import LineCollection
 import TwoD_fun
 import brainpy.math as bm
 
+#set default ramndom seed for reproducibility
+bm.random.seed(1)
+#set backend to cpu
+bm.set_platform('cpu')
+
 xlabel = ['Traveling wave', 'Super-diffusion','Brownian-diffusion','Stationary']
 
 ticksize = 14
