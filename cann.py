@@ -75,8 +75,8 @@ class CANN1D(bp.NeuGroup):
         r = bm.fft.fft(self.r)
         Irec = bm.real(bm.fft.ifft(r * self.conn_fft))
         # Irec = bm.dot(self.conn_mat, self.r)
-        self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau * tdi.dt
-        self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * tdi.dt
+        self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau *bm.get_dt()
+        self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt()
         r1 = bm.square(self.u)
         r2 = 1.0 + self.k * bm.sum(r1)
         self.r.value = r1 / r2
@@ -155,8 +155,8 @@ class CANN_noise(bp.NeuGroup):
         r = bm.fft.fft(self.r)
         Irec = bm.real(bm.fft.ifft(r * self.conn_fft))
         # Irec = bm.dot(self.conn_mat, self.r)
-        self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau * tdi.dt
-        self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * tdi.dt
+        self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau * bm.get_dt()
+        self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt()
         r1 = bm.square(self.u)
         r2 = 1.0 + self.k * bm.sum(r1)
         self.r.value = r1 / r2
