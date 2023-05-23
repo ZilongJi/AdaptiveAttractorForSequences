@@ -55,7 +55,7 @@ custom_color = '#009FB9'
 for axis in ['top','bottom','left','right']:
     ax.spines[axis].set_linewidth(1)
 
-plt.plot(Mbar, v_int, color='k', linewidth=2)
+plt.plot(Mbar*3/144, v_int, color='k', linewidth=2)
 
 plt.xlabel(r'Adaptation strength $m$', fontsize=labelsize)
 plt.ylabel('v_int (m/s)', fontsize=labelsize)
