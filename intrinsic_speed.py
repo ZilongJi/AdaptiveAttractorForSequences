@@ -44,8 +44,8 @@ Mbar = bm.linspace(0,2.5,num_p)
 v_int = np.zeros(num_p,)
 for i in range(num_p):
     v_int[i] = intrinsic_speed(mbar=Mbar[i], duration=15000)
-    print(v_int[i])
-    print(i)
+    # print(v_int[i])
+    print(i/num_p)
 fig, ax = plt.subplots(figsize=(4.5, 3),dpi=200)
 #set parameters for the figure
 labelsize = 18
