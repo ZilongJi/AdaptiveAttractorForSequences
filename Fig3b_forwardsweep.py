@@ -1,8 +1,6 @@
 import brainpy as bp
 import brainpy.math as bm
 import numpy as np
-import jax
-import seaborn as sns
 import matplotlib.pyplot as plt
 from cann import CANN1D
 import scipy

@@ -35,7 +35,7 @@ runner.run(dur)
 
 
 # Plot the figure
-fig = plt.figure(figsize=(6, 3), dpi=300)
+fig = plt.figure(figsize=(6, 4), dpi=300)
 ax = fig.add_subplot(1, 1, 1)
 #set some parameters
 labelsize = 18

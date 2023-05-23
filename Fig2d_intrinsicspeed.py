@@ -3,7 +3,8 @@ import brainpy.math as bm
 import numpy as np
 import matplotlib.pyplot as plt
 from cann import CANN1D
-import time
+
+#%%
 #set default ramndom seed for reproducibility
 np.random.seed(0)
 #set backend to cpu
@@ -46,7 +47,10 @@ for i in range(num_p):
     v_int[i] = intrinsic_speed(mbar=Mbar[i], duration=15000)
     # print(v_int[i])
     print(i/num_p)
-fig, ax = plt.subplots(figsize=(4.5, 3),dpi=200)
+    
+    
+ #%%   
+fig, ax = plt.subplots(figsize=(6, 4),dpi=300)
 #set parameters for the figure
 labelsize = 18
 ticksize = 14
@@ -55,17 +59,23 @@ custom_color = '#009FB9'
 for axis in ['top','bottom','left','right']:
     ax.spines[axis].set_linewidth(1)
 
-plt.plot(Mbar*3/144, v_int, color='k', linewidth=2)
+#plot Mbar v.s. v_int with scatters and lines
+plt.plot(Mbar*3/144, v_int, color='k', linewidth=2, linestyle='--')
+#add scatter points
+plt.scatter(Mbar*3/144, v_int, s=100, c='#009FB9', marker='o', alpha=0.8, edgecolors='k')    
 
 plt.xlabel(r'Adaptation strength $m$', fontsize=labelsize)
-plt.ylabel('v_int (m/s)', fontsize=labelsize)
+plt.ylabel('$v_{int}$ (m/s)', fontsize=labelsize)
 
-# ste the xticks and yticks
-# xticks = np.array([0,0.1,0.2])
-# yticks = np.array([0,0.5,1,1.5])
+#set x and y ticks
+xticks = [0,0.01,0.02,0.03,0.04,0.05]
+yticks = [0,1,2,3,4]
+ax.set_xticks(xticks)
+ax.set_yticks(yticks)
 
-# ax.set_xticks(xticks)
-# ax.set_yticks(yticks)
+#add reference line of x=3/144
+ymin, ymax = ax.get_ylim()
+plt.plot([3/144,3/144],[ymin,ymax], color='#F18D00', linewidth=2, linestyle='--')
 
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
@@ -76,10 +86,11 @@ ax.spines['top'].set_visible(False)
 
 plt.tight_layout()
 plt.show()
-fig.savefig('Figures/v_int.pdf')
+fig.savefig('Figures/Fig2d.pdf')
 
+#%%
 bm.clear_buffer_memory()
 
 
 
-
+# %%

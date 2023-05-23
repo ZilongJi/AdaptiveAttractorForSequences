@@ -56,4 +56,4 @@ axes[1].tick_params(axis='x', labelsize=ticksize)
 axes[1].set_yticks([])
 plt.tight_layout()
 
-fig.savefig('Figures/Fig2b.pdf', bbox_inches='tight')
+fig.savefig('Figures/Fig2a.pdf', bbox_inches='tight')

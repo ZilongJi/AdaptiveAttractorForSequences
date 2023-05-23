@@ -47,7 +47,7 @@ mean_dis = np.mean(dis*1e2, axis=1)
 
 #%%
 vext = vbar*0.4/144*1e3
-fig, ax = plt.subplots(figsize=(4.5, 3), dpi=300)
+fig, ax = plt.subplots(figsize=(6, 4), dpi=300)
 #set parameters
 labelsize = 18
 ticksize = 14
@@ -84,7 +84,7 @@ ax.spines['top'].set_visible(False)
 
 plt.tight_layout()
 plt.show()
-fig.savefig('Figures/Fig2d.pdf', dpi=300)
+fig.savefig('Figures/Fig2e.pdf', dpi=300)
 
 
 
