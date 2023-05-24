@@ -65,13 +65,18 @@ plt.plot(Mbar*3/144, v_int, color='k', linewidth=2, linestyle='--')
 plt.scatter(Mbar*3/144, v_int, s=100, c='#009FB9', marker='o', alpha=0.8, edgecolors='k')    
 
 plt.xlabel(r'Adaptation strength $m$', fontsize=labelsize)
-plt.ylabel('$v_{int}$ (m/s)', fontsize=labelsize)
+plt.ylabel('$v_{int}$ (cm/s)', fontsize=labelsize)
 
 #set x and y ticks
 xticks = [0,0.01,0.02,0.03,0.04,0.05]
-yticks = [0,1,2,3,4]
+yticks = [0.0,1.0,2.0,3.0,4.0]
+
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
+
+#change y tick labels by timing 100
+yticklabels = [str(int(100*i)) for i in yticks]
+ax.set_yticklabels(yticklabels)
 
 #add reference line of x=3/144
 ymin, ymax = ax.get_ylim()
