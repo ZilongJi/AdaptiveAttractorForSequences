@@ -68,10 +68,13 @@ plt.ylabel('Lag distance (cm)', fontsize=labelsize)
 
 # set the xticks and yticks
 xticks = np.asarray([0,2.5,5,7.5,10])
+yticks = np.asarray([0.0,2.0,4.0,6.0])
 ax.set_xticks(xticks)
+ax.set_yticks(yticks)
 #chnage xtick labels by times 100
 xticklabels = [str(int(xtick*100)) for xtick in xticks]
 ax.set_xticklabels(xticklabels, fontsize=ticksize)
+ax.set_yticklabels(yticks, fontsize=ticksize)   
 
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
