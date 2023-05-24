@@ -45,7 +45,7 @@ def plot_5d(simulation=[0, 0, 0]):
         y1 = A1 * x1 + B1
         ax.plot(np.exp(x1), np.exp(y1), '--', color = color_list[label], alpha = 0.5)
 
-        ax.errorbar(interval_list,ans[:,0],ans[:,1],label = xlabel[label] + r'$~\alpha = $' + str(round(A1,2)), color = color_list[label], capsize=2)    
+        ax.errorbar(interval_list,ans[:,0],ans[:,1],label = xlabel[label] + r'$~\eta= $' + str(round(A1,2)), color = color_list[label], capsize=2)    
 
     plt.figure(figsize=(4, 3), dpi=300)
     ax = plt.axes()
