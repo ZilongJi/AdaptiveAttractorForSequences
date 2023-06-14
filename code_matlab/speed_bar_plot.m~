@@ -13,14 +13,8 @@ speed_travel = Speed_replay(Speed_replay>thres);
 x = [1,5,9];
 barwidth = 0.8;
 y = [mean(Speed_replay)*1e3/3,mean(Speed_theta)*1e3/3,mean(speed_travel)*1e3/3];
-std_y = [std(Speed_replay*1e3/3),...
-    std(Speed_theta*1e3/3),...
-    std(speed_travel*1e3/3)];
 
-bar(x,y,barwidth),hold on
-h = errorbar(x, y, std_y, 'LineStyle', 'none', 'Marker', 'o', 'MarkerFaceColor', 'blue', 'MarkerEdgeColor', 'blue');
-set(h, 'Color', 'red');
-set(h, 'LineWidth', 2);
+bar(x,y,barwidth)
 xlim([-1 11])
 
 xticklabels({'All replays', 'Theta sequences', 'Traveling segments of replays'});
