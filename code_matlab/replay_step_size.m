@@ -25,7 +25,7 @@ h = 16.4;
 pos = pos';
 vbar = 0.5;
 v=a/tau_v*vbar;
-T = 100*pi/v;
+T = 20*pi/v;
 loc=-pi*5/8;
 n_m = 10;
 mbar = linspace(0,1,n_m);
@@ -80,9 +80,10 @@ for mi = 1:n_m
 end
 toc
 %%
-errorbar(mean_speed,var_speed,'b','linewidth',2)
-xticks(1:3:length(mean_speed));
-xticklabels(round(mbar(1:3:end)/48,3));
+plot(mbar/48,mean_speed,'b','linewidth',2),hold on
+shadedErrorBar(mbar/48,mean_speed,var_speed,'lineprops','-b','patchSaturation',0.33)
+xticks(round(mbar(1:3:end)/48,3));
+% xticklabels(round(mbar(1:3:end)/48,3));
 
 % save('mean_speed_replay.mat','mean_speed')
 % save('std_speed_replay.mat','std_speed')
