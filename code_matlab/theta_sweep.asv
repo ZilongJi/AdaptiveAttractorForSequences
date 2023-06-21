@@ -86,34 +86,21 @@ for mi = 1:n_m
 end
 toc
 %%
-% A4 paper size in inches
-a4WidthInches = 8.27;
-a4HeightInches = 11.69;
-
-% Calculate the desired figure width
-figureWidthInches = (2/3) * a4WidthInches;
-
-% Create the figure with the specified width
-figure('Units', 'inches', 'Position', [0 0 figureWidthInches 1/3*figureWidthInches]);
-
-X = mbar/48;
-
-plot(X, amplitude,'-o', 'Color','#009FB9','linewidth',1);
-hold on
-scatter(X, amplitude, 50,'MarkerFaceColor', '#F18D00', 'MarkerEdgeColor', '#F18D00');
+plot(amplitude,'b','linewidth',2),hold on
+plot(amplitude,'r.','markersize',20)
 xticks(1:3:length(mbar));
 xticklabels(round(mbar(1:3:end)/48,3));
-xlabel('Adaptation strength', 'FontName', 'Arial', 'FontSize', 10)
-ylabel('Sweeps amp.', 'FontName', 'Arial', 'FontSize', 10)
-set(gca, 'LineWidth', 1.0);
+xlabel('Adaptation strength m')
+ylabel('Theta sweeps amplitude', 'FontName', 'Arial', 'FontSize', 20)
+% 设置坐标轴的字体和大小
+set(gca, 'FontName', 'Arial', 'FontSize', 20);
+set(gca, 'LineWidth', 1.5);
 
 
 figure
-
-plot(X, omega,'-o', 'Color','#009FB9','linewidth',1);
+plot(omega,'Color','#009FB9','linewidth',2, 'markersize',20);
 hold on
-scatter(X, omega, 50,'MarkerFaceColor', '#F18D00', 'MarkerEdgeColor', '#F18D00');
-
+plot(omega,'Color', '#F18D00','markersize',20)
 xticks(1:3:length(mbar));
 xticklabels(round(mbar(1:3:end)/48,3));
 xlabel('Adaptation strength m')
