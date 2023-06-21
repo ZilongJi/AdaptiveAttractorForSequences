@@ -26,7 +26,7 @@ vbar = 0.5;
 v=a/tau_v*vbar;
 T = 20*pi/v;
 loc=-pi*5/8;
-n_m = 10;
+n_m = 11;
 mbar = linspace(0,1,n_m);
 tic
 for mi = 1:n_m
@@ -75,20 +75,20 @@ for mi = 1:n_m
     speed(speed>pi) = 2*pi-speed(speed>pi);
     mean_speed(mi) = mean(speed);
     var_speed(mi) = var(speed);
-    disp(mi/n_m)
+    fprintf('Simulated adaptation strength is %f\n', mbar(mi));
 end
 toc
 %%
-plot(mbar/48,mean_speed,'b','linewidth',2),hold on
-shadedErrorBar(mbar/48,mean_speed,var_speed,'lineprops','-b','patchSaturation',0.33)
-xticks(round(mbar(1:3:end)/48,3));
-% xticklabels(round(mbar(1:3:end)/48,3));
+figure
+plot(mbar,mean_speed,'Color','#009FB9','linewidth',1);
+hold on
+scatter(mbar, mean_speed, 50,'MarkerFaceColor', '#F18D00', 'MarkerEdgeColor', '#F18D00');
+%shadedErrorBar(mbar,mean_speed,var_speed,'lineprops','-b','patchSaturation',0.33)
 
-% save('mean_speed_replay.mat','mean_speed')
-% save('std_speed_replay.mat','std_speed')
-% plot(mbar/48,mean_speed)
-xlabel('Adaptation strength m')
-ylabel('Average replay step size', 'FontName', 'Arial', 'FontSize', 20)
-% 设置坐标轴的字体和大小
-set(gca, 'FontName', 'Arial', 'FontSize', 20);
-set(gca, 'LineWidth', 1.5);
+xticks(mbar(1:2:end));
+yticks(linspace(min(mean_speed), max(mean_speed), 4));
+ytickformat('%.2f');
+xlabel('Adaptation strength (\times \tau_u/\tau_v)','FontName', 'Arial', 'FontSize', 10)
+ylabel('Step size', 'FontName', 'Arial', 'FontSize', 10)
+
+set(gca, 'LineWidth', 1.0);

@@ -1,3 +1,6 @@
+rng('default');
+
+%% simulation theta sweeps
 N = 512;
 J0 = 1;%1/N*512;
 a = 0.4;
@@ -31,7 +34,7 @@ tic
 timestamp = 1;
 j = 1;
 noise_m = 0;
-n_m = 10;
+n_m = 11;
 mbar = linspace(0,1,n_m);
 amplitude = zeros(n_m,1);
 omega= zeros(n_m,1);
@@ -82,29 +85,38 @@ for mi = 1:n_m
     period = mean(diff(index))*dt*1e-3;
     omega(mi) = 1/period;
     amplitude(mi) = mean(pks_pos) - mean(pks_neg);
-    disp(mi/n_m)
+    disp(sprintf('current adaptation strength is %f', mbar(mi)));
+
 end
 toc
-%%
-plot(amplitude,'b','linewidth',2),hold on
-plot(amplitude,'r.','markersize',20)
-xticks(1:3:length(mbar));
-xticklabels(round(mbar(1:3:end)/48,3));
-xlabel('Adaptation strength m')
-ylabel('Theta sweeps amplitude', 'FontName', 'Arial', 'FontSize', 20)
-% 设置坐标轴的字体和大小
-set(gca, 'FontName', 'Arial', 'FontSize', 20);
-set(gca, 'LineWidth', 1.5);
+%% plot sweep amplitude and frequency against adaptation strength
+% A4 paper size in inches
+a4WidthInches = 8.27;
+a4HeightInches = 11.69;
 
+% Calculate the desired figure width
+figureWidthInches = (2/3) * a4WidthInches;
 
-figure
-plot(omega,'Color','#009FB9','linewidth',2, 'markersize',20);
+% Create the figure with the specified width
+figure('Units', 'inches', 'Position', [0 0 figureWidthInches 2/3*figureWidthInches]);
+
+subplot(2,1,1)
+plot(mbar, amplitude,'-o', 'Color','#009FB9','linewidth',1);
 hold on
-plot(omega,'Color', '#F18D00','markersize',20)
-xticks(1:3:length(mbar));
-xticklabels(round(mbar(1:3:end)/48,3));
-xlabel('Adaptation strength m')
-ylabel('Theta sweeps frequency (hz)', 'FontName', 'Arial', 'FontSize', 20)
-% 设置坐标轴的字体和大小
-set(gca, 'FontName', 'Arial', 'FontSize', 20);
-set(gca, 'LineWidth', 1.5);
+scatter(mbar, amplitude, 50,'MarkerFaceColor', '#F18D00', 'MarkerEdgeColor', '#F18D00');
+ylabel('Sweeps amp.', 'FontName', 'Arial', 'FontSize', 10)
+set(gca, 'LineWidth', 1.0);
+xticks([]);
+box off;
+
+subplot(2,1,2)
+plot(mbar, omega,'-o', 'Color','#009FB9','linewidth',1);
+hold on
+scatter(mbar, omega, 50,'MarkerFaceColor', '#F18D00', 'MarkerEdgeColor', '#F18D00');
+
+xticks(mbar(1:2:end));
+ytickformat('%.2f');
+xlabel('Adaptation strength (\times \tau_u/\tau_v)','FontName', 'Arial', 'FontSize', 10)
+ylabel('Sweeps freq. (Hz)', 'FontName', 'Arial', 'FontSize', 10)
+set(gca, 'LineWidth', 1.0);
+box off;
