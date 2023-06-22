@@ -1,4 +1,4 @@
-ccc
+clear;clc
 speed_replay = load('speed_replay.mat').Speed;
 speed_theta = load('speed_theta.mat').Speed;
 v_ext = load('v_record.mat').v_record;
@@ -31,7 +31,7 @@ figure('Units', 'inches', 'Position', [0 0 figureWidthInches 0.8*3/2*figureWidth
 
 bar(x, y,barwidth, "FaceColor", '#009FB9');
 hold on
-h = errorbar(x, y, std_y, "Marker","o", "MarkerEdgeColor", '#F18D00', "MarkerFaceColor","#F18D00");
+h = errorbar(x, y, std_y, "Marker","o", "MarkerEdgeColor", '#F18D00', "MarkerFaceColor","#F18D00", "CapSize", 20);
 set(h, 'Color', '#F18D00', 'LineWidth', 2, 'LineStyle', '--');
 
 xlim([-1 15]);
@@ -50,5 +50,5 @@ set(gca, ...
 box off;
 
 %save figure
-% filename = './Figures/Fig7a.pdf';
-% exportgraphics(gcf, filename, 'ContentType', 'vector', 'Resolution', 300)
+filename = './Figures/Fig7a.pdf';
+exportgraphics(gcf, filename, 'ContentType', 'vector', 'Resolution', 300)
