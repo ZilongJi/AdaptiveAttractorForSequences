@@ -191,7 +191,10 @@ plot(mbar, amplitude,'-o', 'Color','#009FB9','linewidth',1);
 hold on
 scatter(mbar, amplitude, 50,'MarkerFaceColor', '#F18D00', 'MarkerEdgeColor', '#F18D00');
 ylabel('Sweeps amp.', 'FontName', 'Arial', 'FontSize', 10)
-set(gca, 'LineWidth', 1.0);
+set(gca, ...
+    'LineWidth', 1, ...
+    'XColor', [0,0,0],...
+    'YColor', [0,0,0]);
 xticks([]);
 yticks(linspace(min(amplitude), max(amplitude), 3));
 ytickformat('%.2f');
@@ -206,7 +209,10 @@ xticks([]);
 yticks(linspace(min(omega), max(omega), 3));
 ytickformat('%.2f');
 ylabel('Sweeps freq.', 'FontName', 'Arial', 'FontSize', 10)
-set(gca, 'LineWidth', 1.0);
+set(gca, ...
+    'LineWidth', 1, ...
+    'XColor', [0,0,0],...
+    'YColor', [0,0,0]);
 box off;
 
 % plot replay step size
@@ -222,11 +228,15 @@ ytickformat('%.2f');
 xlabel('Scaled Adaptation strength','FontName', 'Arial', 'FontSize', 10)
 ylabel('Step size', 'FontName', 'Arial', 'FontSize', 10)
 
-set(gca, 'LineWidth', 1.0);
+set(gca, ...
+    'LineWidth', 1, ...
+    'XColor', [0,0,0],...
+    'YColor', [0,0,0]);
+
 
 box off;
 
-set(gcf, 'defaultAxesLooseInset', [0 0 0 0.0])
+
 
 %save figure
 filename = './Figures/Fig7b.pdf';
