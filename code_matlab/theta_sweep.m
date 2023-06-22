@@ -219,7 +219,7 @@ scatter(mbar, mean_speed, 50,'MarkerFaceColor', '#F18D00', 'MarkerEdgeColor', '#
 xticks(mbar(1:2:end));
 yticks(linspace(min(mean_speed), max(mean_speed), 3));
 ytickformat('%.2f');
-xlabel('Adaptation strength ($\times \tau_u/\tau_v$)','FontName', 'Arial', 'FontSize', 10, 'Interpreter','latex')
+xlabel('Scaled Adaptation strength','FontName', 'Arial', 'FontSize', 10)
 ylabel('Step size', 'FontName', 'Arial', 'FontSize', 10)
 
 set(gca, 'LineWidth', 1.0);
