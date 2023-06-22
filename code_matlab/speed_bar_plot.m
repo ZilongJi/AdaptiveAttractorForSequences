@@ -1,5 +1,4 @@
-
-
+ccc
 speed_replay = load('speed_replay.mat').Speed;
 speed_theta = load('speed_theta.mat').Speed;
 v_ext = load('v_record.mat').v_record;
@@ -12,11 +11,10 @@ for i = 1:10
     speed_travel = speed_replay(speed_replay>thres);
     Speed_travel(i) = mean(speed_travel);
 end
-
 x = [1,5,9,13];
 barwidth = 0.8;
 y = [mean(v_ext)*1e3/3, mean(Speed_replay)*1e3/3,mean(Speed_theta)*1e3/3,mean(Speed_travel)*1e3/3];
-std_y = [0,std(Speed_replay*1e3/3),std(Speed_theta*1e3/3),std(Speed_travel*1e3/3)];
+std_y = [std(v_ext)*1e3/3,std(Speed_replay*1e3/3),std(Speed_theta*1e3/3),std(Speed_travel*1e3/3)];
 
 
 %% plot figure
@@ -52,5 +50,5 @@ set(gca, ...
 box off;
 
 %save figure
-filename = './Figures/Fig7a.pdf';
-exportgraphics(gcf, filename, 'ContentType', 'vector', 'Resolution', 300)
+% filename = './Figures/Fig7a.pdf';
+% exportgraphics(gcf, filename, 'ContentType', 'vector', 'Resolution', 300)
