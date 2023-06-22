@@ -181,10 +181,10 @@ a4WidthInches = 8.27;
 a4HeightInches = 11.69;
 
 % Calculate the desired figure width
-figureWidthInches = (2/3) * a4WidthInches;
+figureWidthInches = 0.6 * a4WidthInches;
 
 % Create the figure with the specified width
-figure('Units', 'inches', 'Position', [0 0 figureWidthInches figureWidthInches]);
+figure('Units', 'inches', 'Position', [0 0 figureWidthInches 0.8*figureWidthInches]);
 
 subplot(3,1,1)
 plot(mbar, amplitude,'-o', 'Color','#009FB9','linewidth',1);
@@ -205,7 +205,7 @@ scatter(mbar, omega, 50,'MarkerFaceColor', '#F18D00', 'MarkerEdgeColor', '#F18D0
 xticks([]);
 yticks(linspace(min(omega), max(omega), 3));
 ytickformat('%.2f');
-ylabel('Sweeps freq. (Hz)', 'FontName', 'Arial', 'FontSize', 10)
+ylabel('Sweeps freq.', 'FontName', 'Arial', 'FontSize', 10)
 set(gca, 'LineWidth', 1.0);
 box off;
 
@@ -226,5 +226,8 @@ set(gca, 'LineWidth', 1.0);
 
 box off;
 
-
 set(gcf, 'defaultAxesLooseInset', [0 0 0 0.0])
+
+%save figure
+filename = './Figures/Fig7b.pdf';
+exportgraphics(gcf, filename, 'ContentType', 'vector', 'Resolution', 300)
