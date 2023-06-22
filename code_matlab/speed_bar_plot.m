@@ -1,4 +1,4 @@
-clc; clear; 
+
 
 speed_replay = load('speed_replay.mat').Speed;
 speed_theta = load('speed_theta.mat').Speed;
@@ -29,7 +29,7 @@ a4HeightInches = 11.69;
 figureWidthInches = 0.4 * a4WidthInches;
 
 % Create the figure with the specified width
-figure('Units', 'inches', 'Position', [0 0 figureWidthInches 0.8*figureWidthInches]);
+figure('Units', 'inches', 'Position', [0 0 figureWidthInches 0.8*3/2*figureWidthInches]);
 
 bar(x, y,barwidth, "FaceColor", '#009FB9');
 hold on
