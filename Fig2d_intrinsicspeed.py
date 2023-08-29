@@ -90,7 +90,6 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 plt.tight_layout()
-plt.show()
 fig.savefig('Figures/Fig2d.pdf')
 
 #%%
