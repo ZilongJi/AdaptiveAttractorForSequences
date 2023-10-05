@@ -50,22 +50,22 @@ for i in range(num_p):
     
     
  #%%   
-fig, ax = plt.subplots(figsize=(6, 4),dpi=300)
+fig, ax = plt.subplots(figsize=(2.5, 2),dpi=300)
 #set parameters for the figure
-labelsize = 18
-ticksize = 14
+labelsize = 10
+ticksize = 8
 custom_color = '#009FB9'
 # set the linewidth of each axis
 for axis in ['top','bottom','left','right']:
     ax.spines[axis].set_linewidth(1)
 
 #plot Mbar v.s. v_int with scatters and lines
-plt.plot(Mbar*3/144, v_int, color='k', linewidth=2, linestyle='--')
+plt.plot(Mbar*3/144, v_int, color='k', linewidth=1, linestyle='--')
 #add scatter points
-plt.scatter(Mbar*3/144, v_int, s=100, c='#009FB9', marker='o', alpha=0.8, edgecolors='k')    
+plt.scatter(Mbar*3/144, v_int, s=30, c='#009FB9', marker='o', alpha=0.8, edgecolors='k')    
 
 plt.xlabel(r'Adaptation strength $m$', fontsize=labelsize)
-plt.ylabel('$v_{int}$ (cm/s)', fontsize=labelsize)
+plt.ylabel('$v_{int}$ (m/s)', fontsize=labelsize)
 
 #set x and y ticks
 xticks = [0,0.01,0.02,0.03,0.04,0.05]
@@ -75,12 +75,12 @@ ax.set_xticks(xticks)
 ax.set_yticks(yticks)
 
 #change y tick labels by timing 100
-yticklabels = [str(int(100*i)) for i in yticks]
+yticklabels = [str(int(i)) for i in yticks]
 ax.set_yticklabels(yticklabels)
 
 #add reference line of x=3/144
 ymin, ymax = ax.get_ylim()
-plt.plot([3/144,3/144],[ymin,ymax], color='#F18D00', linewidth=2, linestyle='--')
+plt.plot([3/144,3/144],[ymin,ymax], color='#F18D00', linewidth=1, linestyle='--')
 
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
@@ -90,7 +90,7 @@ ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
 plt.tight_layout()
-fig.savefig('Figures/Fig2d.pdf')
+fig.savefig('Figures/Fig2d_intrinsicspeed.pdf')
 
 #%%
 bm.clear_buffer_memory()

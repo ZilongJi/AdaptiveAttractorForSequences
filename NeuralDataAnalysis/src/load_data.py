@@ -3,6 +3,7 @@ from logging import getLogger
 
 import numpy as np
 import pandas as pd
+import pdb
 from loren_frank_data_processing import (get_all_multiunit_indicators,
                                          get_all_spike_indicators,
                                          get_interpolated_position_dataframe,
@@ -134,6 +135,7 @@ def load_data(epoch_key, brain_areas=None,
     lfps = lfps.resample('2ms').mean().fillna(method='pad').reindex(time)
 
     logger.info('Loading spikes...')
+
     try:
         neuron_info = make_neuron_dataframe(ANIMALS).xs(
             epoch_key, drop_level=False)
@@ -219,6 +221,7 @@ def get_sleep_interpolated_position_info(
     time = time_function(epoch_key, ANIMALS)
     position_df = get_position_dataframe(
         epoch_key, animals, skip_linearization=True)
+    
     new_index = pd.Index(
         np.unique(np.concatenate((position_df.index, time))), name="time"
     )
@@ -248,17 +251,17 @@ def get_sleep_ripple_times(epoch_key, brain_areas=["CA1", "CA2", "CA3"]):
         tetrode_keys = tetrode_info.loc[is_brain_areas].index
 
     lfps = get_LFPs(tetrode_keys, ANIMALS).reindex(time)
-    ripple_filtered_lfps = pd.DataFrame(
-        np.stack(
-            [
-                filter_ripple_band(
-                    lfps.values[:, ind], sampling_frequency=1500)
-                for ind in np.arange(lfps.shape[1])
-            ],
-            axis=1,
-        ),
-        index=lfps.index,
-    )
+    # ripple_filtered_lfps = pd.DataFrame(
+    #     np.stack(
+    #         [
+    #             filter_ripple_band(
+    #                 lfps.values[:, ind])
+    #             for ind in np.arange(lfps.shape[1])
+    #         ],
+    #         axis=1,
+    #     ),
+    #     index=lfps.index,
+    # )
 
     ripple_times = Kay_ripple_detector(
         time,
@@ -270,10 +273,12 @@ def get_sleep_ripple_times(epoch_key, brain_areas=["CA1", "CA2", "CA3"]):
         minimum_duration=np.timedelta64(15, "ms"),
     )
 
-    return ripple_times, ripple_filtered_lfps, lfps
+    #return ripple_times, ripple_filtered_lfps, lfps
+    return ripple_times, lfps
 
 
-def load_sleep_data(epoch_key, brain_areas=None):
+def load_sleep_data(epoch_key, brain_areas=None,
+                    exclude_interneuron_spikes=False):
 
     if brain_areas is None:
         brain_areas = _BRAIN_AREAS
@@ -289,6 +294,7 @@ def load_sleep_data(epoch_key, brain_areas=None):
     def _time_function(*args, **kwargs):
         return time
 
+    logger.info('Loading position info...')
     position_info = get_sleep_interpolated_position_info(
         epoch_key, ANIMALS, _time_function
     ).dropna(subset=["speed"])
@@ -302,6 +308,7 @@ def load_sleep_data(epoch_key, brain_areas=None):
     lfps = get_LFPs(tetrode_keys, ANIMALS)
     lfps = lfps.resample("2ms").mean().fillna(method="pad").reindex(time)
 
+    logger.info('Loading spikes...')
     try:
         neuron_info = make_neuron_dataframe(
             ANIMALS).xs(epoch_key, drop_level=False)
@@ -316,12 +323,38 @@ def load_sleep_data(epoch_key, brain_areas=None):
     except KeyError:
         spikes = None
 
+    logger.info('Loading multiunit...')
     tetrode_info = tetrode_info.loc[is_brain_areas]
     multiunit = (
         get_all_multiunit_indicators(
             tetrode_info.index, ANIMALS, _time_function)
         .reindex({"time": time})
     )
+    
+    TO_MILLISECONDS = 1000
+
+    if epoch_key[0] == "remy":
+        # Remy features aren't extracted using matclust so in different format.
+        features = multiunit.features.values
+        features[-1] = "max_width"  # last feature is max_width
+        multiunit["features"] = features
+        # Convert to milliseconds
+        multiunit.loc[dict(features='max_width')] *= TO_MILLISECONDS
+    else:
+        SPIKE_SAMPLING_RATE = 30_000
+        # Convert to milliseconds
+        multiunit.loc[dict(features='max_width')] = (
+            TO_MILLISECONDS * (multiunit.sel(features='max_width')) /
+            SPIKE_SAMPLING_RATE)
+
+    if exclude_interneuron_spikes:
+        INTERNEURON_SPIKE_WIDTH_MAX = 0.3  # ms
+        is_interneuron_spike = (
+            multiunit.sel(features='max_width') < INTERNEURON_SPIKE_WIDTH_MAX)
+        multiunit = multiunit.where(~is_interneuron_spike)
+
+    multiunit = multiunit.sel(features=_MARKS)
+    
     multiunit_spikes = (
         np.any(~np.isnan(multiunit.values), axis=1)).astype(np.float)
     multiunit_firing_rate = pd.DataFrame(
@@ -331,8 +364,11 @@ def load_sleep_data(epoch_key, brain_areas=None):
         columns=["firing_rate"],
     )
 
-    ripple_times, ripple_filtered_lfps, ripple_lfps = get_sleep_ripple_times(
-        epoch_key)
+    # ripple_times, ripple_filtered_lfps, ripple_lfps = get_sleep_ripple_times(
+    #     epoch_key)
+    logger.info('Finding sleep ripple times...')
+    ripple_times, ripple_lfps = get_sleep_ripple_times(
+         epoch_key)
 
     ripple_times = ripple_times.assign(
         duration=lambda df: (df.end_time - df.start_time).dt.total_seconds()
@@ -345,7 +381,7 @@ def load_sleep_data(epoch_key, brain_areas=None):
         "multiunit": multiunit,
         "lfps": lfps,
         "tetrode_info": tetrode_info,
-        "ripple_filtered_lfps": ripple_filtered_lfps,
+        "ripple_filtered_lfps": 0,
         "ripple_lfps": ripple_lfps,
         "multiunit_firing_rate": multiunit_firing_rate,
         "sampling_frequency": SAMPLING_FREQUENCY,

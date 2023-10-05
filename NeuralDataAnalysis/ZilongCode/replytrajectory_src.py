@@ -1,31 +1,12 @@
 import logging
 import os
-import sys
-from argparse import ArgumentParser
-from signal import SIGUSR1, SIGUSR2, signal
-from subprocess import PIPE, run
 
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 import xarray as xr
-from loren_frank_data_processing import save_xarray
-from loren_frank_data_processing.position import (EDGE_ORDER, EDGE_SPACING,
-                                                  make_track_graph)
-from replay_trajectory_classification import (ClusterlessClassifier,
-                                              SortedSpikesClassifier)
-from scipy.ndimage import label
-from src.analysis import (get_place_field_max, get_replay_traj,
-                          reshape_to_segments)
+from loren_frank_data_processing.position import make_track_graph
+from replay_trajectory_classification import (ClusterlessClassifier, SortedSpikesClassifier)
+from src.analysis import get_replay_traj
 from src.load_data import load_data
-from src.parameters import (ANIMALS, FIGURE_DIR, PROBABILITY_THRESHOLD,
-                            PROCESSED_DATA_DIR, SAMPLING_FREQUENCY,
-                            TRANSITION_TO_CATEGORY,
-                            continuous_transition_types, discrete_diag,
-                            knot_spacing, model, model_kwargs, movement_var,
-                            place_bin_size, replay_speed, spike_model_penalty)
-from src.visualization import plot_ripple_decode_1D
-from tqdm.auto import tqdm
+from src.parameters import (ANIMALS, PROCESSED_DATA_DIR)
 
 
 def get_replay_traj_from_sorted_spikes( epoch_key,

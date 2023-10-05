@@ -42,7 +42,7 @@ def get_replay_traj(results, ripple_times, position_info,
         ripple_position_info = ripple_position_info.loc[is_immobility]
 
         posterior = result.acausal_posterior
-
+        
         trajectory_data = get_trajectory_data(
             posterior.sum("state"), track_graph, classifier, ripple_position_info)
 
@@ -205,7 +205,7 @@ def get_ripple_replay_info(ripple, results, spikes,
                            sampling_frequency, probability_threshold,
                            track_graph, classifier):
 
-    pdb.set_trace()
+    #pdb.set_trace()
     start_time = ripple.start_time
     end_time = ripple.end_time
     ripple_duration = ripple.duration

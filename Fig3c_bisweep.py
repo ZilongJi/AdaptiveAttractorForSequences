@@ -49,26 +49,19 @@ relative_pos = np.squeeze(relative_pos)
 Peaks,_ = scipy.signal.find_peaks(relative_pos, width=300)
 Trough,_ = scipy.signal.find_peaks(-relative_pos, width=300)
 
-'''
-#visualize theta sweeps
-fig0, ax0 = plt.subplots(figsize=(6,6), dpi=300)
-plt.plot(time-time[0], relative_pos)
-plt.scatter(time[Peaks]-time[0], relative_pos[Peaks])
-'''
-
 #visualize bump sweeps
-fig, ax = plt.subplots(figsize=(6,3))
+fig, ax = plt.subplots(figsize=(4,2))
 #set parameters
-labelsize = 18
-ticksize = 14
-position_color = '#F18D00'
+labelsize = 10
+ticksize = 8
+position_color = 'darkturquoise'
 
 plt.pcolormesh(time[0:-1:50]-time[0], pos, fr[:,0:-1:50]*1e3, cmap='inferno')
 clb = plt.colorbar(ticklocation='right', ticks=[0,1,2])
 clb.set_label('Firing rate (Hz)', fontsize=labelsize)
 clb.ax.tick_params(labelsize=ticksize)
 #add animal position to the plot 
-plt.plot(time-time[0], cI, color=position_color, linewidth=2)  
+plt.plot(time-time[0], cI, color=position_color, linewidth=1)  
 
 #add separate lines to theta sweeps
 for peaks in Peaks:
@@ -76,23 +69,26 @@ for peaks in Peaks:
 
 plt.xlim(0, 1e3)
 plt.ylim([-2.5, 2.5])
-plt.xlabel('Time (ms)', fontsize=labelsize)
+plt.xlabel('Time (s)', fontsize=labelsize)
 plt.ylabel('Position (cm)', fontsize=labelsize)
 # set x and y ticks
 xticks = np.linspace(0, 1e3, 3)
 yticks = np.linspace(-2.5,2.5,3)
 ax.set_xticks(xticks)
 ax.set_yticks(yticks)
-#set y ticks labels
+
+#set tick labels
+xticklabels = [0, 0.5, 1]
 yticklabels = [0, int(2.5*100), int(5*100)]
 ax.set_yticklabels(yticklabels)
+ax.set_xticklabels(xticklabels)
 ax.tick_params(axis='x', labelsize=ticksize)
 ax.tick_params(axis='y', labelsize=ticksize)
 plt.tight_layout()
-fig.savefig('Figures/Fig3c.pdf', dpi=300)
+fig.savefig('Figures/Fig3_thetasweep.pdf', dpi=300)
 
 #plot the average bump sweeps
-fig, ax = plt.subplots(figsize=(3,3), dpi=300)
+fig, ax = plt.subplots(figsize=(2,2), dpi=300)
 
 t_start = Trough[1]
 t_end = Trough[2]
@@ -110,7 +106,7 @@ plt.plot([time[Peaks[2]]-time[t_start], time[Peaks[2]]-time[t_start]],[-np.pi,np
 #plt.plot([time[Peaks[3]]-time[t_start], time[Peaks[3]]-time[t_start]],[-np.pi,np.pi],'w--', linewidth=3)
 
 #add reference line of y=0
-plt.plot([0, time[t_end]-time[t_start]], [0,0], color=position_color, linewidth=2, linestyle='--')
+plt.plot([0, time[t_end]-time[t_start]], [0,0], color=position_color, linewidth=1, linestyle='--')
 
 plt.xlabel('Time (ms)', fontsize=labelsize)
 plt.ylabel('Relative pos. (cm)', fontsize=labelsize)
@@ -128,4 +124,4 @@ ax.tick_params(axis='y', labelsize=ticksize)
 plt.xlim(0, 82)
 plt.ylim([-1.2,1.5])
 plt.tight_layout()
-fig.savefig('Figures/Fig3c_1.pdf')
+fig.savefig('Figures/Fig3_thetasweep_merged.pdf')

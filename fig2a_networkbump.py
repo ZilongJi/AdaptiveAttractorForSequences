@@ -32,12 +32,12 @@ pos = position.squeeze()
 
 #plot the figrue
 # set some parameters
-labelsize = 18
-ticksize = 14
+labelsize = 10
+ticksize = 8
 custom_color = '#009FB9'
 
 #create twwo subplots with the first one is bigger than the second one
-fig, axes = plt.subplots(nrows=2,figsize=(6,3), height_ratios=[2, 1], dpi=300)
+fig, axes = plt.subplots(nrows=2, figsize=(2.5,2), height_ratios=[2, 1], dpi=300)
 #plot the line and set the line color to customized color
 axes[0].plot(index, 1e3*fr[2000,:], linewidth=2, color=custom_color) 
 #set axis off and box off in this subplot
@@ -56,4 +56,4 @@ axes[1].tick_params(axis='x', labelsize=ticksize)
 axes[1].set_yticks([])
 plt.tight_layout()
 
-fig.savefig('Figures/Fig2a.pdf', bbox_inches='tight')
+fig.savefig('Figures/Fig2a_networkbump.pdf', bbox_inches='tight')

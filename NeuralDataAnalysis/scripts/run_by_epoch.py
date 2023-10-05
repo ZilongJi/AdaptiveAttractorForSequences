@@ -1,9 +1,11 @@
 import logging
 import os
+import pdb
 import sys
 from argparse import ArgumentParser
 from signal import SIGUSR1, SIGUSR2, signal
 from subprocess import PIPE, run
+import pickle
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,26 +18,33 @@ from replay_trajectory_classification import (ClusterlessClassifier,
                                               SortedSpikesClassifier)
 from scipy.ndimage import label
 from src.analysis import (get_place_field_max, get_replay_info,
-                          reshape_to_segments)
-from src.load_data import load_data
+                          reshape_to_segments, get_replay_traj)
+
+from src.load_data import load_data, load_sleep_data
 from src.parameters import (ANIMALS, FIGURE_DIR, PROBABILITY_THRESHOLD,
                             PROCESSED_DATA_DIR, SAMPLING_FREQUENCY,
                             TRANSITION_TO_CATEGORY,
+                            sleep_duration_threshold, 
                             continuous_transition_types, discrete_diag,
                             knot_spacing, model, model_kwargs, movement_var,
                             place_bin_size, replay_speed, spike_model_penalty)
 
-from src.parameters import (classifier_parameters, discrete_state_transition)
+from src.parameters import (classifier_parameters_thetasweeps, discrete_state_transition)
+
+from trajectory_analysis_tools import (get_ahead_behind_distance,
+                                       get_trajectory_data)
 
 from sklearn.model_selection import KFold
 from src.visualization import plot_ripple_decode_1D
 from tqdm.auto import tqdm
 
+from ZilongCode.utils import find_sleep_intervals, get_sleep_ripples, detect_sleep_periods
+
+
 FORMAT = '%(asctime)s %(message)s'
 
 logging.basicConfig(level='INFO', format=FORMAT, datefmt='%d-%b-%y %H:%M:%S')
 plt.switch_backend('agg')
-
 
 def sorted_spikes_analysis_1D(epoch_key,
                               plot_ripple_figures=False,
@@ -211,16 +220,225 @@ def sorted_spikes_analysis_1D(epoch_key,
     logging.info('Done...')
 
 
-
-def clusterless_thetasweeps(epoch_key):
+def clusterless_thetasweeps(epoch_key, 
+                            exclude_interneuron_spikes=False,
+                            brain_areas=None,
+                            save_original_data=False):
     '''
     created by Zilong 29/08/2023
     Decoding theta sweeps using clusterless classifier
+    Since we are using the state-space model, we need to cross validatd the classifier
+    We do 5-fold cross validation here...
     '''
+    animal, day, epoch = epoch_key
     
+    #load data
+    logging.info('Loading data...')
+    data = load_data(epoch_key,
+                     brain_areas=brain_areas,
+                     exclude_interneuron_spikes=exclude_interneuron_spikes)
+ 
+    #get lfp info from data
+    lfp_info = data['lfps']
+    #save the ifp_info, which is pandas.core.series.Series
+    lfp_info.to_pickle(os.path.join(PROCESSED_DATA_DIR, 'ThetaSweepTrajectories', f'{animal}_{day:02d}_{epoch:02d}_lfp_info.pkl'))
+            
+    is_running = data["position_info"].speed > 4
     
-    pass
+    track_graph, center_well_id = make_track_graph(epoch_key, ANIMALS)
+    
+    cv = KFold()
+    cv_classifier_clusterless_results = []
 
+    logging.info('Cross validation the classifier...')
+    for fold_ind, (train, test) in tqdm(enumerate(cv.split(data["position_info"].index))):
+        
+        print(f'Fold {fold_ind}')
+        
+        cv_classifier = ClusterlessClassifier(**classifier_parameters_thetasweeps)
+
+        cv_classifier.fit(
+            position=data["position_info"].iloc[train].linear_position,
+            multiunits=data["multiunit"].isel(time=train),
+            is_training=is_running.iloc[train],
+            track_graph=track_graph,
+            center_well_id=center_well_id,
+            edge_order=EDGE_ORDER,
+            edge_spacing=EDGE_SPACING,
+        )
+        cv_classifier.discrete_state_transition_ = discrete_state_transition
+
+        cv_result = cv_classifier.predict(
+                            data["multiunit"].isel(time=test),
+                            time=data["position_info"].iloc[test].index / np.timedelta64(1, "s")
+                            )
+        
+        #get the decoded trajectory in test data
+        test_position_info = data["position_info"].iloc[test]
+        posterior = cv_result.acausal_posterior
+        trajectory_data = get_trajectory_data(
+            posterior.sum('state'), track_graph, cv_classifier, test_position_info)
+        
+        #calculate the distance between actual position and mental position
+        mental_distance_from_actual_position = np.abs(get_ahead_behind_distance(
+            track_graph, *trajectory_data))
+        #add mental_distance_from_actual_position to cv_result, which is a xarray.Dataset
+        cv_result['mental_distance_from_actual_position'] = xr.DataArray(
+            mental_distance_from_actual_position, dims=['time'])
+        
+        #calculate the distance between actual position and center well
+        mental_distance_from_center_well = np.abs(get_ahead_behind_distance(
+            track_graph, *trajectory_data, source=center_well_id))
+        #add mental_distance_from_center_well to cv_result, which is a xarray.Dataset
+        cv_result['mental_distance_from_center_well'] = xr.DataArray(
+            mental_distance_from_center_well, dims=['time'])
+        
+        cv_classifier_clusterless_results.append(cv_result)
+        
+    cv_classifier_clusterless_results = xr.concat(cv_classifier_clusterless_results, dim="time")   
+    
+    logging.info('Saving results...')
+    #save classification results
+    cv_classifier_clusterless_results.to_netcdf(
+        os.path.join(
+            PROCESSED_DATA_DIR, 'ThetaSweepTrajectories', f'{animal}_{day:02d}_{epoch:02d}_cv_classifier_clusterless_results.nc'
+        )
+    )
+    
+    if save_original_data:
+        #save data. Be careful, the data is too large. Only saved for animal bon for later visualization purpose
+        with open(os.path.join(
+                PROCESSED_DATA_DIR, 'ThetaSweepTrajectories', f'{animal}_{day:02d}_{epoch:02d}_data.pkl'), 'wb') as f:
+            pickle.dump(data, f)
+        
+    #get speed info from data
+    speed_info = data['position_info'].speed
+    #save the speed_info, which is pandas.core.series.Series
+    speed_info.to_pickle(os.path.join(PROCESSED_DATA_DIR, 'ThetaSweepTrajectories', f'{animal}_{day:02d}_{epoch:02d}_speed_info.pkl'))
+    
+
+def clusterless_sleep_replay(sleep_epoch_key,
+                             prev_run_epoch_key, 
+                             exclude_interneuron_spikes=True,
+                             brain_areas=None):
+    '''
+    created by Zilong 11/09/2023
+    Decoding sleep replay using clusterless classifier from the previous running epoch
+    For example, if we want to decode sleep replay for bon, 3, 3, which is a sleep spoch
+    We will use the classifier from bon, 3, 2, which is a running epoch. The classifier 
+    has been saved to Processed-data
+    '''
+    DATA_DIR = os.path.join(PROCESSED_DATA_DIR, 'TrueSleepReplayTrajectories')
+
+    animal, day, epoch = sleep_epoch_key
+    data_type, dim = 'clusterless', '1D'
+
+    logging.info('Loading sleeping data...')
+    
+    #try to load sleep data, if there is error in loading sleep data, then skip this epoch
+    #for exampel, con,1,3 raise an error 'IndexError: Item wrong length 429 instead of 430'..
+    #need to fix this later, but skip now
+    try:
+        data = load_sleep_data(sleep_epoch_key,
+                               brain_areas=brain_areas,
+                               exclude_interneuron_spikes=exclude_interneuron_spikes)
+    except:
+        logging.info('Error in loading sleep data. Skip this epoch...')
+        return
+    
+    group = f'/{data_type}/{dim}/'
+    if exclude_interneuron_spikes:
+        group += 'no_interneuron/'
+    group += 'classifier/ripples/'
+    
+    logging.info('Get the potential sleep intervals...')
+    
+    is_test, valid_durations, valid_intervals = detect_sleep_periods(data, sleep_epoch_key, 
+                                                        lowspeed_thres=4, lowspeed_duration=60,
+                                                        theta2alpha_thres=1.5, REM_duration=10,
+                                                        sleep_duration=90, LIA_duration=5,
+                                                        plot=True, figdir=DATA_DIR)
+    
+    #speed = data['position_info'].speed
+    #is_test, valid_durations, valid_intervals = find_sleep_intervals(speed, sleep_duration_threshold=180)
+    
+    #if valid_durations is empty, then print out the message and skip this epoch
+    #save valid_durations to a pickle file
+    with open(os.path.join(DATA_DIR, f'{animal}_{day:02d}_{epoch:02d}_valid_durations.pkl'), 'wb') as f:
+        pickle.dump(valid_durations, f)
+
+    if not valid_durations:
+        logging.info('No valid sleep intervals found. Skip this epoch...')
+        return
+    else:
+        print(valid_durations)
+        logging.info(f'Found {len(valid_durations)} valid sleep intervals...')
+        
+        #for data["ripple_times"], filter those intervals within valid_intervals
+        sleep_ripple_times = get_sleep_ripples(data["ripple_times"], valid_intervals)
+            
+        logging.info('Loading classifier from the previous running epoch...')
+        prev_animal, prev_day, prev_epoch = prev_run_epoch_key
+        model_name = os.path.join(
+        PROCESSED_DATA_DIR,
+        "ReplayTrajectories",
+        (f"{prev_animal}_{prev_day:02d}_{prev_epoch:02d}_clusterless_1D_no_interneuron_model.pkl"),
+        )   
+        
+        classifier = ClusterlessClassifier.load_model(model_name)
+        
+        logging.info('Decoding sleep replay...')
+        
+        test_groups = pd.DataFrame(
+            {"test_groups": label(is_test.values)[0]}, index=is_test.index
+        )
+        
+        immobility_results = []
+        for _, df in tqdm(test_groups.loc[is_test].groupby("test_groups"), desc="immobility"):
+            start_time, end_time = df.iloc[0].name, df.iloc[-1].name
+            test_multiunit = data["multiunit"].sel(time=slice(start_time, end_time))
+            immobility_results.append(
+                classifier.predict(test_multiunit, time=test_multiunit.time)
+            )
+
+        immobility_results = xr.concat(immobility_results, dim="time")
+        
+        results = [
+            (
+                immobility_results.sel(time=slice(df.start_time, df.end_time)).assign_coords(
+                    time=lambda ds: ds.time - ds.time[0]
+                )
+            )
+            for _, df in sleep_ripple_times.iterrows()
+        ]
+        
+        results = xr.concat(results, dim=sleep_ripple_times.index).assign_coords(
+            state=lambda ds: ds.state.to_index().map(TRANSITION_TO_CATEGORY)
+        )
+      
+        #########################
+        logging.info('Saving results...')
+        save_xarray(DATA_DIR, sleep_epoch_key,
+                    results.drop(['likelihood', 'causal_posterior']),
+                    group=group)
+        
+        #get replay trajectory
+        track_graph, center_well_id = make_track_graph(prev_run_epoch_key, ANIMALS)
+        #add three zero columns to data["position_info"], 
+        # projected_x_position, projected_y_position, track_segment_id
+        # since it is an open field
+        #so there is no projected position, but it is necessary for geting the replay trajectory
+        
+        data["position_info"].loc[:, "projected_x_position"] = 0.0
+        data["position_info"].loc[:, "projected_y_position"] = 0.0
+        data["position_info"].loc[:, "track_segment_id"] = 0.0
+        
+        replay_trajectories = get_replay_traj(
+            results, sleep_ripple_times, data['position_info'],
+            track_graph, classifier)
+        
+        with open(os.path.join(DATA_DIR, f'{animal}_{day:02d}_{epoch:02d}_traj.pkl'), 'wb') as f:
+            pickle.dump(replay_trajectories, f)  
 
 def clusterless_analysis_1D(epoch_key,
                             plot_ripple_figures=False,
@@ -228,6 +446,9 @@ def clusterless_analysis_1D(epoch_key,
                             use_multiunit_HSE=False,
                             brain_areas=None,
                             overwrite=False):
+    
+    DATA_DIR = os.path.join(PROCESSED_DATA_DIR, 'ReplayTrajectories')
+    
     animal, day, epoch = epoch_key
     data_type, dim = 'clusterless', '1D'
 
@@ -263,14 +484,14 @@ def clusterless_analysis_1D(epoch_key,
         replay_times = data['ripple_times']
 
     model_name = os.path.join(
-        PROCESSED_DATA_DIR, epoch_identifier + '_model.pkl')
+        DATA_DIR, epoch_identifier + '_model.pkl')
 
     try:
         if overwrite:
             raise FileNotFoundError
         results = xr.open_dataset(
             os.path.join(
-                PROCESSED_DATA_DIR, f'{animal}_{day:02}_{epoch:02}.nc'),
+                DATA_DIR, f'{animal}_{day:02}_{epoch:02}.nc'),
             group=group)
         logging.info('Found existing results. Loading...')
         spikes = (((data['multiunit'].sum('features') > 0) * 1.0)
@@ -326,9 +547,17 @@ def clusterless_analysis_1D(epoch_key,
             spikes, replay_times.loc[:, ['start_time', 'end_time']])
 
         logging.info('Saving results...')
-        save_xarray(PROCESSED_DATA_DIR, epoch_key,
+        save_xarray(DATA_DIR, epoch_key,
                     results.drop(['likelihood', 'causal_posterior']),
                     group=group)
+        
+        #get replay trajectory
+        replay_trajectories = get_replay_traj(
+            results, replay_times, data['position_info'],
+            track_graph, classifier)
+        
+        with open(os.path.join(DATA_DIR, f'{animal}_{day:02d}_{epoch:02d}_traj.pkl'), 'wb') as f:
+            pickle.dump(replay_trajectories, f)  
 
     logging.info('Saving replay_info...')
     replay_info = get_replay_info(
@@ -337,7 +566,7 @@ def clusterless_analysis_1D(epoch_key,
         classifier, data["ripple_consensus_trace_zscore"])
     prob = int(PROBABILITY_THRESHOLD * 100)
     replay_info_filename = os.path.join(
-        PROCESSED_DATA_DIR, f'{epoch_identifier}_replay_info_{prob:02d}.csv')
+        DATA_DIR, f'{epoch_identifier}_replay_info_{prob:02d}.csv')
     replay_info.to_csv(replay_info_filename)
 
     if plot_ripple_figures:

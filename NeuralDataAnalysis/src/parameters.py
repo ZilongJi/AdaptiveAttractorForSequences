@@ -8,37 +8,34 @@ from replay_trajectory_classification.misc import NumbaKDE
 # LFP sampling frequency
 SAMPLING_FREQUENCY = 500
 
+# sleep duration threshold (in seconds)
+sleep_duration_threshold = 100
+
 # Data directories and definitions
 #ROOT_DIR = join(abspath(dirname(__file__)), pardir)
 ROOT_DIR = '/home/zilong/Desktop/replay_trajectory_paper'
-RAW_DATA_DIR = join(ROOT_DIR, 'Raw-Data')
+#RAW_DATA_DIR = join(ROOT_DIR, 'Raw-Data')
+RAW_DATA_DIR = '/media/zilong/4TB Storage HDD/ReplayTrajectoryAnalysis/Raw-Data'
 PROCESSED_DATA_DIR = join(ROOT_DIR, 'Processed-Data')
 FIGURE_DIR = join(ROOT_DIR, 'figures')
 
-# ANIMALS = {
-#     'bon': Animal(directory=join(RAW_DATA_DIR, 'Bond'), short_name='bon'),
-#     'cha': Animal(directory=join(RAW_DATA_DIR, 'Chapati'), short_name='cha'),
-#     'con': Animal(directory=join(RAW_DATA_DIR, 'Conley'), short_name='con'),
-#     'Cor': Animal(directory=join(RAW_DATA_DIR, 'Corriander'),
-#                   short_name='Cor'),
-#     'dav': Animal(directory=join(RAW_DATA_DIR, 'Dave'), short_name='dav'),
-#     'dud': Animal(directory=join(RAW_DATA_DIR, 'Dudley'), short_name='dud'),
-#     'egy': Animal(directory=join(RAW_DATA_DIR, 'Egypt'), short_name='egy'),
-#     'fra': Animal(directory=join(RAW_DATA_DIR, 'Frank'), short_name='fra'),
-#     'gov': Animal(directory=join(RAW_DATA_DIR, 'Government'),
-#                   short_name='gov'),
-#     #'hig': Animal(directory=join(RAW_DATA_DIR, 'Higgs'), short_name='hig'),
-#     'remy': Animal(directory=join(RAW_DATA_DIR, 'Remy'), short_name='remy'),
-# }
-
 ANIMALS = {
     'bon': Animal(directory=join(RAW_DATA_DIR, 'Bond'), short_name='bon'),
+    'cha': Animal(directory=join(RAW_DATA_DIR, 'Chapati'), short_name='cha'),
+    'con': Animal(directory=join(RAW_DATA_DIR, 'Conley'), short_name='con'),
+    'Cor': Animal(directory=join(RAW_DATA_DIR, 'Corriander'), short_name='Cor'),
+    'dav': Animal(directory=join(RAW_DATA_DIR, 'Dave'), short_name='dav'),
+    'dud': Animal(directory=join(RAW_DATA_DIR, 'Dudley'), short_name='dud'),
+    'egy': Animal(directory=join(RAW_DATA_DIR, 'Egypt'), short_name='egy'),
+    'fra': Animal(directory=join(RAW_DATA_DIR, 'Frank'), short_name='fra'),
+    'gov': Animal(directory=join(RAW_DATA_DIR, 'Government'),
+                  short_name='gov'),
+    #'hig': Animal(directory=join(RAW_DATA_DIR, 'Higgs'), short_name='hig'),
+    'remy': Animal(directory=join(RAW_DATA_DIR, 'Remy'), short_name='remy'),
 }
 
-
 #add by Zilong
-MAX_N_EXPOSURES  = 1e9
-MIN_N_NEURONS = 0
+MIN_N_NEURONS = 9
 
 # ANIMALS = {
 #     'bon': Animal(directory=join(RAW_DATA_DIR, 'Bond'), short_name='bon'),
@@ -119,7 +116,7 @@ STATE_COLORS = {
 
 # %%
 
-classifier_parameters = {
+classifier_parameters_thetasweeps = {
     'movement_var': 25.0,
     'replay_speed': 1,
     'place_bin_size': 5.0,
