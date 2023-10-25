@@ -50,7 +50,7 @@ clb = plt.colorbar(ticklocation='right', ticks=[0,1,2])
 clb.set_label('Firing rate (Hz)', fontsize=labelsize)
 clb.ax.tick_params(labelsize=ticksize)
 fig.savefig('Figures/Fig3_replay.pdf', dpi=300)
-# plt.show()
+plt.show()
 '''
 probe_num = int( 1.9*bm.pi / v_ext/dt)
 time=time[probe_num:-1]
