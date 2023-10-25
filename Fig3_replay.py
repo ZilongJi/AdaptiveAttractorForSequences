@@ -5,26 +5,26 @@ import matplotlib.pyplot as plt
 from cann import CANN1D
 import scipy
 #set default ramndom seed for reproducibility
-np.random.seed(0)
+np.random.seed(111)
 #set backend to cpu
 bm.set_platform('cpu')
 
 #build and run the network
-cann = CANN1D(tau=3, tau_v=144., num=128, mbar=2.5)
+cann = CANN1D(tau=3, tau_v=144., num=128, mbar=8.5)
 
 dt = bm.get_dt()
 dur=5000
 init_dur = 500
-init_index = int(init_dur/dt)
+init_index = int((init_dur+100)/dt)
 
 cann.reset_state()
 Iext, length = bp.inputs.section_input(
-    values=[cann.get_stimulus_by_pos(-2/3*np.pi), 0.],
+    values=[cann.get_stimulus_by_pos(-4/5*np.pi), 0.],
     durations=[init_dur, dur],
     return_length=True
 )
 
-noise = 0.05* np.random.randn(len(Iext), cann.num)
+noise = 0.02* np.random.randn(len(Iext), cann.num)
 #noise[init_index:-1] = 0
 Iext = Iext + noise
 Iext = bm.as_numpy(Iext)

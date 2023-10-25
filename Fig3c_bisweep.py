@@ -10,7 +10,7 @@ np.random.seed(0)
 bm.set_platform('cpu')
 
 #build and run the network
-cann = CANN1D(tau=3, tau_v=144., num=128, mbar=150)
+cann = CANN1D(tau=3, tau_v=144., num=128, mbar=100)
 v_ext = cann.a / cann.tau_v * 0.55
 dur = 2.5*np.pi / v_ext
 dt = bm.get_dt()
