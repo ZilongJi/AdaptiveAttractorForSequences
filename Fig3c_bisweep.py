@@ -10,9 +10,12 @@ np.random.seed(0)
 bm.set_platform('cpu')
 
 #build and run the network
-cann = CANN1D(tau=3, tau_v=144., num=128, mbar=150)
-v_ext = cann.a / cann.tau_v * 0.55
+# cann = CANN1D(tau=3, tau_v=144., num=128, mbar=150, A=0.01)
+cann = CANN1D(tau=1., tau_v=48., num=128, mbar=7.5, A=0.01)
+v_ext = cann.a / 144 * 0.55
+
 dur = 2.5*np.pi / v_ext
+
 dt = bm.get_dt()
 num = int(dur / dt)
 time = np.linspace(0, dur, num)
@@ -25,7 +28,7 @@ for i in range(num)[1:]:
         position[i] -= 2 * np.pi
 
 position = position.reshape((-1, 1))
-noise = 0.01*np.random.randn(num,cann.num)
+noise = 0.0*np.random.randn(num,cann.num)
 Iext = cann.get_stimulus_by_pos(position) + noise
 
 runner = bp.DSRunner(cann,
@@ -33,6 +36,14 @@ runner = bp.DSRunner(cann,
                      monitors=['u', 'v', 'r','center','centerI'])
 
 runner.run(dur)
+
+# fig, ax = plt.subplots(figsize=(4,2))
+# ax.plot(runner.mon.center)
+# ax.plot(runner.mon.centerI)
+# plt.show()
+
+
+
 probe_num = int( 1.9*bm.pi / v_ext/dt)
 time=time[probe_num:-1]
 index = np.linspace(1, cann.num, cann.num)

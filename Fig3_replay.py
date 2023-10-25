@@ -10,7 +10,7 @@ np.random.seed(0)
 bm.set_platform('cpu')
 
 #build and run the network
-cann = CANN1D(tau=3, tau_v=144., num=128, mbar=2.5)
+cann = CANN1D(tau=1., tau_v=48., num=128, mbar=2.5)
 
 dt = bm.get_dt()
 dur=5000
@@ -45,12 +45,13 @@ fig, ax = plt.subplots(figsize=(4,2))
 labelsize = 10
 ticksize = 8
 
-plt.pcolormesh(time[init_index:-1:50]-time[0], pos, fr[:,init_index:-1:50]*1e3, cmap='inferno')
+plt.pcolormesh(time[init_index:-1:50]-time[0]-1200, pos, fr[:,init_index:-1:50]*1e3, cmap='inferno')
+plt.xlim((0,200))
 clb = plt.colorbar(ticklocation='right', ticks=[0,1,2])
 clb.set_label('Firing rate (Hz)', fontsize=labelsize)
 clb.ax.tick_params(labelsize=ticksize)
 fig.savefig('Figures/Fig3_replay.pdf', dpi=300)
-
+plt.show()
 '''
 probe_num = int( 1.9*bm.pi / v_ext/dt)
 time=time[probe_num:-1]

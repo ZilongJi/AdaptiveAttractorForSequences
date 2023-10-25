@@ -20,13 +20,13 @@ end
 Jfft = fft(J);
 %%%%%%%%%%%%%%
 alpha = 0.19;
-h = 16.45;
+h = 17;
 pos = pos';
 vbar = 0.5;
 v=a/tau_v*vbar;
 T = 20*pi/v;
 loc=-pi*5/8;
-
+%%
 draw = 0;
 save_videl = 0;
 save_videl = draw*save_videl;
