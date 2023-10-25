@@ -13,7 +13,6 @@ bm.set_platform('cpu')
 # cann = CANN1D(tau=3, tau_v=144., num=128, mbar=150, A=0.01)
 cann = CANN1D(tau=1., tau_v=48., num=128, mbar=7.5, A=0.01)
 v_ext = cann.a / 144 * 0.55
-
 dur = 2.5*np.pi / v_ext
 
 dt = bm.get_dt()
