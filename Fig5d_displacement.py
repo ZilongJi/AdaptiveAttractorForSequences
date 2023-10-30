@@ -72,4 +72,4 @@ def plot_5d(simulation=[0, 0, 0]):
     plt.savefig('./Figures/Fig5d.pdf', bbox_inches='tight')
 
 if __name__ == '__main__':
-    plot_5d(simulation=[0,0,0])
+    plot_5d(simulation=[1,1,1])

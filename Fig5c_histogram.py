@@ -45,11 +45,11 @@ def plot5c(simulation=[0, 0]):
         
         
     plot_hist(0, simulation[0], 2, 15)
-    plot_hist(1, simulation[1], 1, 0.1)
+    plot_hist(1, simulation[1], 0.5, 0.1)
     plt.xlabel('Step size',fontsize = labelsize)
     plt.ylabel('Probability', fontsize=labelsize)
     plt.xticks(fontsize = ticksize)
-    plt.yticks([0,0.1,0.2,0.3],fontsize = ticksize)
+    #plt.yticks([0,0.1,0.2,0.3],fontsize = ticksize)
     #put the legend on the right upper corner
     plt.legend(fontsize = ticksize,frameon=False, loc='upper right')
 
@@ -57,4 +57,4 @@ def plot5c(simulation=[0, 0]):
     plt.savefig('./Figures/Fi5c.pdf', bbox_inches='tight')
     plt.show()
 
-plot5c([0,0])
+plot5c([1,1])
