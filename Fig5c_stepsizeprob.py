@@ -57,7 +57,7 @@ def plot5_c_inset(simulation=[0, 0]):
     # add legend
     plt.legend(fontsize=ticksize/1.5, frameon=False)
     #add reference line of y=1 with red dash line
-    plt.plot([0.8, 20], [1, 1], '--', color='r', linewidth=1) 
+    plt.plot([0.8, 20], [1, 1], '--', color='r', linewidth=1)
 
     plt.tight_layout()
     plt.savefig('./Figures/Fig5c_inset.pdf', bbox_inches='tight')

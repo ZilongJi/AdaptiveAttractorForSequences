@@ -21,35 +21,40 @@ linewidth = 2
 
 def plot5c(simulation=[0, 0]):
     plt.figure(figsize=(4, 3), dpi=300)
-    fit_guess = np.array([[2,0,0],[1,1,3]])
+    fit_guess = np.array([[2,0,0],[1,0,0]])
+    Max = 0.01
     def plot_hist(label, simulation, mu, gamma):
         if simulation == 1:
-            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma , 100, 0.2, 1, 100))
-            stepsize = np.sum(np.square(center_trace[:-1, :] - center_trace[1:, :]), axis=1)
-            stepsize = stepsize[199:]
+            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 500, 0.2, 1, 10))
+            stepsize = np.sum(np.square(center_trace[:-200, :] - center_trace[200:, :]), axis=1)
+            stepsize = stepsize[100:]
             np.save('./data/stepsize' + str(mu) + '_' + str(gamma) + '.npy', stepsize)
 
         stepsize = np.load('./data/stepsize' + str(mu) + '_' + str(gamma) + '.npy')
-        plt.hist(stepsize, range(20),density=True, alpha = 0.5, color = fit_color[label],label = legend[label],edgecolor='w')
+        plt.hist(stepsize, np.linspace(0,Max,30), density=True, alpha=0.5, color=fit_color[label], label=legend[label],
+                 edgecolor='w')
         ans = levy.fit_levy(stepsize, alpha = fit_guess[label,0], beta = fit_guess[label,1], loc = fit_guess[label,2])  # alpha beta mu sigma
         para = ans[0].get()
+        print(para)
         dist = stats.levy_stable
-        x = np.linspace(np.min(stepsize), np.max(stepsize), 100)
+        x = np.linspace(0, Max, 100)
         plt.plot(x, dist.pdf(x, para[0], para[1], para[2], para[3]),
                  lw=linewidth, alpha=1,  color = fit_color[label])
 
         #set upper and right axis invisible
-        ax = plt.gca()  
+        ax = plt.gca()
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
         
-        
-    plot_hist(0, simulation[0], 2, 15)
-    plot_hist(1, simulation[1], 0.5, 0.1)
+    #Brownian
+    plot_hist(0, simulation[0], 0.575, 1)
+    #Levy
+    plot_hist(1, simulation[1], 0.425, 1)
+
     plt.xlabel('Step size',fontsize = labelsize)
-    plt.ylabel('Probability', fontsize=labelsize)
-    plt.xticks(fontsize = ticksize)
-    #plt.yticks([0,0.1,0.2,0.3],fontsize = ticksize)
+    plt.ylabel('Prob', fontsize=labelsize)
+    plt.xticks([0,Max],fontsize = ticksize)
+    plt.yticks([0],fontsize = ticksize)
     #put the legend on the right upper corner
     plt.legend(fontsize = ticksize,frameon=False, loc='upper right')
 
