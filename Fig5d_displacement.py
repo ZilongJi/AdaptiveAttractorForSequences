@@ -27,7 +27,7 @@ def plot_5d(simulation=[0, 0, 0]):
 
     def plot_mean_var(mu, gamma, simulation, label, ax, sigma_u=0.5):
         if simulation == 1:
-            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 10, 0.2, 1, 1, sigma_u=sigma_u))
+            center_trace = bm.as_numpy(TwoD_fun.get_trace(mu, gamma, 100, 0.2, 1, 100, sigma_u=sigma_u))
             np.save('./data/fig6b_center_trace' + str(mu) + '_' + str(gamma) + '.npy', center_trace)
 
         center_trace = np.load('./data/fig6b_center_trace' + str(mu) + '_' + str(gamma) + '.npy')
@@ -48,10 +48,13 @@ def plot_5d(simulation=[0, 0, 0]):
         ax.errorbar(interval_list,ans[:,0],ans[:,1],label = xlabel[label] + r'$~\eta= $' + str(round(A1,2)), color = color_list[label], capsize=2)    
 
     plt.figure(figsize=(4, 3), dpi=300)
+    
     ax = plt.axes()
     ax.set_xscale("log")
     ax.set_yscale("log")
-    ax.set_ylim(0.0001, 10)
+    #equal axis
+    ax.set_aspect('equal')
+    #ax.set_ylim(0.0001, 10)
     #remove the top and right axis 
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
