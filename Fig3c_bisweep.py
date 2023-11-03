@@ -27,7 +27,7 @@ for i in range(num)[1:]:
         position[i] -= 2 * np.pi
 
 position = position.reshape((-1, 1))
-noise = 0.0*np.random.randn(num,cann.num)
+noise = 0.001*np.random.randn(num,cann.num)
 Iext = cann.get_stimulus_by_pos(position) + noise
 
 runner = bp.DSRunner(cann,

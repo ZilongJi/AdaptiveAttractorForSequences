@@ -6,7 +6,7 @@ bm.set_platform('cpu')
 
 class CANN1D(bp.NeuGroup):
     def __init__(self, num, tau=1., tau_v=48., k=5., a=0.4, A=0.19, J0=1.,
-                 z_min=-bm.pi, z_max=bm.pi, mbar=150):
+                 z_min=-bm.pi, z_max=bm.pi, mbar=150, sigma_u=0, sigma_m=0):
         super(CANN1D, self).__init__(size=num)
 
         # parameters
@@ -17,6 +17,8 @@ class CANN1D(bp.NeuGroup):
         self.A = A  # Magnitude of the external input
         self.J0 = J0 / num * 512  # maximum connection value
         self.m = mbar * tau / tau_v
+        self.sigma_u = sigma_u
+        self.sigma_m = sigma_m
 
         # feature space
         self.z_min = z_min
@@ -75,8 +77,13 @@ class CANN1D(bp.NeuGroup):
         r = bm.fft.fft(self.r)
         Irec = bm.real(bm.fft.ifft(r * self.conn_fft))
         # Irec = bm.dot(self.conn_mat, self.r)
-        self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau *bm.get_dt()
-        self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt()
+        # self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau *bm.get_dt()
+        # self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt()
+        self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau * bm.get_dt() \
+                   + self.sigma_u * bm.random.normal(0, 1, (self.num)) * bm.sqrt(bm.get_dt() / self.tau)
+        self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt() \
+                   + self.sigma_m * self.u * bm.random.normal(0, 1, (self.num)) * bm.sqrt(bm.get_dt() / self.tau_v)
+        
         r1 = bm.square(self.u)
         r2 = 1.0 + self.k * bm.sum(r1)
         self.r.value = r1 / r2
