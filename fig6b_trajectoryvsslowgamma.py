@@ -14,7 +14,7 @@ bm.set_platform('cpu')
 labelsize = 18
 ticksize = 14
 
-center_trace, step, mean_fr = TwoD_gamma.get_trace(duration=3e4, sample_rate=20, T_start=1000, visual=False)
+center_trace, step, mean_fr, spike_num = TwoD_gamma.get_trace(duration=3e4, sample_rate=20, T_start=1000, visual=False)
 w_start = 95
 w_size = 160
 w_step = 3
@@ -75,5 +75,5 @@ plt.tight_layout()
 
 #save the figure
 fig1.savefig('./Figures/Fig6b.pdf', bbox_inches='tight')
-
+plt.show()
 # %%
