@@ -104,8 +104,9 @@ class CANN2D(bp.DynamicalSystemNS):
         self.get_center()
 
 
-def get_trace(duration=30000, beta=0.5, sample_rate=20, T_start=2000, T_sample=1000, visual=False):
-    cann = CANN2D()
+def get_trace(duration=30000, beta=0.5, m_0=0.7, sigma_u=0.5, sigma_v=0.5, sample_rate=20, T_start=2000, T_sample=1000, visual=False):
+
+    cann = CANN2D(m_0=m_0, sigma_u=sigma_u, sigma_v=sigma_v)
     Iext, length = bp.inputs.section_input(
         values=[cann.get_stimulus_by_pos([0., 0.]), 0.],
         durations=[500., duration],
