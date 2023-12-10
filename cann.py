@@ -57,7 +57,9 @@ class CANN1D(bp.NeuGroup):
 
     def get_center(self):
         exppos = bm.exp(1j * self.x)
-        self.center[0] = bm.angle(bm.sum(exppos * self.r))
+        max_r = bm.max(self.r)
+        r_thres = bm.where(self.r>max_r/5, self.r, 0)
+        self.center[0] = bm.angle(bm.sum(exppos * r_thres))
 
     def get_centerI(self):
         exppos = bm.exp(1j * self.x)
