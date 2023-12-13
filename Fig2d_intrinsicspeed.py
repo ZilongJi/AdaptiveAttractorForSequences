@@ -50,7 +50,7 @@ for i in range(num_p):
     
     
  #%%   
-fig, ax = plt.subplots(figsize=(2.5, 2),dpi=300)
+fig, ax = plt.subplots(figsize=(2.4, 2.4),dpi=300)
 #set parameters for the figure
 labelsize = 10
 ticksize = 8
