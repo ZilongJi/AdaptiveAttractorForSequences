@@ -112,6 +112,8 @@ def get_trace(duration=30000, beta=0.5, m_0=0.7, sigma_u=0.5, sigma_v=0.5, sampl
         durations=[500., duration],
         return_length=True
     )
+    
+    #print('Iext shape is: ', Iext.shape)
     # 获取每个维度的长度并赋值给x和y
     x = len(Iext)  # 获取第一维长度
     y = len(Iext[0])  # 获取第二维长度
@@ -119,8 +121,13 @@ def get_trace(duration=30000, beta=0.5, m_0=0.7, sigma_u=0.5, sigma_v=0.5, sampl
     # 创建与给定二维矩阵大小相同的矩阵
     T_gamma = 400
     xx = np.meshgrid(np.arange(x), np.arange(y), np.arange(y))[0]  # 重新生成 xx
+    #print('xx shape is: ', xx.shape)
     xx = xx.transpose((1, 0, 2))  # 将 xx 的第一维和第二维进行交换
     wave = beta * np.sin(xx * 2 * np.pi / T_gamma)
+    
+    #print('wave shape is: ', wave.shape)
+    
+    #print(wave)
     Iext = bm.as_numpy(Iext) + wave
 
     def run_net(inp, ):  # 20 x size
