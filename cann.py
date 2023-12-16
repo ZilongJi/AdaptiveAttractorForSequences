@@ -58,7 +58,7 @@ class CANN1D(bp.NeuGroup):
     def get_center(self):
         exppos = bm.exp(1j * self.x)
         max_r = bm.max(self.r)
-        r_thres = bm.where(self.r>max_r/5, self.r, 0)
+        r_thres = bm.where(self.r>0, self.r, 0)
         self.center[0] = bm.angle(bm.sum(exppos * r_thres))
 
     def get_centerI(self):
@@ -81,11 +81,11 @@ class CANN1D(bp.NeuGroup):
         # Irec = bm.dot(self.conn_mat, self.r)
         # self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau *bm.get_dt()
         # self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt()
-        self.u.value = self.u + (-self.u + Irec + self.input - self.v) / self.tau * bm.get_dt() \
+        u = self.u + (-self.u + Irec + self.input - self.v) / self.tau * bm.get_dt() \
                    + self.sigma_u * bm.random.normal(0, 1, (self.num)) * bm.sqrt(bm.get_dt() / self.tau)
         self.v.value = self.v + (-self.v + self.m * self.u) / self.tau_v * bm.get_dt() \
                    + self.sigma_m * self.u * bm.random.normal(0, 1, (self.num)) * bm.sqrt(bm.get_dt() / self.tau_v)
-        
+        self.u = bm.where(u>0, u, 0)
         r1 = bm.square(self.u)
         r2 = 1.0 + self.k * bm.sum(r1)
         self.r.value = r1 / r2
