@@ -41,6 +41,7 @@ class CANN1D(bp.NeuGroup):
         self.input = bm.Variable(bm.zeros(num))
         self.center = bm.Variable(bm.zeros(1))
         self.centerI = bm.Variable(bm.zeros(1))
+        self.centerV = bm.Variable(bm.zeros(1))
 
     def dist(self, d):
         d = bm.remainder(d, self.z_range)
@@ -49,6 +50,12 @@ class CANN1D(bp.NeuGroup):
 
     def make_conn(self):
         d = self.dist(bm.abs(self.x[0] - self.x))
+        Jxx = self.J0 * bm.exp(-0.5 * bm.square(d / self.a)) / (bm.sqrt(2 * bm.pi) * self.a)
+        return Jxx
+
+
+    def make_conn_i(self, i):
+        d = self.dist(bm.abs(self.x[i] - self.x))
         Jxx = self.J0 * bm.exp(-0.5 * bm.square(d / self.a)) / (bm.sqrt(2 * bm.pi) * self.a)
         return Jxx
 
@@ -64,6 +71,11 @@ class CANN1D(bp.NeuGroup):
     def get_centerI(self):
         exppos = bm.exp(1j * self.x)
         self.centerI[0] = bm.angle(bm.sum(exppos * self.input))
+        
+    def get_centerV(self):
+        exppos = bm.exp(1j * self.x)
+        v_thres = bm.where(self.v>0, self.v, 0)
+        self.centerV[0] = bm.angle(bm.sum(exppos * v_thres))      
 
     def reset_state(self):
         # variables
