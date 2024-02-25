@@ -85,6 +85,7 @@ class CANN1D(bp.NeuGroup):
         self.input = bm.Variable(bm.zeros(self.num))
         self.center = bm.Variable(bm.zeros(1))
         self.centerI = bm.Variable(bm.zeros(1))
+        self.centerV = bm.Variable(bm.zeros(1))
 
     def update(self, tdi):
         # r = jax.vmap(bm.fft.fft)(self.r)
@@ -103,6 +104,7 @@ class CANN1D(bp.NeuGroup):
         self.r.value = r1 / r2
         self.get_center()
         self.get_centerI()
+        self.get_centerV()
         self.input[:] = 0.
 
 class CANN_noise(bp.NeuGroup):
