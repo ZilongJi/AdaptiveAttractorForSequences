@@ -94,7 +94,7 @@ class CANN2D(bp.dyn.NeuGroup):
                    #+ self.sigma_m * self.u * bm.random.normal(0, 1, (self.length, self.length)) * bm.sqrt(bm.get_dt() / self.tau_v)
     self.get_center()
     self.input[:] = 0.
-# m = 1.13 boundary
+
 
 def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=20, sigma_u = 0.5, visualize = False):
   def get_sigma_m(mu, gamma):
@@ -115,7 +115,7 @@ def get_trace(mu, gamma, duration=10, a=0.2, tau=1, tau_v=20, sigma_u = 0.5, vis
   runner = bp.DSRunner(cann,
                        inputs = ['input', Iext, 'iter'],
                        monitors = ['r', 'center'],
-                       dt = 0.01,
+                       dt = 0.1,
                        numpy_mon_after_run=False)
   runner.run(length)
   center_trace = runner.mon.center
