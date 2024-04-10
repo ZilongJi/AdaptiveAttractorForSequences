@@ -42,7 +42,8 @@ def main():
     
     
     #%%
-    PROCESSED_DATA_DIR = '/home/zilong/Desktop/replay_trajectory_paper/Processed-Data'
+    #PROCESSED_DATA_DIR = '/home/zilong/Desktop/replay_trajectory_paper/Processed-Data'
+    PROCESSED_DATA_DIR = '/media/zilong/4TB Storage HDD/ReplayTrajectoryAnalysis/ReplayTrajectories_shuffled'
     for epoch_key in tqdm(epoch_info[valid_epochs].index, desc='epochs'):
         animal, day, epoch = epoch_key                 
         

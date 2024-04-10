@@ -278,7 +278,291 @@ def get_sweep_and_awake_replay_results_using_postive_negative_peak_in_LFP(epoch_
                replay_intercept]
     
     return results
-  
+
+def get_sweep_and_shuffled_awake_replay_results_using_postive_negative_peak_in_LFP(epoch_key, sweepdatadir, replaydatadir, sweep_speed_threshold=4):
+    '''
+    Get the average sweep length and replay exponent for one epoch
+    '''
+    animal, day, epoch = epoch_key
+    
+    #1, LOAD THETA SWEEPS RESULTS
+    #load the classifier results
+    cv_classifier_clusterless_results = xr.open_dataset(os.path.join(sweepdatadir, 'ThetaSweepTrajectories', f'{animal}_{day:02d}_{epoch:02d}_cv_classifier_clusterless_results.nc'))
+    #load the data with pickle
+    with open(os.path.join(sweepdatadir, 'ThetaSweepTrajectories', f'{animal}_{day:02d}_{epoch:02d}_speed_info.pkl'), 'rb') as f:
+        speed_dic = pickle.load(f)
+        speed = speed_dic.values
+    #load lfp info
+    with open(os.path.join(sweepdatadir, 'ThetaSweepTrajectories', f'{animal}_{day:02d}_{epoch:02d}_lfp_info.pkl'), 'rb') as f:
+        lfp = pickle.load(f)
+    
+    lfp = (
+    lfp.reset_index(drop=True).set_index(lfp.index / np.timedelta64(1, "s"))
+    )
+        
+    #from speed, get the moving distance by multiplying speed with the time which is the key of speed
+    speedkey = speed_dic.keys()
+    time = speedkey/np.timedelta64(1, "s")
+    tifmediff = np.diff(time)
+    #append zero to the beginning of tifmediff
+    tifmediff = np.insert(tifmediff, 0, 0)
+    distance  = {}
+    dist = np.cumsum(speed*tifmediff)
+    #downsampling the dist to 1/50, that is 0.1 second
+    dist = dist[::50]
+    distance[0] = dist
+    behavior_slope =  get_diffusion_exponent(distance, plot=False, get_intercept=False)
+    
+    #get the average sweep length
+    #extract speed from data and threshold it with 10 cm/s
+    is_running = speed > sweep_speed_threshold
+
+    sweeps_dist_in_running = cv_classifier_clusterless_results.mental_distance_from_actual_position[is_running]
+
+    
+    #get mean speed with speed < 4 (mean speed udring immobile state)
+    mean_immobile_speed = np.mean(speed[speed<4])
+    mean_active_speed = np.mean(speed[speed>=4])
+    
+    mean_sweep_dist = np.mean(sweeps_dist_in_running).values
+    
+    
+    # add band passs filter to lfp.iloc[:,0], using band between 5-11Hz
+    lfp0 = bandpassfilter(lfp.iloc[:, 0], lowcut=5, highcut=11, fs=500)
+    lfp0 = pd.DataFrame(lfp0, index=lfp.index)
+    
+    #filter the lfp0 using is_running
+    lfp0_is_running = lfp0[is_running]
+    
+    zero_phase_index = get_zero_phase(lfp0_is_running)  
+    
+    sweeps_dist_in_running_ahead_behind = cv_classifier_clusterless_results.mental_distance_from_actual_position_ahead_behind[is_running]
+    
+    #for two successive zero phases, find the peak value from sweeps_dist_in_running_ahead_behind in that interval
+    sweep_amp = []
+    sweep_ahead = []
+    sweep_behind = []
+    for i in range(len(zero_phase_index)-1):
+        #get the start and end index of the current zero phase
+        start_index = zero_phase_index[i]
+        end_index = zero_phase_index[i+1]
+        #get the peak value in the current interval
+        ahead_peak = np.max(sweeps_dist_in_running_ahead_behind[start_index:end_index])
+        behind_peak = np.min(sweeps_dist_in_running_ahead_behind[start_index:end_index])
+        sweep_amp.append(ahead_peak-behind_peak)
+        sweep_ahead.append(ahead_peak)
+        sweep_behind.append(behind_peak)
+        
+    mean_sweep_amp = np.mean(sweep_amp)
+    mean_sweep_ahead = np.mean(sweep_ahead)
+    mean_sweep_behind = np.mean(sweep_behind)
+    
+    sweep_mass = np.mean(sweeps_dist_in_running_ahead_behind).values
+    
+    #if successive zero phases are both in      
+    
+    # group the lfp0 into dataframe with time index
+    lfp0 = pd.DataFrame(lfp0, index=lfp.index)
+    
+    #2, LOAD REPLAY RESULTS
+    #load the dictionary from the 'ReplayTrajectories' folder under PROCESSED_DATA_DIR using pickle
+    with open(os.path.join(replaydatadir, 'ReplayTrajectories', f'{animal}_{day:02d}_{epoch:02d}_traj.pkl'), 'rb') as f:
+        Replay_traj = pickle.load(f)
+        
+    #fig, ax, slope = get_exponent(Replay_traj, plot=True)
+    replay_exponent, replay_intercept = get_diffusion_exponent(Replay_traj, plot=False, get_intercept=True)
+    
+    #return mean_immobile_speed, mean_active_speed, behavior_slope, mean_sweep_dist, mean_sweep_amp, mean_sweep_ahead, mean_sweep_behind, sweep_mass, replay_exponent, replay_intercept in a list
+    
+    results = [mean_immobile_speed, 
+               mean_active_speed, 
+               behavior_slope, 
+               mean_sweep_dist, 
+               mean_sweep_amp, 
+               mean_sweep_ahead, 
+               mean_sweep_behind, 
+               sweep_mass, 
+               replay_exponent, 
+               replay_intercept]
+    
+    return results
+
+def get_sweep_awake_and_sleep_replay_results(run_epoch_key, sleep_epoch_key, datadir, sweep_speed_threshold=4):
+    '''
+    Get the average sweep length and replay exponent for one epoch
+    '''
+    animal_run, day_run, epoch_run = run_epoch_key
+    
+    #1, LOAD THETA SWEEPS RESULTS
+    #load the classifier results
+    cv_classifier_clusterless_results = xr.open_dataset(os.path.join(datadir, 'ThetaSweepTrajectories', f'{animal_run}_{day_run:02d}_{epoch_run:02d}_cv_classifier_clusterless_results.nc'))
+    #load the data with pickle
+
+    with open(os.path.join(datadir, 'ThetaSweepTrajectories', f'{animal_run}_{day_run:02d}_{epoch_run:02d}_speed_info.pkl'), 'rb') as f:
+        speed_dic = pickle.load(f)
+        speed = speed_dic.values
+    #load lfp info
+    with open(os.path.join(datadir, 'ThetaSweepTrajectories', f'{animal_run}_{day_run:02d}_{epoch_run:02d}_lfp_info.pkl'), 'rb') as f:
+        lfp = pickle.load(f)
+    
+    lfp = (
+    lfp.reset_index(drop=True).set_index(lfp.index / np.timedelta64(1, "s"))
+    )
+
+    #get the average sweep length
+    #extract speed from data and threshold it with 10 cm/s
+    is_running = speed > sweep_speed_threshold
+
+    # add band passs filter to lfp.iloc[:,0], using band between 5-11Hz
+    lfp0 = bandpassfilter(lfp.iloc[:, 0], lowcut=5, highcut=11, fs=500)
+    lfp0 = pd.DataFrame(lfp0, index=lfp.index)
+    
+    #filter the lfp0 using is_running
+    lfp0_is_running = lfp0[is_running]
+    
+    zero_phase_index = get_zero_phase(lfp0_is_running)  
+    
+    sweeps_dist_in_running_ahead_behind = cv_classifier_clusterless_results.mental_distance_from_actual_position_ahead_behind[is_running]
+    
+    #for two successive zero phases, find the peak value from sweeps_dist_in_running_ahead_behind in that interval
+    sweep_amp = []
+    for i in range(len(zero_phase_index)-1):
+        #get the start and end index of the current zero phase
+        start_index = zero_phase_index[i]
+        end_index = zero_phase_index[i+1]
+        #get the peak value in the current interval
+        ahead_peak = np.max(sweeps_dist_in_running_ahead_behind[start_index:end_index])
+        behind_peak = np.min(sweeps_dist_in_running_ahead_behind[start_index:end_index])
+        sweep_amp.append(ahead_peak-behind_peak)
+        
+    mean_sweep_amp = np.mean(sweep_amp)
+    
+    #2, LOAD awake REPLAY RESULTS
+    #load the dictionary from the 'ReplayTrajectories' folder under PROCESSED_DATA_DIR using pickle
+    with open(os.path.join(datadir, 'ReplayTrajectories', f'{animal_run}_{day_run:02d}_{epoch_run:02d}_traj.pkl'), 'rb') as f:
+        Replay_traj = pickle.load(f)
+        
+    awake_replay_exponent, _ = get_diffusion_exponent(Replay_traj, plot=False, get_intercept=True)
+    
+    #3, LOAD Sleep REPLAY RESULTS
+    #load the dictionary from the 'ReplayTrajectories' folder under PROCESSED_DATA_DIR using pickle
+    animal_sleep, day_sleep, epoch_sleep = sleep_epoch_key
+    with open(os.path.join(datadir, 'TrueSleepReplayTrajectories', f'{animal_sleep}_{day_sleep:02d}_{epoch_sleep:02d}_traj.pkl'), 'rb') as f:
+        Replay_traj = pickle.load(f)
+        
+    sleep_replay_exponent, _ = get_diffusion_exponent(Replay_traj, plot=False, get_intercept=True)
+
+    results = [mean_sweep_amp, 
+               awake_replay_exponent,
+               sleep_replay_exponent]
+
+    return results
+
+
+def get_sweep_and_sleep_replay_results_using_postive_negative_peak_in_LFP(run_epoch_key, sleep_epoch_key, datadir, sweep_speed_threshold=4):
+    '''
+    Get the average sweep length and replay exponent for one epoch
+    '''
+    animal_run, day_run, epoch_run = run_epoch_key
+    
+    #1, LOAD THETA SWEEPS RESULTS
+    #load the classifier results
+    cv_classifier_clusterless_results = xr.open_dataset(os.path.join(datadir, 'ThetaSweepTrajectories', f'{animal_run}_{day_run:02d}_{epoch_run:02d}_cv_classifier_clusterless_results.nc'))
+    #load the data with pickle
+
+    with open(os.path.join(datadir, 'ThetaSweepTrajectories', f'{animal_run}_{day_run:02d}_{epoch_run:02d}_speed_info.pkl'), 'rb') as f:
+        speed_dic = pickle.load(f)
+        speed = speed_dic.values
+    #load lfp info
+    with open(os.path.join(datadir, 'ThetaSweepTrajectories', f'{animal_run}_{day_run:02d}_{epoch_run:02d}_lfp_info.pkl'), 'rb') as f:
+        lfp = pickle.load(f)
+    
+    lfp = (
+    lfp.reset_index(drop=True).set_index(lfp.index / np.timedelta64(1, "s"))
+    )
+        
+    #from speed, get the moving distance by multiplying speed with the time which is the key of speed
+    speedkey = speed_dic.keys()
+    time = speedkey/np.timedelta64(1, "s")
+    tifmediff = np.diff(time)
+    #append zero to the beginning of tifmediff
+    tifmediff = np.insert(tifmediff, 0, 0)
+    distance  = {}
+    dist = np.cumsum(speed*tifmediff)
+    #downsampling the dist to 1/50, that is 0.1 second
+    dist = dist[::50]
+    distance[0] = dist
+    behavior_slope =  get_diffusion_exponent(distance, plot=False, get_intercept=False)
+    
+    #get the average sweep length
+    #extract speed from data and threshold it with 10 cm/s
+    is_running = speed > sweep_speed_threshold
+
+    sweeps_dist_in_running = cv_classifier_clusterless_results.mental_distance_from_actual_position[is_running]
+
+    
+    #get mean speed with speed < 4 (mean speed udring immobile state)
+    mean_immobile_speed = np.mean(speed[speed<4])
+    mean_active_speed = np.mean(speed[speed>=4])
+    
+    mean_sweep_dist = np.mean(sweeps_dist_in_running).values
+    
+    
+    # add band passs filter to lfp.iloc[:,0], using band between 5-11Hz
+    lfp0 = bandpassfilter(lfp.iloc[:, 0], lowcut=5, highcut=11, fs=500)
+    lfp0 = pd.DataFrame(lfp0, index=lfp.index)
+    
+    #filter the lfp0 using is_running
+    lfp0_is_running = lfp0[is_running]
+    
+    zero_phase_index = get_zero_phase(lfp0_is_running)  
+    
+    sweeps_dist_in_running_ahead_behind = cv_classifier_clusterless_results.mental_distance_from_actual_position_ahead_behind[is_running]
+    
+    #for two successive zero phases, find the peak value from sweeps_dist_in_running_ahead_behind in that interval
+    sweep_amp = []
+    sweep_ahead = []
+    sweep_behind = []
+    for i in range(len(zero_phase_index)-1):
+        #get the start and end index of the current zero phase
+        start_index = zero_phase_index[i]
+        end_index = zero_phase_index[i+1]
+        #get the peak value in the current interval
+        ahead_peak = np.max(sweeps_dist_in_running_ahead_behind[start_index:end_index])
+        behind_peak = np.min(sweeps_dist_in_running_ahead_behind[start_index:end_index])
+        sweep_amp.append(ahead_peak-behind_peak)
+        sweep_ahead.append(ahead_peak)
+        sweep_behind.append(behind_peak)
+        
+    mean_sweep_amp = np.mean(sweep_amp)
+    mean_sweep_ahead = np.mean(sweep_ahead)
+    mean_sweep_behind = np.mean(sweep_behind)
+    
+    sweep_mass = np.mean(sweeps_dist_in_running_ahead_behind).values
+    
+    #2, LOAD REPLAY RESULTS
+    #load the dictionary from the 'ReplayTrajectories' folder under PROCESSED_DATA_DIR using pickle
+    animal_sleep, day_sleep, epoch_sleep = sleep_epoch_key
+    with open(os.path.join(datadir, 'TrueSleepReplayTrajectories', f'{animal_sleep}_{day_sleep:02d}_{epoch_sleep:02d}_traj.pkl'), 'rb') as f:
+        Replay_traj = pickle.load(f)
+        
+    #fig, ax, slope = get_exponent(Replay_traj, plot=True)
+    sleep_replay_exponent, sleep_replay_intercept = get_diffusion_exponent(Replay_traj, plot=False, get_intercept=True)
+
+    results = [mean_immobile_speed, 
+               mean_active_speed, 
+               behavior_slope, 
+               mean_sweep_dist, 
+               mean_sweep_amp, 
+               mean_sweep_ahead, 
+               mean_sweep_behind, 
+               sweep_mass, 
+               sleep_replay_exponent, 
+               sleep_replay_intercept]
+
+    return results
+
+
 def get_sweep_and_sleep_replay_results(run_epoch_key, sleep_epoch_key, datadir, sweep_speed_threshold=4):
     '''
     Get the average sweep length and replay exponent for one epoch
@@ -564,7 +848,7 @@ def detect_sleep_periods(data, epoch_key,
                          lowspeed_thres=4, lowspeed_duration=60,
                          theta2alpha_thres=1.5, REM_duration=10,
                          sleep_duration=90, LIA_duration=5,
-                         plot=True, figdir=None):
+                         plot=True, figdir=None, figsize=(8,3)):
     '''
     detect sleep periods from the data
     Input:
@@ -663,6 +947,9 @@ def detect_sleep_periods(data, epoch_key,
             
         SIA_threshold = x[local_minima][0]   
         
+        #save the figure
+        plt.savefig
+        
         #close the figure
         plt.close(fig) 
     except:
@@ -739,7 +1026,7 @@ def detect_sleep_periods(data, epoch_key,
     #7, plot the results
     if plot==True:
         print('Plot the results...')
-        fig = plt.figure(figsize=(20, 8), facecolor='white') 
+        fig = plt.figure(figsize=figsize, dpi=300, facecolor='white') 
 
         #make subplots height as 1:1:1:3
         gs = gridspec.GridSpec(3, 2, height_ratios=[1, 1, 1], width_ratios=[2.5, 1])
@@ -857,7 +1144,7 @@ def detect_sleep_periods(data, epoch_key,
         
         #save the figure
         animal, day, epoch = epoch_key
-        fig.savefig(os.path.join(figdir, f'{animal}_{day:02d}_{epoch:02d}_sleep_periods.png'), dpi=300)
+        fig.savefig(os.path.join(figdir, f'{animal}_{day:02d}_{epoch:02d}_sleep_periods.pdf'), dpi=300)
     
     #get the sleep information
     print('Get the sleep information and save it...')
