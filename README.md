@@ -41,6 +41,8 @@ Code for reproducing figures on the manuscript is located in the `Code4PaperFigs
 
 For example, to reproduce **Figure 1** in the paper, open `Figure1_hippocampalsequence_examples.ipynb` and excute the cells sequentially from the beginning.
 
+After running, you will find the resulted figures in the folder `Figures`
+
 
 
 
