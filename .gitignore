@@ -2,3 +2,6 @@
 *.xml
 .idea/*
 *.pdf
+
+\ExpData
+\Code4PaperFigs_EXP
