@@ -794,6 +794,47 @@ def get_sleep_ripples(all_ripple_times, valid_intervals):
             
     return sleep_ripple_times
 
+def get_phase(filtered_lfp):
+    """
+    get the instantaneous phase of the filtered lfp signal
+    """
+    
+    analytic_signal = hilbert(filtered_lfp)
+    instantaneous_phase = np.unwrap(np.angle(analytic_signal))
+    # wrap the instantaneous_phase to -pi and pi
+    instantaneous_phase = np.mod(instantaneous_phase + np.pi, 2 * np.pi)
+    
+    return instantaneous_phase
+
+def compute_spike_array(spike_times, timestamps):
+    """
+    Compute the spike array from spike times and timestamps.
+    """
+    
+    #for loop is too slow:
+    # spike_array = np.zeros(timestamps.shape)
+    # for spike_time in spike_times:
+    #     # Find the index of the closest time in t to this spike_time
+    #     idx = np.argmin(np.abs(timestamps - spike_time))
+    #     spike_array[idx] += 1
+    
+    # Assume t is sorted. If not, you must sort it first.
+    indices = np.searchsorted(timestamps, spike_times, side='right')
+
+    # Ensure no out-of-bounds indices
+    indices = np.clip(indices, 0, len(timestamps) - 1)
+
+    # Adjust indices to always refer to the nearest timestamp
+    # If the index points to the start of the array, no need to adjust
+    # If not, check if the previous index is closer
+    prev_close = (indices > 0) & (np.abs(timestamps[indices - 1] - spike_times) < np.abs(timestamps[indices] - spike_times))
+    indices[prev_close] -= 1
+
+    spike_array = np.zeros_like(timestamps)
+    np.add.at(spike_array, indices, 1) #very fast!
+    
+    return spike_array
+
 def get_power(lfp, sampling_frequency=500, band=[5, 11]):
     """Returns filtered amplitude.
     Parameters
