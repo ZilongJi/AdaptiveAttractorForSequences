@@ -2,3 +2,7 @@
 *.xml
 .idea/*
 *.pdf
+
+\ExpData
+\data
+\Data
